@@ -1,0 +1,57 @@
+s = {
+  "Sangua":      "Sangua",
+  "Flegma":      "Flegma",
+  "Chole":       "Chole",
+  "Melanchole":  "Melanchole",
+  "Ci":          "Ci",
+  "Pulse":       "Pulse",
+  "Temperature": "Temperature",
+
+  "Circulatory": "Circulatory",
+  "Digestion":   "Digestion",
+  "Joints":      "Суставы",
+  "Lungs":       "Легкие",
+  "Brains":      "Brains",
+  "LOR":         "LOR",
+
+  "Insomnia":      "Insomnia",
+  "Anxiety":       "Anxiety",
+  "Delusion":      "Delusion",
+  "HeadHurt":      "HeadHurt",
+  "HeadAche":      "HeadAche",
+  "Amnesia":       "Amnesia",
+  "Vertigo":       "Vertigo",
+  "Apraxia":       "Apraxia",
+  "Chorea":        "Chorea",
+  "Depression":    "Depression",
+  "Hallucination": "Hallucination",
+
+  "Arrhythmia":   "Arrhythmia",
+  "Faints":       "Faints",
+  "ChestPain":    "ChestPain",
+  "Claudication": "Claudication",
+  "Asthenia":     "Asthenia",
+  "Epistaxis":    "Epistaxis",
+
+  "Vomit":          "Vomit",
+  "LossOfAppetite": "LossOfAppetite",
+  "BodyAche":       "BodyAche",
+  "BodyHurt":       "BodyHurt",
+  "FoodPoison":     "FoodPoison",
+  "Xerostomia":     "Xerostomia",
+
+  "JointAche": "JointAche",
+  "JointHurt": "JointHurt",
+  "BigJoint":  "BigJoint",
+
+  "Cheah":     "Cheah",
+  "BolVGorle": "BolVGorle",
+  "Nasmork":   "Nasmork",
+
+  "Couch":      "Couch",
+  "Hrip":       "Hrip",
+  "Dyspnea":    "Dyspnea",
+  "Hemoptysis": "Hemoptysis",
+  "LungsPain":  "LungsPain",
+
+}

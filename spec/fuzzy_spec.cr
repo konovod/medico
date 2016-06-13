@@ -109,20 +109,47 @@ describe Fuzzy do
     rate_value(a, 150, 80, 1000, 11).should be_close(0, delta)
   end
 
-  param = Param.new(f(0), f(50), f(100))
-  value = ParamValue.new(param)
-  rates = RateSet.new
-  low = Trapezoid.new(f(0), f(0), f(10), f(50))
-  medium = Trapezoid.new(f(0), f(50), f(50), f(100))
-  high = Trapezoid.new(f(50), f(90), f(100), f(100))
-  rates.concat [low, medium, high]
 
   it "estimating" do
+    param = Param.new(f(0), f(50), f(100))
+    value = ParamValue.new(param)
+    rates = RateSet.new(param)
+    rates.items.clear
+    low = Trapezoid.new(f(0), f(0), f(10), f(50))
+    medium = Trapezoid.new(f(0), f(50), f(50), f(100))
+    high = Trapezoid.new(f(50), f(90), f(100), f(100))
+    rates.items.concat [low, medium, high]
     value.real = f(10)
-    rates.estimate(value).should be(low)
+    rates.estimate(value).should eq(0)
     value.real = f(40)
-    rates.estimate(value).should be(medium)
+    rates.estimate(value).should eq(1)
     value.real = f(75)
-    rates.estimate(value).should be(high)
+    rates.estimate(value).should eq(2)
   end
+
+  it "estimating auto" do
+    param = Param.new(f(0), f(10), f(100))
+    value = ParamValue.new(param)
+    rates = RateSet.new(param, 4)
+    rates.generate_for(param, 1)
+    rates.items.size.should eq(5)
+
+    value.real = f(1)
+    rates.estimate(value).should eq(0)
+    value.real = f(6)
+    rates.estimate(value).should eq(1)
+    value.real = f(9)
+    rates.estimate(value).should eq(2)
+    value.real = f(16)
+    value.estimate(rates).should eq(2)
+    value.real = f(70)
+    rates.estimate(value).should eq(3)
+    value.real = f(90)
+    rates.estimate(value).should eq(4)
+  end
+
+
+
+
+
 end

@@ -1,10 +1,4 @@
-alias FLOAT = Float32
-
-def f(value) : FLOAT
-  return FLOAT.new(value)
-end
-
-
+require "./globals"
 
 module Fuzzy
   extend self
@@ -109,24 +103,69 @@ module Fuzzy
     def initialize(aowner, @real = aowner.average)
       @owner = aowner
     end
+
+    def estimate(how : RateSet)
+      how.estimate(self)
+    end
+
   end
 
-  class RateSet < Array(FuzzySet)
+  class RateSet
+    getter items : Array(FuzzySet)
 
-    def estimate(value : ParamValue, oldvalue : (ParamValue | Nil) = nil, oldestimate : (FuzzySet | Nil) = nil) : (FuzzySet | Nil)
-      rates = map { |x| {x, x.rate(value.real)} }.select { |(x, v)| v > 0 }
+    def estimate(value : ParamValue,
+                 oldvalue : (ParamValue | Nil) = nil,
+                 oldestimate : (FuzzySet | Nil) = nil) : Int32
+      rates = items.zip((0...items.size).to_a).map do |(x, i)|
+         {i, x.rate(value.real)}
+      end.select { |(i, v)| v > 0 }
       case rates.size
       when 0
         raise "estimate failed for #{value} (#{self})"
       when 1
-        return rates.first[0]
+        return 0
       else
         # TODO: incremental estimating
-        rates.max_by { |(x, v)| v }.first
+        rates.max_by { |(i, v)| v}.first
       end
     end
+
+    private def fill_open_range(min, max, count)
+      return if count <= 0
+      pos = min
+      delta = (max-min)/(count+1)
+      count.times do |i|
+        @items << Trapezoid.new(pos, pos+delta, pos+delta, pos+2*delta)
+        pos += delta
+      end
+    end
+
+    def generate_for(min, average, max, additional = 0)
+      @items.clear
+      @items<<(Trapezoid.new(min, min, min, average))
+      fill_open_range(min, average, additional)
+      @items<<(Trapezoid.new(min, average, average, max))
+      fill_open_range(average, max, additional)
+      @items<<(Trapezoid.new(average, max, max, max))
+    end
+
+    def fill_names(anames = [] of Symbol)
+      @names.clear
+
+      @items.size.times do |i|
+        @names << i < anames.size ? anames[i] : :Unknown
+      end
+    end
+
+    def generate_for(param : Param, additional = 0)
+      generate_for(param.min, param.average, param.max, additional)
+    end
+
+    def initialize(param : Param, additional = 0)
+      @items = Array(FuzzySet).new
+      @names = Array(Symbol).new
+      generate_for(param, additional)
+    end
+
   end
-
-
-
 end
