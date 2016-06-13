@@ -6,6 +6,7 @@ module Biology
 
   data_bioparams
   data_systems
+  data_sympthoms
 
 
   class BioParam < Fuzzy::Param
@@ -24,7 +25,15 @@ module Biology
 
 
   class Sympthom
+    getter name : String
+    getter damage : FLOAT
+    getter danger : FLOAT
+    getter system : System
 
+    def initialize(@system, @name, adanger, adamage)
+      @damage = f(adamage)
+      @danger = f(adanger)
+    end
   end
 
 
@@ -33,10 +42,11 @@ module Biology
     getter sympthoms
     getter params
 
-    def initialize()
+    def initialize(asystem : System)
       @sympthoms = Hash(Sympthom, Bool).new
       @params = Hash(BioParam, Fuzzy::ParamValue).new
       ALL_PARAMS.each {|p| @params[p] = Fuzzy::ParamValue.new(p)}
+      ALL_SYMPTHOMS.select{|sy| sy.system == asystem }.each{|sy| @sympthoms[sy] = false}
     end
   end
 
@@ -46,7 +56,7 @@ module Biology
 
     def initialize(@name)
       @systems = Hash(System, SystemState).new
-      System.values.each {|sys| @systems[sys] = SystemState.new() }
+      System.values.each {|sys| @systems[sys] = SystemState.new(sys) }
     end
   end
 
