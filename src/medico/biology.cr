@@ -55,10 +55,14 @@ module Biology
     def initialize(@name)
       @sympthoms = Hash(Sympthom, FLOAT).new
       @params = Hash(BioParam, Fuzzy::ParamValue).new
+      @oldvalues = Hash(BioParam, Fuzzy::ParamValue).new
 
-      ALL_PARAMS.each { |p| @params[p] = Fuzzy::ParamValue.new(p) }
+      ALL_PARAMS.each do |p|
+        @params[p] = Fuzzy::ParamValue.new(p)
+        @oldvalues[p] = Fuzzy::ParamValue.new(p)
+      end
       ALL_SYMPTHOMS.select { |sy| sy.system == @name }.each { |sy| @sympthoms[sy] = f(0) }
-      @oldvalues = @params.clone
+
     end
 
     def reset
@@ -91,7 +95,7 @@ module Biology
     end
 
     def apply(sys : SystemState, power : FLOAT)
-      sys.sympthoms[@sympthom] = SympthomState::Active if sys.sympthoms[@sympthom] == SympthomState::None
+      sys.sympthoms[@sympthom] += power
     end
   end
 
@@ -102,7 +106,7 @@ module Biology
     end
 
     def apply(sys : SystemState, power : FLOAT)
-      sys.sympthoms[@sympthom] = SympthomState::Inhibited
+      sys.sympthoms[@sympthom] -= power
     end
   end
 
@@ -114,7 +118,7 @@ module Biology
     end
 
     def apply(sys : SystemState, power : FLOAT)
-      delta = changer.sample(random)
+      delta = changer.average
 
     end
 
