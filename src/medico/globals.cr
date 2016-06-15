@@ -7,5 +7,5 @@ def f(value) : FLOAT
 end
 
 def s(value)
-  return $s[value.to_s]
+  return $s[value]
 end

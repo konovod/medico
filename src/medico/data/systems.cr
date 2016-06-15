@@ -1,10 +1,11 @@
 macro data_systems
-  enum System
-    Circulatory
-    Digestion
-    Joints
-    Lungs
-    Brains
-    LOR
-  end
+  ALL_SYSTEMS = {
+    :Circulatory,
+    :Digestion,
+    :Joints,
+    :Lungs,
+    :Brains,
+    :LOR
+  }
+
 end

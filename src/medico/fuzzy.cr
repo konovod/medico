@@ -37,11 +37,36 @@ module Fuzzy
     end
   end
 
+  class Pike < FuzzySet
+    property value : FLOAT
+
+    def initialize(@value)
+    end
+
+    def sample(random = Random::DEFAULT)
+      return @value
+    end
+
+    def rate(value)
+      return 0 #TODO: think about it
+    end
+
+    def to_s(io)
+      io << "(#{@value})"
+    end
+
+  end
+
   class Trapezoid < FuzzySet
     property min : FLOAT
     property topmin : FLOAT
     property topmax : FLOAT
     property max : FLOAT
+
+    def to_s(io)
+      io << "[#{@min}-#{@topmin}-#{@topmax}-#{@max}]"
+    end
+
 
     def initialize(@topmin, @topmax, adelta)
       @min = 0
@@ -59,6 +84,10 @@ module Fuzzy
     end
 
     def initialize(@min, @topmin, @topmax, @max)
+    end
+
+    def dump
+
     end
 
     def sample(random = Random::DEFAULT)
@@ -81,13 +110,30 @@ module Fuzzy
     end
 
     def rate(value)
+      return 1 if value >= @topmin && value <= @topmax
       return 0 if value <= @min
       return 0 if value >= @max
-      return 1 if value >= @topmin && value <= @topmax
       return f(value - @min) / (@topmin - @min) if value < @topmin
       return f(@max - value) / (@max - @topmax)
     end
   end
+
+  def trap_or_pike(min, average, max)
+    if min == max
+      Pike.new(min)
+    else
+      Trapezoid.new(min, average, max)
+    end
+  end
+
+  def trap_or_pike(min, topmin, topmax, max)
+    if min == max
+      Pike.new(min)
+    else
+      Trapezoid.new(min, topmin, topmax, max)
+    end
+  end
+
 
   class Param
     getter min : FLOAT, max : FLOAT, average : FLOAT
@@ -113,17 +159,22 @@ module Fuzzy
   class RateSet
     getter items : Array(FuzzySet)
 
+    def dump
+      p @items.map(&.to_s)
+    end
+
     def estimate(value : ParamValue,
                  oldvalue : (ParamValue | Nil) = nil,
-                 oldestimate : (FuzzySet | Nil) = nil) : Int32
+                 oldestimate : (Int32 | Nil) = nil) : Int32
       rates = items.zip((0...items.size).to_a).map do |(x, i)|
          {i, x.rate(value.real)}
       end.select { |(i, v)| v > 0 }
       case rates.size
       when 0
-        raise "estimate failed for #{value} (#{self})"
+        dump
+        raise "estimate failed for #{value.real} (#{self})"
       when 1
-        return 0
+        return rates.first.first
       else
         # TODO: incremental estimating
         rates.max_by { |(i, v)| v}.first
@@ -135,18 +186,19 @@ module Fuzzy
       pos = min
       delta = (max-min)/(count+1)
       count.times do |i|
-        @items << Trapezoid.new(pos, pos+delta, pos+delta, pos+2*delta)
+        @items << trap_or_pike(pos, pos+delta, pos+delta, pos+2*delta)
         pos += delta
       end
     end
 
     def generate_for(min, average, max, additional = 0)
       @items.clear
-      @items<<(Trapezoid.new(min, min, min, average))
+
+      @items<<trap_or_pike(min, min, min, average)
       fill_open_range(min, average, additional)
-      @items<<(Trapezoid.new(min, average, average, max))
+      @items<<trap_or_pike(min, average, average, max)
       fill_open_range(average, max, additional)
-      @items<<(Trapezoid.new(average, max, max, max))
+      @items<<trap_or_pike(average, max, max, max)
     end
 
     def fill_names(anames = [] of Symbol)

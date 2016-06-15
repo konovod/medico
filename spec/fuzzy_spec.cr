@@ -148,6 +148,29 @@ describe Fuzzy do
     rates.estimate(value).should eq(4)
   end
 
+  it "estimating corner" do
+    param = Param.new(f(0), f(0), f(10))
+    value = ParamValue.new(param)
+    rates = RateSet.new(param, 1)
+
+    value.real = f(0)
+    rates.estimate(value).should eq(2)
+    value.real = f(5)
+    rates.estimate(value).should eq(3)
+    value.real = f(9)
+    rates.estimate(value).should eq(4)
+
+    param = Param.new(f(0), f(10), f(10))
+    value = ParamValue.new(param)
+    rates = RateSet.new(param, 1)
+
+    value.real = f(0)
+    rates.estimate(value).should eq(0)
+    value.real = f(5)
+    rates.estimate(value).should eq(1)
+    value.real = f(10)
+    rates.estimate(value).should eq(2)
+  end
 
 
 
