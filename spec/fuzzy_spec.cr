@@ -5,7 +5,7 @@ include Fuzzy
 
 R = Random.new(1)
 
-def histogram(&block : -> Float32)
+def histogram(&block : -> FLOAT)
   hist = Array(Int32).new(10, 0)
   10000.times do
     x = yield
