@@ -8,14 +8,10 @@ describe Biology do
     john = Patient.new("John")
     s(john.systems.keys.first).should be_truthy
     john.systems.values.first.sympthoms.keys.first.desc.should be_truthy
-    john.systems.values.first.params.keys.first.desc.should be_truthy
-    john.systems.values.first.params.values.first.real.should be_truthy
+    john.systems.values.first.params.get.keys.first.desc.should be_truthy
+    john.systems.values.first.params.get.values.first.real.should be_truthy
   end
   john = Patient.new("John")
-
-  it "effects" do
-
-  end
 
 
 end

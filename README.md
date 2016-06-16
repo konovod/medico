@@ -1,6 +1,6 @@
 # medico
 
-TODO: Write a description here
+Nothing to see here
 
 ## Installation
 

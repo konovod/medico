@@ -42,35 +42,81 @@ module Biology
     end
   end
 
+  enum Index
+    CUR = 0
+    OLD = 1
+    PREV = 2
+  end
+  alias TParams = Hash(BioParam, Fuzzy::ParamValue)
+
+  class ParamsBuffer
+    def initialize
+      @data = {TParams.new, TParams.new, TParams.new}
+      3.times do |i|
+        ALL_PARAMS.each do |p|
+          @data[i][p] = Fuzzy::ParamValue.new(p)
+        end
+      end
+      @index = 0
+      reset_all
+    end
+
+    def reset_all
+      reset(Index::CUR)
+      reset(Index::OLD)
+      reset(Index::PREV)
+    end
+
+    def reset(n)
+      get(n).values.each {|x| x.real = x.owner.average}
+    end
+
+    def get(n : Index = Index::CUR)
+      @data[(@index + n.value)%3]
+    end
+
+    def scroll
+      @index = (@index + 1)%3
+      reset(Index::CUR)
+    end
+
+
+  end
+
+  alias TEffectorData = Int32
+
   class SystemState
 
-    alias TParams = Hash(BioParam, Fuzzy::ParamValue)
-
-    getter sympthoms
-    getter params : TParams
-    @oldvalues : TParams
+    getter params : ParamsBuffer
+    getter sympthoms #TODO: cache sympthoms too?
     getter name : Symbol
+    getter effectors
 
 
     def initialize(@name)
       @sympthoms = Hash(Sympthom, FLOAT).new
-      @params = Hash(BioParam, Fuzzy::ParamValue).new
-      @oldvalues = Hash(BioParam, Fuzzy::ParamValue).new
-
-      ALL_PARAMS.each do |p|
-        @params[p] = Fuzzy::ParamValue.new(p)
-        @oldvalues[p] = Fuzzy::ParamValue.new(p)
-      end
+      @params = ParamsBuffer.new
+      @effectors = Hash(Effector, TEffectorData).new
       ALL_SYMPTHOMS.select { |sy| sy.system == @name }.each { |sy| @sympthoms[sy] = f(0) }
 
     end
 
     def reset
-      @params.value.each {|x| x.real = x.owner.average}
-      @oldvalues = @params.clone
+      @params.reset_all
       @sympthoms.keys.each {|x| @sympthoms[x] = f(0)}
     end
+
+    def process_tick
+      @params.scroll
+      @sympthoms.keys.each {|x| @sympthoms[x] = f(0)}
+      @effectors.each do |eff, data|
+        eff.process(self, data)
+      end
+    end
+
+
   end
+
 
   class Patient
     getter name : String
@@ -122,6 +168,13 @@ module Biology
     end
 
   end
+
+  abstract class Effector
+    abstract def process(state : SystemState, data : TEffectorData)
+  end
+
+
+
 
 
 end
