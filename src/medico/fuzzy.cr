@@ -95,18 +95,14 @@ module Fuzzy
         return (@topmin+@topmax)/2
       else
         #patented algorithm (c)(tm)(ltd)
-        a = @topmax - @topmin;
-        b = @max - @min;
-        c = @topmin - @min;
-        return (2*a*c+a*a+c*b+a*b+b*b)/3/(a+b) + @min;
+        a = @topmax - @topmin
+        b = @max - @min
+        c = @topmin - @min
+        return (2*a*c+a*a+c*b+a*b+b*b)/3/(a+b) + @min
       end
     end
 
     def initialize(@min, @topmin, @topmax, @max)
-    end
-
-    def dump
-
     end
 
     def sample(random = Random::DEFAULT)
@@ -205,7 +201,7 @@ module Fuzzy
       pos = min
       delta = (max-min)/(count+1)
       count.times do |i|
-        @items << trap_or_pike(pos, pos+delta, pos+delta, pos+2*delta)
+        @items << Fuzzy.trap_or_pike(pos, pos+delta, pos+delta, pos+2*delta)
         pos += delta
       end
     end
@@ -213,11 +209,11 @@ module Fuzzy
     def generate_for(min, average, max, additional = 0)
       @items.clear
 
-      @items<<trap_or_pike(min, min, min, average)
+      @items<<Fuzzy.trap_or_pike(min, min, min, average)
       fill_open_range(min, average, additional)
-      @items<<trap_or_pike(min, average, average, max)
+      @items<<Fuzzy.trap_or_pike(min, average, average, max)
       fill_open_range(average, max, additional)
-      @items<<trap_or_pike(average, max, max, max)
+      @items<<Fuzzy.trap_or_pike(average, max, max, max)
     end
 
     def fill_names(anames = [] of Symbol)

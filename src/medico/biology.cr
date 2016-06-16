@@ -110,12 +110,12 @@ module Biology
       @sympthoms.keys.each {|x| @sympthoms[x] = f(0)}
     end
 
-    def process_tick
+    def process_tick(random = Random::DEFAULT)
       @params.scroll
       @sympthoms.keys.each {|x| @sympthoms[x] = f(0)}
       #apply effectors
       @effectors.each do |eff, data|
-        @effectors[eff] = eff.process(state: self, data: data)
+        @effectors[eff] = eff.process(state: self, data: data, random: random)
       end
       #remove inactive effectors
       @effectors.reject! do |eff, data|
@@ -141,13 +141,16 @@ module Biology
       @systems.values.each(&.reset)
     end
 
-    def process_tick
-      @systems.values.each(&.process_tick)
+    def process_tick(random = Random::DEFAULT)
+      @systems.values.each{|sys| sys.process_tick(random)}
     end
 
   end
 
-  BIO_RATER = ALL_PARAMS.map{|x| RateSet.new(x, 1)}
+  BIO_RATER = Hash(BioParam, Fuzzy::RateSet).zip(
+    ALL_PARAMS.to_a,
+    ALL_PARAMS.to_a.map{|x| Fuzzy::RateSet.new(x, 1)}
+    )
 
   abstract class Effect
     abstract def apply(sys : SystemState, power : FLOAT)
@@ -191,7 +194,7 @@ module Biology
   abstract class Effector
     getter effects
 
-    alias Context = NamedTuple(state: SystemState, data: TEffectorData)
+    alias Context = NamedTuple( state: SystemState, data: TEffectorData, random: Random::MT19937)
 
     abstract def process(**context) : TEffectorData
 
@@ -215,10 +218,26 @@ module Biology
     end
   end
 
-#  class ParamRule < Effector
+  class ParamRule < Effector
     #TODO: maybe complex rules?
+    getter param : BioParam
+    getter checker : Fuzzy::FuzzySet
 
-#  end
+    def initialize(@param, @checker)
+      super()
+    end
+
+    def process(**context) : TEffectorData
+      newstate = checker.incremental(
+          context[:state].params.get(Index::OLD)[@param].real,
+          context[:state].params.get(Index::PREV)[@param].real,
+          context[:data] > 0,
+          context[:random])
+      apply(context) if newstate
+      return (newstate ? 1 : 0)
+    end
+
+  end
 
 
 
