@@ -3,6 +3,8 @@ require "../src/medico/biology.cr"
 
 include Biology
 
+R = Random.new(1)
+
 describe Biology do
   it "Creating patient" do
     john = Patient.new("John")
