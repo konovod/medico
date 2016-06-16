@@ -10,7 +10,8 @@ module Fuzzy
 
   abstract class FuzzySet
     abstract def sample(random = Random::DEFAULT)
-    abstract def rate(value)
+    abstract def rate(value : FLOAT)
+    abstract def average : FLOAT
 
     def check(value, random = Random::DEFAULT)
       arate = rate(value)
@@ -51,6 +52,10 @@ module Fuzzy
       return 0 #TODO: think about it
     end
 
+    def average
+      return @value
+    end
+
     def to_s(io)
       io << "(#{@value})"
     end
@@ -81,6 +86,22 @@ module Fuzzy
     def delta=(delta)
       @min = @topmin - delta
       @max = @topmax + delta
+    end
+
+    def average
+      #return @topmin
+      #@min     1/9
+      #@topmin  2/9 1/6
+      #@topmax  2/9 1/6r
+      #@max     1/9
+      if @topmin - @min == @max - @topmax
+        return (@topmin+@topmax)/2
+      else
+        a = @topmax - @topmin;
+        b = @max - @min;
+        c = @topmin - @min;
+        return (2*a*c+a*a+c*b+a*b+b*b)/3/(a+b) + @min;
+      end
     end
 
     def initialize(@min, @topmin, @topmax, @max)

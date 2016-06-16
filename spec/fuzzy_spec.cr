@@ -172,7 +172,11 @@ describe Fuzzy do
     rates.estimate(value).should eq(2)
   end
 
-
-
+  it "average" do
+    Trapezoid.new(f(0), f(0), f(0), f(1)).average.should be_close(0.333, 0.01)
+    Trapezoid.new(f(0), f(1), f(1), f(1)).average.should be_close(0.667, 0.01)
+    Trapezoid.new(f(0), f(1), f(2), f(3)).average.should be_close(1.5, 0.01)
+    Trapezoid.new(f(0), f(10), f(10), f(30)).average.should be_close(13.333, 0.01)
+  end
 
 end
