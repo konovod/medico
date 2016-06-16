@@ -1,4 +1,5 @@
 # medico
+![alt tag]https://travis-ci.org/konovod/test-crystal.svg?branch=master
 
 Nothing to see here
 
