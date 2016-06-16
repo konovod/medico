@@ -1,5 +1,5 @@
 # medico
-[[https://travis-ci.org/konovod/test-crystal.svg?branch=master|alt=travis]]
+[![Build Status](https://travis-ci.org/konovod/test-crystal.svg?branch=master)](https://travis-ci.org/konovod/test-crystal)
 
 Nothing to see here
 
