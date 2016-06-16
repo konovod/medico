@@ -13,5 +13,9 @@ describe Biology do
   end
   john = Patient.new("John")
 
+  it "empty tick" do
+    john.process_tick
+  end
+
 
 end

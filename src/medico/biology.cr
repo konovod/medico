@@ -85,6 +85,10 @@ module Biology
 
   alias TEffectorData = Int32
 
+  def effector_dead(data : TEffectorData) : Bool
+    data <= 0
+  end
+
   class SystemState
 
     getter params : ParamsBuffer
@@ -109,9 +113,15 @@ module Biology
     def process_tick
       @params.scroll
       @sympthoms.keys.each {|x| @sympthoms[x] = f(0)}
+      #apply effectors
       @effectors.each do |eff, data|
-        eff.process(self, data)
+        @effectors[eff] = eff.process(self, data)
       end
+      #remove inactive effectors
+      @effectors.reject do |eff, data|
+        effector_dead(data)
+      end
+
     end
 
 
@@ -126,6 +136,15 @@ module Biology
       @systems = Hash(Symbol, SystemState).new
       ALL_SYSTEMS.each { |sys| @systems[sys] = SystemState.new(sys) }
     end
+
+    def reset
+      @systems.values.each(&.reset)
+    end
+
+    def process_tick
+      @systems.values.each(&.process_tick)
+    end
+
   end
 
   BIO_RATER = ALL_PARAMS.map{|x| RateSet.new(x, 1)}
@@ -164,16 +183,35 @@ module Biology
     end
 
     def apply(sys : SystemState, power : FLOAT)
-      sys.params[@param].real += changer.average * power
+      sys.params.get(Index::CUR)[@param].real += changer.average * power
     end
 
   end
 
   abstract class Effector
-    abstract def process(state : SystemState, data : TEffectorData)
+    getter effects
+    abstract def process(state : SystemState, data : TEffectorData) : TEffectorData
+
+    def calc_power : FLOAT
+      f(1)
+    end
+
+    def apply(state : SystemState)
+      @effects.each{|eff| eff.apply(state, calc_power)}
+    end
+
+    def initialize
+      @effects = Array(Effect).new
+    end
   end
 
+  class TimedEffector < Effector
+    def process(state : SystemState, data : TEffectorData) : TEffectorData
+      apply(state)
+      return data-1
+    end
 
+  end
 
 
 
