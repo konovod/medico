@@ -86,7 +86,7 @@ module Biology
   alias TEffectorData = Int32
 
   def effector_dead(data : TEffectorData) : Bool
-    data <= 0
+    data < 0
   end
 
   class SystemState
@@ -115,10 +115,10 @@ module Biology
       @sympthoms.keys.each {|x| @sympthoms[x] = f(0)}
       #apply effectors
       @effectors.each do |eff, data|
-        @effectors[eff] = eff.process(self, data)
+        @effectors[eff] = eff.process(state: self, data: data)
       end
       #remove inactive effectors
-      @effectors.reject do |eff, data|
+      @effectors.reject! do |eff, data|
         effector_dead(data)
       end
 
@@ -190,14 +190,17 @@ module Biology
 
   abstract class Effector
     getter effects
-    abstract def process(state : SystemState, data : TEffectorData) : TEffectorData
 
-    def calc_power : FLOAT
+    alias Context = NamedTuple(state: SystemState, data: TEffectorData)
+
+    abstract def process(**context) : TEffectorData
+
+    def calc_power(context : Context) : FLOAT
       f(1)
     end
 
-    def apply(state : SystemState)
-      @effects.each{|eff| eff.apply(state, calc_power)}
+    def apply(context : Context)
+      @effects.each{|eff| eff.apply(context[:state], calc_power(context))}
     end
 
     def initialize
@@ -206,12 +209,16 @@ module Biology
   end
 
   class TimedEffector < Effector
-    def process(state : SystemState, data : TEffectorData) : TEffectorData
-      apply(state)
-      return data-1
+    def process(**context) : TEffectorData
+      apply(context)
+      return context[:data]-1
     end
-
   end
+
+#  class ParamRule < Effector
+    #TODO: maybe complex rules?
+
+#  end
 
 
 
