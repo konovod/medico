@@ -3,7 +3,7 @@ require "../src/medico/fuzzy.cr"
 
 include Fuzzy
 
-R = Random.new(1)
+$r = Random.new(1)
 
 def histogram(&block : -> FLOAT)
   hist = Array(Int32).new(10, 0)
@@ -19,14 +19,14 @@ end
 describe Fuzzy do
   it "triangular" do
     res = histogram do
-      triangular(0, 100, R.rand, R) / 100
+      triangular(0, 100, $r.rand, $r) / 100
     end
     (res[0] + res[1] + res[2] < res[9]).should eq(true)
   end
 
   it "triangular2" do
     res = histogram do
-      triangular(100, 60, R.rand, R) / 100
+      triangular(100, 60, $r.rand, $r) / 100
     end
     (res[8] + res[9] < res[6]).should eq(true)
   end
@@ -35,7 +35,7 @@ describe Fuzzy do
 
   it "sampling" do
     res = histogram do
-      a.sample(R) / 100
+      a.sample($r) / 100
     end
     (res[5] + res[6]).should be_close(3333, 500)
   end
@@ -46,8 +46,8 @@ describe Fuzzy do
     a.check(0).should eq(false)
     a.check(100).should eq(false)
 
-    10000.times.map { |x| a.check(25, R) ? 1 : 0 }.sum.should be_close(5000, 200)
-    10000.times.map { |x| a.check(95, R) ? 1 : 0 }.sum.should be_close(10000/8, 200)
+    10000.times.map { |x| a.check(25, $r) ? 1 : 0 }.sum.should be_close(5000, 200)
+    10000.times.map { |x| a.check(95, $r) ? 1 : 0 }.sum.should be_close(10000/8, 200)
   end
 end
 
@@ -55,14 +55,14 @@ def rate_value(trapezoid, start, finish, n, steps)
   rate = f(0)
   n.times do
     v = f(start)
-    inside = trapezoid.check(v, R)
+    inside = trapezoid.check(v, $r)
     steps.times do
       vnew = v + f(finish - start) / steps
-      inside = trapezoid.incremental(v, vnew, inside, R)
+      inside = trapezoid.incremental(v, vnew, inside, $r)
       v = vnew
     end
     rate += 1 if inside
-    rate -= 1 if trapezoid.check(finish, R)
+    rate -= 1 if trapezoid.check(finish, $r)
   end
   1.0*rate / n
 end
