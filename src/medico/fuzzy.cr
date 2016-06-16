@@ -90,13 +90,11 @@ module Fuzzy
 
     def average
       #return @topmin
-      #@min     1/9
-      #@topmin  2/9 1/6
-      #@topmax  2/9 1/6r
-      #@max     1/9
+      #simple algorithm
       if @topmin - @min == @max - @topmax
         return (@topmin+@topmax)/2
       else
+        #patented algorithm (c)(tm)(ltd)
         a = @topmax - @topmin;
         b = @max - @min;
         c = @topmin - @min;

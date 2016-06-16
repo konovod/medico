@@ -118,8 +118,7 @@ module Biology
     end
 
     def apply(sys : SystemState, power : FLOAT)
-      delta = changer.average
-
+      sys.params[@param].real += changer.average * power
     end
 
   end
