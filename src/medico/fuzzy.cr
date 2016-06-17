@@ -49,7 +49,7 @@ module Fuzzy
     end
 
     def rate(value)
-      return 0 #TODO: think about it
+      return 0 # TODO: think about it
     end
 
     def average
@@ -59,7 +59,6 @@ module Fuzzy
     def to_s(io)
       io << "(#{@value})"
     end
-
   end
 
   class Trapezoid < FuzzySet
@@ -71,7 +70,6 @@ module Fuzzy
     def to_s(io)
       io << "[#{@min}-#{@topmin}-#{@topmax}-#{@max}]"
     end
-
 
     def initialize(@topmin, @topmax, adelta)
       @min = 0
@@ -89,16 +87,16 @@ module Fuzzy
     end
 
     def average
-      #return @topmin
-      #simple algorithm
+      # return @topmin
+      # simple algorithm
       if @topmin - @min == @max - @topmax
-        return (@topmin+@topmax)/2
+        return (@topmin + @topmax)/2
       else
-        #patented algorithm (c)(tm)(ltd)
+        # patented algorithm (c)(tm)(ltd)
         a = @topmax - @topmin
         b = @max - @min
         c = @topmin - @min
-        return (2*a*c+a*a+c*b+a*b+b*b)/3/(a+b) + @min
+        return (2*a*c + a*a + c*b + a*b + b*b)/3/(a + b) + @min
       end
     end
 
@@ -149,7 +147,6 @@ module Fuzzy
     end
   end
 
-
   class Param
     getter min : FLOAT, max : FLOAT, average : FLOAT
 
@@ -168,7 +165,6 @@ module Fuzzy
     def estimate(how : RateSet)
       how.estimate(self)
     end
-
   end
 
   class RateSet
@@ -182,7 +178,7 @@ module Fuzzy
                  oldvalue : (ParamValue | Nil) = nil,
                  oldestimate : (Int32 | Nil) = nil) : Int32
       rates = items.zip((0...items.size).to_a).map do |(x, i)|
-         {i, x.rate(value.real)}
+        {i, x.rate(value.real)}
       end.select { |(i, v)| v > 0 }
       case rates.size
       when 0
@@ -192,16 +188,16 @@ module Fuzzy
         return rates.first.first
       else
         # TODO: incremental estimating
-        rates.max_by { |(i, v)| v}.first
+        rates.max_by { |(i, v)| v }.first
       end
     end
 
     private def fill_open_range(min, max, count)
       return if count <= 0
       pos = min
-      delta = (max-min)/(count+1)
+      delta = (max - min)/(count + 1)
       count.times do |i|
-        @items << Fuzzy.trap_or_pike(pos, pos+delta, pos+delta, pos+2*delta)
+        @items << Fuzzy.trap_or_pike(pos, pos + delta, pos + delta, pos + 2*delta)
         pos += delta
       end
     end
@@ -209,11 +205,11 @@ module Fuzzy
     def generate_for(min, average, max, additional = 0)
       @items.clear
 
-      @items<<Fuzzy.trap_or_pike(min, min, min, average)
+      @items << Fuzzy.trap_or_pike(min, min, min, average)
       fill_open_range(min, average, additional)
-      @items<<Fuzzy.trap_or_pike(min, average, average, max)
+      @items << Fuzzy.trap_or_pike(min, average, average, max)
       fill_open_range(average, max, additional)
-      @items<<Fuzzy.trap_or_pike(average, max, max, max)
+      @items << Fuzzy.trap_or_pike(average, max, max, max)
     end
 
     def fill_names(anames = [] of Symbol)
@@ -233,6 +229,5 @@ module Fuzzy
       @names = Array(Symbol).new
       generate_for(param, additional)
     end
-
   end
 end

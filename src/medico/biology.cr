@@ -43,8 +43,8 @@ module Biology
   end
 
   enum Index
-    CUR = 0
-    OLD = 1
+    CUR  = 0
+    OLD  = 1
     PREV = 2
   end
   alias TParams = Hash(BioParam, Fuzzy::ParamValue)
@@ -68,19 +68,17 @@ module Biology
     end
 
     def reset(n)
-      get(n).values.each {|x| x.real = x.owner.average}
+      get(n).values.each { |x| x.real = x.owner.average }
     end
 
     def get(n : Index = Index::CUR)
-      @data[(@index + n.value)%3]
+      @data[(@index + n.value) % 3]
     end
 
     def scroll
-      @index = (@index + 1)%3
+      @index = (@index + 1) % 3
       reset(Index::CUR)
     end
-
-
   end
 
   alias TEffectorData = Int32
@@ -90,43 +88,36 @@ module Biology
   end
 
   class SystemState
-
     getter params : ParamsBuffer
-    getter sympthoms #TODO: cache sympthoms too?
+    getter sympthoms # TODO: cache sympthoms too?
     getter name : Symbol
     getter effectors
-
 
     def initialize(@name)
       @sympthoms = Hash(Sympthom, FLOAT).new
       @params = ParamsBuffer.new
       @effectors = Hash(Effector, TEffectorData).new
       ALL_SYMPTHOMS.select { |sy| sy.system == @name }.each { |sy| @sympthoms[sy] = f(0) }
-
     end
 
     def reset
       @params.reset_all
-      @sympthoms.keys.each {|x| @sympthoms[x] = f(0)}
+      @sympthoms.keys.each { |x| @sympthoms[x] = f(0) }
     end
 
     def process_tick(random = Random::DEFAULT)
       @params.scroll
-      @sympthoms.keys.each {|x| @sympthoms[x] = f(0)}
-      #apply effectors
+      @sympthoms.keys.each { |x| @sympthoms[x] = f(0) }
+      # apply effectors
       @effectors.each do |eff, data|
         @effectors[eff] = eff.process(state: self, data: data, random: random)
       end
-      #remove inactive effectors
+      # remove inactive effectors
       @effectors.reject! do |eff, data|
         effector_dead(data)
       end
-
     end
-
-
   end
-
 
   class Patient
     getter name : String
@@ -142,15 +133,14 @@ module Biology
     end
 
     def process_tick(random = Random::DEFAULT)
-      @systems.values.each{|sys| sys.process_tick(random)}
+      @systems.values.each { |sys| sys.process_tick(random) }
     end
-
   end
 
   BIO_RATER = Hash(BioParam, Fuzzy::RateSet).zip(
     ALL_PARAMS.to_a,
-    ALL_PARAMS.to_a.map{|x| Fuzzy::RateSet.new(x, 1)}
-    )
+    ALL_PARAMS.to_a.map { |x| Fuzzy::RateSet.new(x, 1) }
+  )
 
   abstract class Effect
     abstract def apply(sys : SystemState, power : FLOAT)
@@ -188,13 +178,12 @@ module Biology
     def apply(sys : SystemState, power : FLOAT)
       sys.params.get(Index::CUR)[@param].real += changer.average * power
     end
-
   end
 
   abstract class Effector
     getter effects
 
-    alias Context = NamedTuple( state: SystemState, data: TEffectorData, random: Random::MT19937)
+    alias Context = NamedTuple(state: SystemState, data: TEffectorData, random: Random::MT19937)
 
     abstract def process(**context) : TEffectorData
 
@@ -203,42 +192,11 @@ module Biology
     end
 
     def apply(context : Context)
-      @effects.each{|eff| eff.apply(context[:state], calc_power(context))}
+      @effects.each { |eff| eff.apply(context[:state], calc_power(context)) }
     end
 
     def initialize
       @effects = Array(Effect).new
     end
   end
-
-  class TimedEffector < Effector
-    def process(**context) : TEffectorData
-      apply(context)
-      return context[:data]-1
-    end
-  end
-
-  class ParamRule < Effector
-    #TODO: maybe complex rules?
-    getter param : BioParam
-    getter checker : Fuzzy::FuzzySet
-
-    def initialize(@param, @checker)
-      super()
-    end
-
-    def process(**context) : TEffectorData
-      newstate = checker.incremental(
-          context[:state].params.get(Index::OLD)[@param].real,
-          context[:state].params.get(Index::PREV)[@param].real,
-          context[:data] > 0,
-          context[:random])
-      apply(context) if newstate
-      return (newstate ? 1 : 0)
-    end
-
-  end
-
-
-
 end

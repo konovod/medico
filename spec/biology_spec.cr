@@ -1,13 +1,12 @@
 require "spec"
 require "../src/medico/biology.cr"
+require "../src/medico/effectors.cr"
 
 include Biology
 
 $r = Random.new(1)
 
-
 describe Biology do
-
   it "Creating patient" do
     john = Patient.new("John")
     s(john.systems.keys.first).should be_truthy
@@ -18,28 +17,28 @@ describe Biology do
   john = Patient.new("John")
   asys = ALL_SYSTEMS.first
   aparam = ALL_PARAMS.first
-  asym = ALL_SYMPTHOMS.select{|sym| sym.system == asys}.first
+  asym = ALL_SYMPTHOMS.select { |sym| sym.system == asys }.first
 
   it "empty tick" do
-    10.times{john.process_tick}
+    10.times { john.process_tick }
     john.systems[asys].params.get[aparam].real.should be_close(0.25, 0.01)
   end
 
   it "test effector" do
     testeff = ChangeParam.new(aparam, Fuzzy::Pike.new(f(-0.1)))
-    testdis = TimedEffector.new()
+    testdis = TimedEffector.new
     testdis.effects << testeff
 
     john.systems[asys].effectors[testdis] = 10
-    5.times{john.process_tick}
+    5.times { john.process_tick }
     john.systems[asys].params.get[aparam].real.should be_close(0.15, 0.01)
-    10.times{john.process_tick}
+    10.times { john.process_tick }
     john.systems[asys].params.get[aparam].real.should be_close(0.25, 0.01)
   end
 
   it "param rule" do
     testeff = ChangeParam.new(aparam, Fuzzy::Pike.new(f(-0.1)))
-    testdis = TimedEffector.new()
+    testdis = TimedEffector.new
     testdis.effects << testeff
     payload = SympthomEffect.new(asym)
     testdis2 = ParamRule.new(aparam, BIO_RATER[aparam].items[1])
@@ -47,11 +46,9 @@ describe Biology do
 
     john.systems[asys].effectors[testdis] = 10
     john.systems[asys].effectors[testdis2] = 0
-    5.times{john.process_tick}
+    5.times { john.process_tick }
     john.systems[asys].sympthoms[asym].should eq(1)
-    10.times{john.process_tick}
+    10.times { john.process_tick }
     john.systems[asys].sympthoms[asym].should eq(0)
   end
-
-
 end

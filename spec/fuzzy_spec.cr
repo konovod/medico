@@ -109,7 +109,6 @@ describe Fuzzy do
     rate_value(a, 150, 80, 1000, 11).should be_close(0, delta)
   end
 
-
   it "estimating" do
     param = Param.new(f(0), f(50), f(100))
     value = ParamValue.new(param)
@@ -178,5 +177,4 @@ describe Fuzzy do
     Trapezoid.new(f(0), f(1), f(2), f(3)).average.should be_close(1.5, 0.01)
     Trapezoid.new(f(0), f(10), f(10), f(30)).average.should be_close(13.333, 0.01)
   end
-
 end
