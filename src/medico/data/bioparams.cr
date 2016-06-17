@@ -1,6 +1,7 @@
 macro data_bioparams
 
-NLIQUIDS = 4
+N_LIQUIDS = 4
+N_PARAMS = 7
 
 ALL_PARAMS = {
   LiquidParam.new(:Sangua),

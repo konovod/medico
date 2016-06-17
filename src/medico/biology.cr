@@ -18,11 +18,20 @@ module Biology
     def initialize(@name, min, average, max)
       super(f(min), f(average), f(max))
     end
+
+    def damage(value)
+      return 0 if value == @average
+      if value < @average
+        @average == @min ? 0 : (@average - value) / (@average - @min)
+      else
+        @average == @max ? 0 : (value - @average) / (@max - @average)
+      end
+    end
   end
 
   class LiquidParam < BioParam
     def initialize(name)
-      super(name, f(0), f(1) / NLIQUIDS, f(1))
+      super(name, f(0), f(1) / N_LIQUIDS, f(1))
     end
   end
 
@@ -117,6 +126,17 @@ module Biology
         effector_dead(data)
       end
     end
+
+    def damage
+      part1 = (@params.get.sum{|param, value| param.damage(value.real)}) / N_PARAMS
+      part2 = @sympthoms.select{|sym, val| val > 0}.sum{|sym, val| sym.damage}
+      part1+part2
+    end
+
+    def danger
+      @sympthoms.select{|sym, val| val > 0}.sum{|sym, val| sym.danger}
+    end
+
   end
 
   class Patient

@@ -32,7 +32,18 @@ module Biology
     end
 
     def apply(sys : SystemState, power : FLOAT)
-      sys.params.get(Index::CUR)[@param].real += changer.average * power
+      delta = changer.average * power
+      curval = sys.params.get(Index::CUR)[@param].real
+      if curval + delta > @param.max
+        delta = @param.max-curval
+      elsif curval + delta < @param.min
+        delta = @param.min - curval
+      end
+      sys.params.get(Index::CUR)[@param].real += delta
+      ALL_PARAMS.each do |p|
+        next if p == @param
+        sys.params.get(Index::CUR)[p].real -= delta/N_LIQUIDS
+      end if @param.class == LiquidParam
     end
   end
 

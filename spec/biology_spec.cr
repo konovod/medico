@@ -52,6 +52,8 @@ describe Biology do
     john.systems[asys].sympthoms[asym].should eq(0)
     5.times { john.process_tick($r) }
     john.systems[asys].sympthoms[asym].should eq(1)
+    #p john.systems[asys].damage
+    #p john.systems[asys].danger
     10.times { john.process_tick($r) }
     john.systems[asys].sympthoms[asym].should eq(0)
   end
