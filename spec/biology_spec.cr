@@ -40,12 +40,14 @@ describe Biology do
     testeff = ChangeParam.new(aparam, Fuzzy::Pike.new(f(-0.1)))
     testdis = TimedEffector.new
     testdis.effects << testeff
-    payload = SympthomEffect.new(asym)
+    payload = AddSympthomEffect.new(asym)
     testdis2 = ParamRule.new(aparam, BIO_RATER[aparam].items[1])
     testdis2.effects << payload
 
     john.systems[asys].effectors[testdis] = 10
     john.systems[asys].effectors[testdis2] = 0
+    1.times { john.process_tick }
+    john.systems[asys].sympthoms[asym].should eq(0)
     5.times { john.process_tick }
     john.systems[asys].sympthoms[asym].should eq(1)
     10.times { john.process_tick }

@@ -146,40 +146,6 @@ module Biology
     abstract def apply(sys : SystemState, power : FLOAT)
   end
 
-  class SympthomEffect < Effect
-    getter sympthom : Sympthom
-
-    def initialize(@sympthom)
-    end
-
-    def apply(sys : SystemState, power : FLOAT)
-      sys.sympthoms[@sympthom] += power
-    end
-  end
-
-  class RemoveSympthomEffect < Effect
-    getter sympthom : Sympthom
-
-    def initialize(@sympthom)
-    end
-
-    def apply(sys : SystemState, power : FLOAT)
-      sys.sympthoms[@sympthom] -= power
-    end
-  end
-
-  class ChangeParam < Effect
-    getter param : BioParam
-    getter changer : Fuzzy::FuzzySet
-
-    def initialize(@param, @changer)
-    end
-
-    def apply(sys : SystemState, power : FLOAT)
-      sys.params.get(Index::CUR)[@param].real += changer.average * power
-    end
-  end
-
   abstract class Effector
     getter effects
 
