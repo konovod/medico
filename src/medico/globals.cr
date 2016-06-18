@@ -9,3 +9,5 @@ end
 def s(value)
   return $s[value]
 end
+
+#TODO: def fill_hash

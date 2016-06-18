@@ -73,4 +73,59 @@ module Biology
       return (newstate ? 1 : 0)
     end
   end
+
+  CRUNCH = DiseaseStage.new(Disease.new(1), 0)
+
+  class Disease
+    def first : DiseaseStage
+      @first.as(DiseaseStage)
+    end
+    getter systems : Set(Symbol)
+
+    def initialize(power : Int32)
+      #TODO proper generation
+      @systems = ALL_SYSTEMS.to_set
+      @first = DiseaseStage.new(self, power)
+    end
+
+    def process(patient : Patient, state : DiseaseState, random = Random::DEFAULT) : Bool
+      #TODO save antigenes after cure
+      state.antigene += 0.3
+
+      return patient.systems.values.any? {|sys| sys.effectors.has_key?(state.stage)}
+    end
+
+  end
+
+  class DiseaseState
+    property antigene : FLOAT
+    property stage : DiseaseStage
+
+    def initialize(dis : Disease)
+      @antigene = f(0)
+      @stage = dis.first
+    end
+
+  end
+
+  class DiseaseStage < Effector
+    getter disease : Disease
+    getter next_stage
+    getter speed : FLOAT
+
+
+    def initialize(@disease, power)
+      super()
+      @speed = f(power)
+      @next_stage = power > 0 ? DiseaseStage.new(@disease, power-1) : nil
+    end
+
+    def process(**context) : TEffectorData
+      apply(context)
+      return context[:data]
+    end
+
+  end
+
+
 end

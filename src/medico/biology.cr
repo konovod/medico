@@ -137,6 +137,12 @@ module Biology
       @sympthoms.select{|sym, val| val > 0}.sum{|sym, val| sym.danger}
     end
 
+    def infect(stage : DiseaseStage)
+      oldlevel = @effectors[stage]?
+      return if oldlevel && oldlevel > 50
+      @effectors[stage] = 50
+    end
+
   end
 
   class Patient
@@ -144,10 +150,12 @@ module Biology
     getter systems
     property maxhealth : FLOAT
     getter immunity : FLOAT = f(1)
+    getter diseases
 
     def initialize(@name,random = Random::DEFAULT)
       @maxhealth = f(2+random.rand*8) #TODO gauss distribution
       @health = @maxhealth
+      @diseases = Hash(Disease, DiseaseState).new
       @systems = Hash(Symbol, SystemState).new
       ALL_SYSTEMS.each { |sys| @systems[sys] = SystemState.new(sys) }
       check_immunity
@@ -178,7 +186,41 @@ module Biology
       @systems.values.each { |sys| sys.process_tick(random) }
       check_immunity
       check_health
+      @diseases.select!{ |dis, state| dis.process(self, state, random) }
     end
+
+    def healed(dis : Disease)
+      state = @diseases[dis]?
+      return unless state
+      stage = state.stage
+      @diseases.delete(dis)
+      @systems.values.each do |sys|
+        sys.effectors.delete(stage)
+      end
+    end
+
+    def infect(dis : Disease, random = Random::DEFAULT)
+      return if @diseases.has_key?(dis)
+      @diseases[dis] = DiseaseState.new(dis)
+      @systems[dis.systems.to_a.sample(random)].infect(dis.first)
+    end
+
+    def spread(dis : Disease,random = Random::DEFAULT)
+      state = @diseases[dis]?
+      return unless state
+      oldstage = state.stage
+      if random.rand<0.5
+        @systems[dis.systems.to_a.sample(random)].infect(oldstage)
+      else
+        newstage = oldstage.next_stage
+        return unless newstage
+        @systems.values.each do |sys|
+          @effectors.remove(oldstage)
+          @effectors[newstage] = 50
+        end
+      end
+    end
+
   end
 
   BIO_RATER = Hash(BioParam, Fuzzy::RateSet).zip(
