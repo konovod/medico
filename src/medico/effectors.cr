@@ -102,7 +102,7 @@ module Biology
     property stage : DiseaseStage
 
     def initialize(dis : Disease)
-      @antigene = f(0)
+      @antigene = f(0.05)
       @stage = dis.first
     end
 
@@ -122,7 +122,19 @@ module Biology
 
     def process(**context) : TEffectorData
       apply(context)
-      return context[:data]
+      v = context[:data]
+      sys = context[:state]
+      pat = sys.owner
+      if context[:random].rand * speed * sys.damage > pat.immunity + pat.diseases[@disease].antigene
+        v += 10
+      else
+        v -= 10
+      end
+      if v > 100
+        pat.spread(@disease)
+        v = 50
+      end
+      return v
     end
 
   end

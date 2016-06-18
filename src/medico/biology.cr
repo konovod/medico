@@ -97,12 +97,15 @@ module Biology
   end
 
   class SystemState
+    def owner : Patient
+      @owner.as(Patient)
+    end
     getter params : ParamsBuffer
     getter sympthoms # TODO: cache sympthoms too?
     getter name : Symbol
     getter effectors
 
-    def initialize(@name)
+    def initialize(@owner : Patient, @name)
       @sympthoms = Hash(Sympthom, FLOAT).new
       @params = ParamsBuffer.new
       @effectors = Hash(Effector, TEffectorData).new
@@ -157,7 +160,7 @@ module Biology
       @health = @maxhealth
       @diseases = Hash(Disease, DiseaseState).new
       @systems = Hash(Symbol, SystemState).new
-      ALL_SYSTEMS.each { |sys| @systems[sys] = SystemState.new(sys) }
+      ALL_SYSTEMS.each { |sys| @systems[sys] = SystemState.new(self, sys) }
       check_immunity
     end
 
@@ -215,8 +218,8 @@ module Biology
         newstage = oldstage.next_stage
         return unless newstage
         @systems.values.each do |sys|
-          @effectors.remove(oldstage)
-          @effectors[newstage] = 50
+          sys.effectors.delete(oldstage)
+          sys.effectors[newstage] = 50
         end
       end
     end

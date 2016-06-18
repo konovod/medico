@@ -63,5 +63,9 @@ describe Biology do
   it "infection1" do
     dis = Disease.new(10)
     john.infect(dis, $r)
+    john.diseases[dis].stage.should be(dis.first)
+    john.diseases[dis].antigene.should be_close(0.05, 0.01)
+    10.times { john.process_tick($r) }
+    john.diseases[dis]?.should be_falsey
   end
 end
