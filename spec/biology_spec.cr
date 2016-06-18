@@ -8,13 +8,13 @@ $r = Random.new(2)
 
 describe Biology do
   it "Creating patient" do
-    john = Patient.new("John")
+    john = Patient.new("John", $r)
     s(john.systems.keys.first).should be_truthy
     john.systems.values.first.sympthoms.keys.first.desc.should be_truthy
     john.systems.values.first.params.get.keys.first.desc.should be_truthy
     john.systems.values.first.params.get.values.first.real.should be_truthy
   end
-  john = Patient.new("John")
+  john = Patient.new("John", $r)
   asys = ALL_SYSTEMS.first
   aparam = ALL_PARAMS.first
   asym = ALL_SYMPTHOMS.select { |sym| sym.system == asys }.first
@@ -35,8 +35,8 @@ describe Biology do
     10.times { john.process_tick($r) }
     john.systems[asys].params.get[aparam].real.should be_close(0.25, 0.01)
   end
-  john.reset
 
+  john.reset
 
   it "param rule" do
     testeff = ChangeParam.new(aparam, Fuzzy::Pike.new(f(-0.25)))
@@ -56,5 +56,6 @@ describe Biology do
     #p john.systems[asys].danger
     10.times { john.process_tick($r) }
     john.systems[asys].sympthoms[asym].should eq(0)
+
   end
 end

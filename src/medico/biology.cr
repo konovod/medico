@@ -142,18 +142,42 @@ module Biology
   class Patient
     getter name : String
     getter systems
+    property maxhealth : FLOAT
+    getter immunity : FLOAT = f(1)
 
-    def initialize(@name)
+    def initialize(@name,random = Random::DEFAULT)
+      @maxhealth = f(2+random.rand*8) #TODO gauss distribution
+      @health = @maxhealth
       @systems = Hash(Symbol, SystemState).new
       ALL_SYSTEMS.each { |sys| @systems[sys] = SystemState.new(sys) }
+      check_immunity
     end
+
+    private def check_immunity
+      imm = [f(0.5), @health/@maxhealth].max
+      imm = @systems.values.reduce(imm) do |mul, sys|
+        dam = sys.damage
+        dam > 0.5 ? mul*dam : mul
+      end
+      @immunity = imm
+    end
+
+    private def check_health
+      hp_dam = -BIO_CONSTS[:HealthDump] + @systems.values.sum(&.danger)
+      @health -= hp_dam if hp_dam > 0
+      @health += BIO_CONSTS[:HealthRegen] if @health < @maxhealth
+    end
+
 
     def reset
       @systems.values.each(&.reset)
+      check_immunity
     end
 
     def process_tick(random = Random::DEFAULT)
       @systems.values.each { |sys| sys.process_tick(random) }
+      check_immunity
+      check_health
     end
   end
 
