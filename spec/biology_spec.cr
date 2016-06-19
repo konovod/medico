@@ -70,4 +70,5 @@ describe Biology do
     10.times { john.process_tick($r)}
     john.diseases[dis]?.should be_falsey
   end
+
 end

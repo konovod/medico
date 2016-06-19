@@ -237,7 +237,8 @@ module Biology
     Neutral
     Positive
   end
-  
+
+
   abstract class Effect
     abstract def apply(sys : SystemState, power : FLOAT)
     abstract def sign : Sign #TODO make it class const?
