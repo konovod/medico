@@ -11,6 +11,10 @@ module Biology
     def apply(sys : SystemState, power : FLOAT)
       sys.sympthoms[@sympthom] += power
     end
+
+    def sign
+      Sign::Negative
+    end
   end
 
   class RemoveSympthomEffect < Effect
@@ -22,8 +26,28 @@ module Biology
     def apply(sys : SystemState, power : FLOAT)
       sys.sympthoms[@sympthom] -= power
     end
+    def sign
+      Sign::Positive
+    end
   end
 
+  class MagicBulletEffect < Effect
+    getter disease : Disease
+
+    def initialize(@disease)
+    end
+
+    def apply(sys : SystemState, power : FLOAT)
+      state = sys.owner.diseases[@disease]?
+      return unless state
+      v = sys.effectors[state.stage]?
+      return unless v
+      sys.effectors[state.stage] = v-(power*50).to_i
+    end
+    def sign
+      Sign::Positive
+    end
+  end
   class ChangeParam < Effect
     getter param : BioParam
     getter changer : Fuzzy::FuzzySet
@@ -45,6 +69,10 @@ module Biology
         sys.params.get(Index::CUR)[p].real -= delta/N_LIQUIDS
       end if @param.class == LiquidParam
     end
+    def sign
+      Sign::Neutral
+    end
+
   end
 
   class TimedEffector < Effector
@@ -72,6 +100,10 @@ module Biology
       apply(context) if newstate
       return (newstate ? 1 : 0)
     end
+    def sign
+      Sign::Neutral
+    end
+
   end
 
   CRUNCH = DiseaseStage.new(Disease.new(1), 0)

@@ -232,8 +232,15 @@ module Biology
     ALL_PARAMS.to_a.map { |x| Fuzzy::RateSet.new(x, 1) }
   )
 
+  enum Sign
+    Negative
+    Neutral
+    Positive
+  end
+  
   abstract class Effect
     abstract def apply(sys : SystemState, power : FLOAT)
+    abstract def sign : Sign #TODO make it class const?
   end
 
   abstract class Effector
