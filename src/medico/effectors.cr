@@ -8,7 +8,7 @@ module Biology
     end
 
     def apply(sys : SystemState, power : FLOAT)
-      sys.sympthoms[@sympthom] += power
+      sys.sympthoms[@sympthom] += power if sys.sympthoms.has_key? @sympthom
     end
 
     def sign
@@ -23,7 +23,7 @@ module Biology
     end
 
     def apply(sys : SystemState, power : FLOAT)
-      sys.sympthoms[@sympthom] -= power
+      sys.sympthoms[@sympthom] -= power if sys.sympthoms.has_key? @sympthom
     end
 
     def sign
@@ -122,6 +122,16 @@ module Biology
       @systems = ALL_SYSTEMS.to_set
       @first = DiseaseStage.new(self, power)
     end
+
+
+    def generate(univ : Universe, random = Random::DEFAULT)
+      #TODO names generator
+      #systems
+      n = random.rand(ALL_SYSTEMS.size)
+      @systems = (ALL_SYSTEMS.to_a.sample(n/2+1, random) + ALL_SYSTEMS.to_a.sample(n/2+1, random)).to_set
+
+    end
+
 
     def process(patient : Patient, state : DiseaseState, random = Random::DEFAULT) : Bool
       # TODO save antigenes after cure

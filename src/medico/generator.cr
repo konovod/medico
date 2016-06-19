@@ -77,6 +77,7 @@ module Biology
     end
 
     def init_diseases(random = Random::DEFAULT)
+      @diseases_pool.each{|dis| dis.generate(self, random)}
     end
   end
 end
