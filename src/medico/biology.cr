@@ -152,6 +152,7 @@ module Biology
     getter name : String
     getter systems
     property maxhealth : FLOAT
+    property health : FLOAT
     getter immunity : FLOAT = f(1)
     getter diseases
 

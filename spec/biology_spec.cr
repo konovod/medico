@@ -40,22 +40,22 @@ describe Biology do
 
   it "param rule" do
     john.reset
-    testeff = ChangeParam.new(aparam, Fuzzy::Pike.new(f(-0.25)))
+    testeff = ChangeParam.new(aparam, Fuzzy::Pike.new(f(-0.125)))
     testdis = TimedEffector.new
     testdis.effects << testeff
     payload = AddSympthomEffect.new(asym)
-    testdis2 = ParamRule.new(aparam, BIO_RATER[aparam].items[0])
+    testdis2 = ParamRule.new(aparam, BIO_RATER[aparam].items[1])
     testdis2.effects << payload
 
     john.systems[asys].effectors[testdis] = 10
     john.systems[asys].effectors[testdis2] = 0
     1.times { john.process_tick($r) }
     john.systems[asys].sympthoms[asym].should eq(0)
-    5.times { john.process_tick($r) }
+    5.times { john.process_tick($r)}
     john.systems[asys].sympthoms[asym].should eq(1)
     #p john.systems[asys].damage
     #p john.systems[asys].danger
-    10.times { john.process_tick($r) }
+    10.times { john.process_tick($r)}
     john.systems[asys].sympthoms[asym].should eq(0)
 
   end
@@ -65,7 +65,9 @@ describe Biology do
     john.infect(dis, $r)
     john.diseases[dis].stage.should be(dis.first)
     john.diseases[dis].antigene.should be_close(0.05, 0.01)
-    10.times { john.process_tick($r) }
+    2.times { john.process_tick($r)}
+    john.diseases[dis]?.should be_truthy
+    10.times { john.process_tick($r)}
     john.diseases[dis]?.should be_falsey
   end
 end
