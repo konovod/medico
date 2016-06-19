@@ -100,6 +100,7 @@ module Biology
     def owner : Patient
       @owner.as(Patient)
     end
+
     getter params : ParamsBuffer
     getter sympthoms # TODO: cache sympthoms too?
     getter name : Symbol
@@ -131,13 +132,13 @@ module Biology
     end
 
     def damage
-      part1 = (@params.get.sum{|param, value| param.damage(value.real)}) / N_PARAMS
-      part2 = @sympthoms.select{|sym, val| val > 0}.sum{|sym, val| sym.damage}
-      part1+part2
+      part1 = (@params.get.sum { |param, value| param.damage(value.real) }) / N_PARAMS
+      part2 = @sympthoms.select { |sym, val| val > 0 }.sum { |sym, val| sym.damage }
+      part1 + part2
     end
 
     def danger
-      @sympthoms.select{|sym, val| val > 0}.sum{|sym, val| sym.danger}
+      @sympthoms.select { |sym, val| val > 0 }.sum { |sym, val| sym.danger }
     end
 
     def infect(stage : DiseaseStage)
@@ -145,7 +146,6 @@ module Biology
       return if oldlevel && oldlevel > 50
       @effectors[stage] = 50
     end
-
   end
 
   class Patient
@@ -156,8 +156,8 @@ module Biology
     getter immunity : FLOAT = f(1)
     getter diseases
 
-    def initialize(@name,random = Random::DEFAULT)
-      @maxhealth = f(2+random.rand*8) #TODO gauss distribution
+    def initialize(@name, random = Random::DEFAULT)
+      @maxhealth = f(2 + random.rand*8) # TODO gauss distribution
       @health = @maxhealth
       @diseases = Hash(Disease, DiseaseState).new
       @systems = Hash(Symbol, SystemState).new
@@ -180,7 +180,6 @@ module Biology
       @health += BIO_CONSTS[:HealthRegen] if @health < @maxhealth
     end
 
-
     def reset
       @systems.values.each(&.reset)
       check_immunity
@@ -190,7 +189,7 @@ module Biology
       @systems.values.each { |sys| sys.process_tick(random) }
       check_immunity
       check_health
-      @diseases.select!{ |dis, state| dis.process(self, state, random) }
+      @diseases.select! { |dis, state| dis.process(self, state, random) }
     end
 
     def healed(dis : Disease)
@@ -209,11 +208,11 @@ module Biology
       @systems[dis.systems.to_a.sample(random)].infect(dis.first)
     end
 
-    def spread(dis : Disease,random = Random::DEFAULT)
+    def spread(dis : Disease, random = Random::DEFAULT)
       state = @diseases[dis]?
       return unless state
       oldstage = state.stage
-      if random.rand<0.5
+      if random.rand < 0.5
         @systems[dis.systems.to_a.sample(random)].infect(oldstage)
       else
         newstage = oldstage.next_stage
@@ -224,7 +223,6 @@ module Biology
         end
       end
     end
-
   end
 
   BIO_RATER = Hash(BioParam, Fuzzy::RateSet).zip(
@@ -238,10 +236,9 @@ module Biology
     Positive
   end
 
-
   abstract class Effect
     abstract def apply(sys : SystemState, power : FLOAT)
-    abstract def sign : Sign #TODO make it class const?
+    abstract def sign : Sign # TODO make it class const?
   end
 
   abstract class Effector

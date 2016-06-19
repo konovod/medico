@@ -1,7 +1,6 @@
 require "./biology"
 
 module Biology
-
   class AddSympthomEffect < Effect
     getter sympthom : Sympthom
 
@@ -26,6 +25,7 @@ module Biology
     def apply(sys : SystemState, power : FLOAT)
       sys.sympthoms[@sympthom] -= power
     end
+
     def sign
       Sign::Positive
     end
@@ -42,12 +42,14 @@ module Biology
       return unless state
       v = sys.effectors[state.stage]?
       return unless v
-      sys.effectors[state.stage] = v-(power*50).to_i
+      sys.effectors[state.stage] = v - (power*50).to_i
     end
+
     def sign
       Sign::Positive
     end
   end
+
   class ChangeParam < Effect
     getter param : BioParam
     getter changer : Fuzzy::FuzzySet
@@ -59,7 +61,7 @@ module Biology
       delta = changer.average * power
       curval = sys.params.get(Index::CUR)[@param].real
       if curval + delta > @param.max
-        delta = @param.max-curval
+        delta = @param.max - curval
       elsif curval + delta < @param.min
         delta = @param.min - curval
       end
@@ -69,10 +71,10 @@ module Biology
         sys.params.get(Index::CUR)[p].real -= delta/N_LIQUIDS
       end if @param.class == LiquidParam
     end
+
     def sign
       Sign::Neutral
     end
-
   end
 
   class TimedEffector < Effector
@@ -100,10 +102,10 @@ module Biology
       apply(context) if newstate
       return (newstate ? 1 : 0)
     end
+
     def sign
       Sign::Neutral
     end
-
   end
 
   CRUNCH = DiseaseStage.new(Disease.new(1), 0)
@@ -112,21 +114,21 @@ module Biology
     def first : DiseaseStage
       @first.as(DiseaseStage)
     end
+
     getter systems : Set(Symbol)
 
     def initialize(power : Int32)
-      #TODO proper generation
+      # TODO proper generation
       @systems = ALL_SYSTEMS.to_set
       @first = DiseaseStage.new(self, power)
     end
 
     def process(patient : Patient, state : DiseaseState, random = Random::DEFAULT) : Bool
-      #TODO save antigenes after cure
+      # TODO save antigenes after cure
       state.antigene += 0.3
 
-      return patient.systems.values.any? {|sys| sys.effectors.has_key?(state.stage)}
+      return patient.systems.values.any? { |sys| sys.effectors.has_key?(state.stage) }
     end
-
   end
 
   class DiseaseState
@@ -137,7 +139,6 @@ module Biology
       @antigene = f(0.05)
       @stage = dis.first
     end
-
   end
 
   class DiseaseStage < Effector
@@ -145,11 +146,10 @@ module Biology
     getter next_stage
     getter speed : FLOAT
 
-
     def initialize(@disease, power)
       super()
       @speed = f(power)
-      @next_stage = power > 0 ? DiseaseStage.new(@disease, power-1) : nil
+      @next_stage = power > 0 ? DiseaseStage.new(@disease, power - 1) : nil
     end
 
     def process(**context) : TEffectorData
@@ -168,8 +168,5 @@ module Biology
       end
       return v
     end
-
   end
-
-
 end
