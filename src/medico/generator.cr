@@ -12,9 +12,9 @@ module Biology
       Bullet
     end
     KINDS_MAP = {
-      Param => [ChangeParam],
-      Sympthom => [AddSympthomEffect, RemoveSympthomEffect],
-      Bullet => [MagicBulletEffect]
+      Kind::Param => [ChangeParam],
+      Kind::Sympthom => [AddSympthomEffect, RemoveSympthomEffect],
+      Kind::Bullet => [MagicBulletEffect]
     }
 
     getter effects_pool
@@ -58,17 +58,20 @@ module Biology
 
     def random_effects (good : FLOAT, *, sys = nil, count = 1, random = Random::DEFAULT)
         #TODO optimize later
-      result = Set(Effect)
+      result = Set(Effect).new
 
       while count > 0
         need_sign = random.rand < good ? Sign::Positive : Sign::Negative
-        loop do
+        typ = @types.sample(random)
+        while need_sign ==  Sign::Negative && (typ == Kind::Bullet)
           typ = @types.sample(random)
-          break if need_sign ==  Sign::Positive || (typ != Kind::Bullet)
         end
         classes = KINDS_MAP[typ]
         e = @effects_pool.select do |eff|
-          classes.find(eff.class) && (eff.sign == Sign::Neutral || eff.sign == need_sign)
+          classes.includes?(eff.class) &&
+            (eff.sign == Sign::Neutral || eff.sign == need_sign) &&
+            (sys == nil || !eff.is_a?(RemoveSympthomEffect) || eff.as(RemoveSympthomEffect).sympthom.system == sys)&&
+            (sys == nil || !eff.is_a?(AddSympthomEffect) || eff.as(AddSympthomEffect).sympthom.system == sys)
         end.sample
         if !result.includes? e
           count -= 1
