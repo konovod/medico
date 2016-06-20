@@ -42,7 +42,15 @@ describe Universe do
     #p sys_count.group_by{|x| x}.map{|k, v| {k, v.size}}
     sys_count.to_set.superset?((1...ALL_SYSTEMS.size).to_set).should be_truthy
     (sys_count.count(2) > sys_count.count(1)).should eq(true)
-    (sys_count.count(3) >= sys_count.count(4)).should eq(true)
+    (sys_count.count(3) > sys_count.count(5)).should eq(true)
   end
+
+  it "test diseases" do
+    john = Patient.new("John", $r)
+    dis = u.diseases_pool.sample($r)
+    john.infect(dis, $r)
+    20.times { john.process_tick($r); p john.health }
+  end
+
 
 end

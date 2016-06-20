@@ -11,7 +11,7 @@ module Biology
 
     def initialize
       @systems = ALL_SYSTEMS.to_set
-      @first = DiseaseStage.new(self, f(1), nil)
+      @first = DiseaseStage.new(self, f(1))
     end
 
 
@@ -23,13 +23,24 @@ module Biology
       n.times { arr<<ALL_SYSTEMS.to_a.sample(random) }
       @systems = arr.to_set
       #stages
-      # nstages = random.rand(BIO_CONSTS[:MaxStages]-1)+2
-      # curstage = DiseaseStage.new
-      # @first = curstage
-      # nstages.times do |i|
-      #   curstage
-      #
-      # end
+      #TODO - danger generation (was in namegen)
+      danger = 5+random.rand(10)
+      nstages = random.rand(BIO_CONSTS[:MaxStages]-1)+2
+      curstage = nil
+      nstages.times do |i|
+        astage = DiseaseStage.new(self, f(danger*(nstages - i + 4)*BIO_CONSTS[:DisDanger]))
+        if i==0
+          @first = astage
+        else
+          curstage.as(DiseaseStage).next_stage = astage
+          astage.effects.concat(curstage.as(DiseaseStage).effects)
+        end
+        curstage = astage
+        curstage.effects.concat(univ.random_effects(f(0), sys: @systems, random: random, count: 2*BIO_CONSTS[:DisRules] / 5))
+        curstage.effects.uniq! #if i > 0
+        #curstage
+
+      end
 
     end
 
@@ -54,11 +65,12 @@ module Biology
 
   class DiseaseStage < Effector
     getter disease : Disease
-    getter next_stage : DiseaseStage?
+    property next_stage : DiseaseStage?
     getter speed : FLOAT
 
-    def initialize(@disease, @speed, @next_stage)
+    def initialize(@disease, @speed)
       super()
+      @next_stage = nil
     end
 
     def process(**context) : TEffectorData
