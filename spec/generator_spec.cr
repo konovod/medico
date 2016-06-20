@@ -1,6 +1,5 @@
 require "spec"
 require "../src/medico/biology.cr"
-require "../src/medico/effectors.cr"
 require "../src/medico/generator.cr"
 
 include Biology
@@ -39,9 +38,10 @@ describe Universe do
 
   it "diseases generation" do
     u.init_diseases($r)
-    p u.diseases_pool.map{|d|d.systems.size}.sort
-    u.diseases_pool.map{|d|d.systems.size}.uniq.sort.should eq((1...ALL_SYSTEMS.size).to_a)
-
+    sys_count = u.diseases_pool.map{|d|d.systems.size}.sort
+    sys_count.uniq.should eq((1...ALL_SYSTEMS.size).to_a)
+    (sys_count.count(2) > sys_count.count(1)).should eq(true)
+    (sys_count.count(3) > sys_count.count(4)).should eq(true)
   end
 
 end
