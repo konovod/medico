@@ -40,7 +40,7 @@ describe Universe do
   it "diseases generation" do
     u.init_diseases($r)
     p u.diseases_pool.map{|d|d.systems.size}.sort
-    u.diseases_pool.map{|d|d.systems.size}.uniq.sort.should eq((1..ALL_SYSTEMS.size).to_a)
+    u.diseases_pool.map{|d|d.systems.size}.uniq.sort.should eq((1...ALL_SYSTEMS.size).to_a)
 
   end
 

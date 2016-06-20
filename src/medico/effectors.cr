@@ -118,7 +118,6 @@ module Biology
     getter systems : Set(Symbol)
 
     def initialize(power : Int32)
-      # TODO proper generation
       @systems = ALL_SYSTEMS.to_set
       @first = DiseaseStage.new(self, power)
     end
@@ -127,9 +126,10 @@ module Biology
     def generate(univ : Universe, random = Random::DEFAULT)
       #TODO names generator
       #systems
-      n = random.rand(ALL_SYSTEMS.size)
-      @systems = (ALL_SYSTEMS.to_a.sample(n/2+1, random) + ALL_SYSTEMS.to_a.sample(n/2+1, random)).to_set
-
+      n = random.rand(ALL_SYSTEMS.size)+2
+      arr = [] of Symbol
+      n.times { arr<<ALL_SYSTEMS.to_a.sample(random) }
+      @systems = arr.to_set
     end
 
 
