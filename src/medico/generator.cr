@@ -21,7 +21,7 @@ module Biology
       @effects_pool = Array(Effect).new
       @diseases_pool = Array(Disease).new(BIO_CONSTS[:NDiseases])
       BIO_CONSTS[:NDiseases].times do |i|
-        @diseases_pool << Disease.new(0)
+        @diseases_pool << Disease.new
       end
       @types = Array(Kind).new
     end
@@ -51,7 +51,7 @@ module Biology
       end
     end
 
-    def random_effects(good : FLOAT, *, sys = nil, count = 1, random = Random::DEFAULT)
+    def random_effects(good : FLOAT, *, sys = ALL_SYSTEMS.to_set, count = 1, random = Random::DEFAULT)
       # TODO optimize later
       result = Set(Effect).new
 
@@ -65,9 +65,9 @@ module Biology
         e = @effects_pool.select do |eff|
           classes.includes?(eff.class) &&
             (eff.sign == Sign::Neutral || eff.sign == need_sign) &&
-            (sys == nil || !eff.is_a?(RemoveSympthomEffect) || eff.as(RemoveSympthomEffect).sympthom.system == sys) &&
-            (sys == nil || !eff.is_a?(AddSympthomEffect) || eff.as(AddSympthomEffect).sympthom.system == sys)
-        end.sample
+            (!eff.is_a?(RemoveSympthomEffect) || sys.includes?(eff.as(RemoveSympthomEffect).sympthom.system)) &&
+            (!eff.is_a?(AddSympthomEffect) || sys.includes?(eff.as(AddSympthomEffect).sympthom.system))
+        end.sample(random)
         if !result.includes? e
           count -= 1
           result << e

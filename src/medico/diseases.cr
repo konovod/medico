@@ -9,21 +9,28 @@ module Biology
 
     getter systems : Set(Symbol)
 
-    def initialize(power : Int32)
+    def initialize
       @systems = ALL_SYSTEMS.to_set
-      @first = DiseaseStage.new(self, power)
+      @first = DiseaseStage.new(self, f(1), nil)
     end
 
 
     def generate(univ : Universe, random = Random::DEFAULT)
       #TODO names generator
       #systems
-      n = random.rand(ALL_SYSTEMS.size)+2
+      n = random.rand(ALL_SYSTEMS.size+1)+2
       arr = [] of Symbol
       n.times { arr<<ALL_SYSTEMS.to_a.sample(random) }
       @systems = arr.to_set
       #stages
-      
+      # nstages = random.rand(BIO_CONSTS[:MaxStages]-1)+2
+      # curstage = DiseaseStage.new
+      # @first = curstage
+      # nstages.times do |i|
+      #   curstage
+      #
+      # end
+
     end
 
 
@@ -47,13 +54,11 @@ module Biology
 
   class DiseaseStage < Effector
     getter disease : Disease
-    getter next_stage
+    getter next_stage : DiseaseStage?
     getter speed : FLOAT
 
-    def initialize(@disease, power)
+    def initialize(@disease, @speed, @next_stage)
       super()
-      @speed = f(power)
-      @next_stage = power > 0 ? DiseaseStage.new(@disease, power - 1) : nil
     end
 
     def process(**context) : TEffectorData

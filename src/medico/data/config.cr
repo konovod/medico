@@ -1,6 +1,6 @@
 BIO_CONSTS = {
   NRules:    100,
-  NDiseases: 30,
+  NDiseases: 36,
   DisRules:  10,
   MaxStages: 5,
   DisDanger: 5,

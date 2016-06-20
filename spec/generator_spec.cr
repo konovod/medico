@@ -28,7 +28,7 @@ describe Universe do
     bads.any? { |e| e.is_a?(AddSympthomEffect) }.should be_truthy
     bads.any? { |e| e.is_a?(ChangeParam) }.should be_truthy
 
-    heads = u.random_effects(f(0.5), random: $r, count: 10, sys: :Brains)
+    heads = u.random_effects(f(0.5), random: $r, count: 10, sys: Set{:Brains})
     heads.any? { |e| e.is_a?(AddSympthomEffect) && e.sympthom.system == :Brains }.should be_truthy
     heads.any? { |e| e.is_a?(RemoveSympthomEffect) && e.sympthom.system == :Brains }.should be_truthy
     heads.any? { |e| e.is_a?(AddSympthomEffect) && e.sympthom.system != :Brains }.should be_falsey
@@ -39,9 +39,10 @@ describe Universe do
   it "diseases generation" do
     u.init_diseases($r)
     sys_count = u.diseases_pool.map{|d|d.systems.size}.sort
-    sys_count.uniq.should eq((1...ALL_SYSTEMS.size).to_a)
+    #p sys_count.group_by{|x| x}.map{|k, v| {k, v.size}}
+    sys_count.to_set.superset?((1...ALL_SYSTEMS.size).to_set).should be_truthy
     (sys_count.count(2) > sys_count.count(1)).should eq(true)
-    (sys_count.count(3) > sys_count.count(4)).should eq(true)
+    (sys_count.count(3) >= sys_count.count(4)).should eq(true)
   end
 
 end
