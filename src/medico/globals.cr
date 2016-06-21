@@ -24,6 +24,7 @@ class TEST_RND
 end
 
 
-DEF_RND = TEST_RND.new  #Random::DEFAULT
+#DEF_RND = TEST_RND.new
+DEF_RND = Random::DEFAULT
 
 # TODO: def fill_hash

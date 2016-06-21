@@ -116,7 +116,7 @@ module Fuzzy
       when 1 # min ... topmin
         return Fuzzy.triangular(@min, @topmin, point/((@topmin - @min)/2), random)
       when 2 # topmax ... max
-        return Fuzzy.triangular(@max, @topmax, point/((@max - @topmax)/2))
+        return Fuzzy.triangular(@max, @topmax, point/((@max - @topmax)/2), random)
       else
         raise "sample failed for #{range}, (#{self})"
       end

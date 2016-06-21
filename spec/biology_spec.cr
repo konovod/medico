@@ -13,7 +13,7 @@ describe Biology do
     john.systems.values.first.sympthoms.keys.first.desc.should be_truthy
     john.systems.values.first.params.get.keys.first.desc.should be_truthy
     john.systems.values.first.params.get.values.first.real.should be_truthy
-  end
+  end 
   john = Patient.new("John")
   asys = ALL_SYSTEMS.first
   aparam = ALL_PARAMS.first
