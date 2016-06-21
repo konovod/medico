@@ -3,7 +3,7 @@ BIO_CONSTS = {
   NDiseases: 36,
   DisRules:  10,
   MaxStages: 5,
-  DisDanger: 5,
+  DisDanger: 2,
 
   BulletEff:   10,
   SympthomEff: 50,
