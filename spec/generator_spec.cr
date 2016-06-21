@@ -45,12 +45,32 @@ describe Universe do
     (sys_count.count(3) > sys_count.count(5)).should eq(true)
   end
 
+  john = Patient.new("John", $r)
   it "test diseases" do
-    john = Patient.new("John", $r)
     dis = u.diseases_pool.sample($r)
     john.infect(dis, $r)
-    20.times { john.process_tick($r); p john.health }
+    john.health.should eq(john.maxhealth)
+    20.times { john.process_tick($r)}
+    (john.health < john.maxhealth).should be_truthy
   end
 
+  it "test diseases2" do
+    john.reset
+    dis = u.diseases_pool.sample($r)
+    john.infect(dis, $r)
+    john.health.should eq(john.maxhealth)
+    20.times { john.process_tick($r)}
+    (john.health < john.maxhealth).should be_truthy
+  end
 
+  it "test disease long" do
+    20.times do
+      john.reset
+      dis = u.diseases_pool.sample($r)
+      john.infect(dis, $r)
+      john.health.should eq(john.maxhealth)
+      200.times { john.process_tick($r)}
+      p john.health
+    end
+  end
 end

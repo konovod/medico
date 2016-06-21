@@ -106,6 +106,10 @@ module Biology
     getter name : Symbol
     getter effectors
 
+    def to_s(io)
+      io<<"#{owner.name} #{name}"
+    end
+
     def initialize(@owner : Patient, @name)
       @sympthoms = Hash(Sympthom, FLOAT).new
       @params = ParamsBuffer.new
@@ -116,6 +120,7 @@ module Biology
     def reset
       @params.reset_all
       @sympthoms.keys.each { |x| @sympthoms[x] = f(0) }
+      @effectors.clear
     end
 
     def process_tick(random = Random::DEFAULT)
@@ -142,6 +147,7 @@ module Biology
     end
 
     def infect(stage : DiseaseStage)
+      #p "#{self} infected with #{stage}"
       oldlevel = @effectors[stage]?
       return if oldlevel && oldlevel > 50
       @effectors[stage] = 50
@@ -155,6 +161,10 @@ module Biology
     property health : FLOAT
     getter immunity : FLOAT = f(1)
     getter diseases
+
+    def to_s(io)
+      io<<name.to_s
+    end
 
     def initialize(@name, random = Random::DEFAULT)
       @maxhealth = f(2 + random.rand*8) # TODO gauss distribution
@@ -182,6 +192,8 @@ module Biology
 
     def reset
       @systems.values.each(&.reset)
+      @health = @maxhealth
+      @diseases.clear
       check_immunity
     end
 
@@ -189,10 +201,12 @@ module Biology
       @systems.values.each { |sys| sys.process_tick(random) }
       check_immunity
       check_health
-      @diseases.select! { |dis, state| dis.process(self, state, random) }
+      remove_dis = @diseases.select { |dis, state| !dis.process(self, state, random) }
+      remove_dis.each{|dis, x| healed dis}
     end
 
     def healed(dis : Disease)
+      #p "#{self} healed of #{dis}"
       state = @diseases[dis]?
       return unless state
       stage = state.stage
@@ -204,11 +218,13 @@ module Biology
 
     def infect(dis : Disease, random = Random::DEFAULT)
       return if @diseases.has_key?(dis)
+      #p "#{self} infected with #{dis}"
       @diseases[dis] = DiseaseState.new(dis)
       @systems[dis.systems.to_a.sample(random)].infect(dis.first)
     end
 
     def spread(dis : Disease, random = Random::DEFAULT)
+      #p "in #{self} spreaded #{dis}"
       state = @diseases[dis]?
       return unless state
       oldstage = state.stage
@@ -217,6 +233,8 @@ module Biology
       else
         newstage = oldstage.next_stage
         return unless newstage
+        #p "it progresses!"
+        state.stage = newstage
         @systems.values.each do |sys|
           sys.effectors.delete(oldstage)
           sys.effectors[newstage] = 50

@@ -14,6 +14,9 @@ module Biology
       @first = DiseaseStage.new(self, f(1))
     end
 
+    def to_s(io)
+      io << "disease(#{@systems})"
+    end
 
     def generate(univ : Universe, random = Random::DEFAULT)
       #TODO names generator
@@ -73,11 +76,16 @@ module Biology
       @next_stage = nil
     end
 
+    def to_s(io)
+      io << "#{@disease}.#{@effects.size}"
+    end
+
     def process(**context) : TEffectorData
       apply(context)
       v = context[:data]
       sys = context[:state]
       pat = sys.owner
+      raise "pat healed?" unless pat.diseases[@disease]?
       if context[:random].rand * speed * sys.damage > pat.immunity + pat.diseases[@disease].antigene
         v += 10
       else
