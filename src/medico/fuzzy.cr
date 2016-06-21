@@ -3,24 +3,24 @@ require "./globals"
 module Fuzzy
   extend self
 
-  def triangular(zeroval, oneval, p1, random = Random::DEFAULT) : FLOAT
+  def triangular(zeroval, oneval, p1, random = DEF_RND) : FLOAT
     p2 = FLOAT.new(random.rand)
     return (p2 - p1).abs * (zeroval - oneval) + oneval
   end
 
   abstract class FuzzySet
-    abstract def sample(random = Random::DEFAULT)
+    abstract def sample(random = DEF_RND)
     abstract def rate(value : FLOAT)
     abstract def average : FLOAT
 
-    def check(value, random = Random::DEFAULT)
+    def check(value, random = DEF_RND)
       arate = rate(value)
       return false if arate == 0
       return true if arate == 1
       return random.rand < arate
     end
 
-    def incremental(oldvalue, newvalue, oldstate, random = Random::DEFAULT)
+    def incremental(oldvalue, newvalue, oldstate, random = DEF_RND)
       # sanity checks
       return oldstate if oldvalue == newvalue
       rate2 = rate(newvalue)
@@ -44,7 +44,7 @@ module Fuzzy
     def initialize(@value)
     end
 
-    def sample(random = Random::DEFAULT)
+    def sample(random = DEF_RND)
       return @value
     end
 
@@ -103,7 +103,7 @@ module Fuzzy
     def initialize(@min, @topmin, @topmax, @max)
     end
 
-    def sample(random = Random::DEFAULT)
+    def sample(random = DEF_RND)
       range = {@topmax - @topmin, (@topmin - @min)/2, (@max - @topmax)/2}
       point = FLOAT.new(random.rand*range.sum)
       index = range.each_with_index do |w, i|

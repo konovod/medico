@@ -49,7 +49,7 @@ module Biology
       end
     end
 
-    def random_effects(good : FLOAT, *, sys = ALL_SYSTEMS.to_set, count = 1, random = Random::DEFAULT)
+    def random_effects(good : FLOAT, *, sys = ALL_SYSTEMS.to_set, count = 1, random = DEF_RND)
       # TODO optimize later
       result = Set(Effect).new
 
@@ -74,7 +74,7 @@ module Biology
       result.to_a
     end
 
-    def init_diseases(random = Random::DEFAULT)
+    def init_diseases(random = DEF_RND)
       @diseases_pool.each{|dis| dis.generate(self, random)}
     end
   end

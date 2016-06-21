@@ -6,6 +6,19 @@ include Biology
 
 $r = Random.new(2)
 
+def simulate_patient(patient, univ, random, time)
+  patient.reset
+  dis = univ.diseases_pool.sample(random)
+  patient.infect(dis, random)
+  time.times do
+    patient.process_tick(random)
+    break if patient.health < 0 || patient.diseases.empty?
+  end
+  return -1 if patient.health < 0
+  return 1 if patient.diseases.empty?
+  return 0
+end
+
 describe Universe do
   u = Universe.new
 
@@ -47,30 +60,32 @@ describe Universe do
 
   john = Patient.new("John", $r)
   it "test diseases" do
-    dis = u.diseases_pool.sample($r)
-    john.infect(dis, $r)
+    john.infect(u.diseases_pool.sample($r), $r)
+    john.infect(u.diseases_pool.sample($r), $r)
+    john.infect(u.diseases_pool.sample($r), $r)
     john.health.should eq(john.maxhealth)
-    20.times { john.process_tick($r)}
+    15.times { john.process_tick($r) }
     (john.health < john.maxhealth).should be_truthy
   end
+  it "test reset" do
+    john.reset
+    john.health.should eq(john.maxhealth)
+  end
+
 
   it "test diseases2" do
-    john.reset
-    dis = u.diseases_pool.sample($r)
-    john.infect(dis, $r)
-    john.health.should eq(john.maxhealth)
-    20.times { john.process_tick($r)}
-    (john.health < john.maxhealth).should be_truthy
+    p simulate_patient(john, u, $r, 20)
+    p simulate_patient(john, u, $r, 20)
+    p simulate_patient(john, u, $r, 20)
+    p simulate_patient(john, u, $r, 20)
+    p simulate_patient(john, u, $r, 20)
   end
 
   it "test disease long" do
-    20.times do
-      john.reset
-      dis = u.diseases_pool.sample($r)
-      john.infect(dis, $r)
-      john.health.should eq(john.maxhealth)
-      200.times { john.process_tick($r)}
-      p john.health
-    end
+    p simulate_patient(john, u, $r, 200)
+    p simulate_patient(john, u, $r, 200)
+    p simulate_patient(john, u, $r, 200)
+    p simulate_patient(john, u, $r, 200)
+    p simulate_patient(john, u, $r, 200)
   end
 end

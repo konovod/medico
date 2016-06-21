@@ -123,7 +123,7 @@ module Biology
       @effectors.clear
     end
 
-    def process_tick(random = Random::DEFAULT)
+    def process_tick(random = DEF_RND)
       @params.scroll
       @sympthoms.keys.each { |x| @sympthoms[x] = f(0) }
       # apply effectors
@@ -166,7 +166,7 @@ module Biology
       io<<name.to_s
     end
 
-    def initialize(@name, random = Random::DEFAULT)
+    def initialize(@name, random = DEF_RND)
       @maxhealth = f(2 + random.rand*8) # TODO gauss distribution
       @health = @maxhealth
       @diseases = Hash(Disease, DiseaseState).new
@@ -197,7 +197,7 @@ module Biology
       check_immunity
     end
 
-    def process_tick(random = Random::DEFAULT)
+    def process_tick(random = DEF_RND)
       @systems.values.each { |sys| sys.process_tick(random) }
       check_immunity
       check_health
@@ -216,14 +216,14 @@ module Biology
       end
     end
 
-    def infect(dis : Disease, random = Random::DEFAULT)
+    def infect(dis : Disease, random = DEF_RND)
       return if @diseases.has_key?(dis)
       #p "#{self} infected with #{dis}"
       @diseases[dis] = DiseaseState.new(dis)
       @systems[dis.systems.to_a.sample(random)].infect(dis.first)
     end
 
-    def spread(dis : Disease, random = Random::DEFAULT)
+    def spread(dis : Disease, random = DEF_RND)
       #p "in #{self} spreaded #{dis}"
       state = @diseases[dis]?
       return unless state

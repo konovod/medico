@@ -18,7 +18,7 @@ module Biology
       io << "disease(#{@systems})"
     end
 
-    def generate(univ : Universe, random = Random::DEFAULT)
+    def generate(univ : Universe, random = DEF_RND)
       #TODO names generator
       #systems
       n = random.rand(ALL_SYSTEMS.size+1)+2
@@ -48,7 +48,7 @@ module Biology
     end
 
 
-    def process(patient : Patient, state : DiseaseState, random = Random::DEFAULT) : Bool
+    def process(patient : Patient, state : DiseaseState, random = DEF_RND) : Bool
       # TODO save antigenes after cure
       state.antigene += 0.3
 
@@ -92,7 +92,7 @@ module Biology
         v -= 10
       end
       if v > 100
-        pat.spread(@disease)
+        pat.spread(@disease, context[:random])
         v = 50
       end
       return v
