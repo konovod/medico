@@ -13,8 +13,6 @@ def simulate_patient(patient, univ, random, time)
   time.times do
     patient.process_tick(random)
     break if patient.health < 0 || patient.diseases.empty?
-
-
   end
   return 1 if patient.diseases.empty?
 #  p patient.diseases[dis].antigene

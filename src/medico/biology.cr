@@ -167,7 +167,7 @@ module Biology
     end
 
     def initialize(@name, random = DEF_RND)
-      @maxhealth = f(2 + random.rand*8) # TODO gauss distribution
+      @maxhealth = f([2, randg(10, 3, random)].max)
       @health = @maxhealth
       @diseases = Hash(Disease, DiseaseState).new
       @systems = Hash(Symbol, SystemState).new
