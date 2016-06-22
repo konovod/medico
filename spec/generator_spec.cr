@@ -73,7 +73,6 @@ describe Universe do
     john.health.should eq(john.maxhealth)
   end
 
-
   it "test diseases2" do
     p simulate_patient(john, u, $r, 20)
     p simulate_patient(john, u, $r, 20)
@@ -85,7 +84,9 @@ describe Universe do
   it "test disease long" do
     p simulate_patient(john, u, $r, 200)
     p simulate_patient(john, u, $r, 200)
+    $verbose = true
     p simulate_patient(john, u, $r, 200)
+    $verbose = false
     p simulate_patient(john, u, $r, 200)
     p simulate_patient(john, u, $r, 200)
   end

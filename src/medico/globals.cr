@@ -36,4 +36,9 @@ def randg(norm, sigma, random = DEF_RND)
   return x * sigma + norm
 end
 
+$verbose = false
+def logs(s)
+  puts s if $verbose
+end
+
 # TODO: def fill_hash

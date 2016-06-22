@@ -147,7 +147,7 @@ module Biology
     end
 
     def infect(stage : DiseaseStage)
-      #p "#{self} infected with #{stage}"
+      logs "#{self} infected with #{stage}"
       oldlevel = @effectors[stage]?
       return if oldlevel && oldlevel > 50
       @effectors[stage] = 50
@@ -206,7 +206,7 @@ module Biology
     end
 
     def healed(dis : Disease)
-      #p "#{self} healed of #{dis}"
+      logs "#{self} healed of #{dis}"
       state = @diseases[dis]?
       return unless state
       stage = state.stage
@@ -218,13 +218,13 @@ module Biology
 
     def infect(dis : Disease, random = DEF_RND)
       return if @diseases.has_key?(dis)
-      #p "#{self} infected with #{dis}"
+      logs "#{self} infected with #{dis}"
       @diseases[dis] = DiseaseState.new(dis)
       @systems[dis.systems.to_a.sample(random)].infect(dis.first)
     end
 
     def spread(dis : Disease, random = DEF_RND)
-      #p "in #{self} spreaded #{dis}"
+      logs "in #{self} spreaded #{dis}"
       state = @diseases[dis]?
       return unless state
       oldstage = state.stage
@@ -233,7 +233,7 @@ module Biology
       else
         newstage = oldstage.next_stage
         return unless newstage
-        #p "it progresses!"
+        logs "it progresses!"
         state.stage = newstage
         @systems.values.each do |sys|
           sys.effectors.delete(oldstage)
