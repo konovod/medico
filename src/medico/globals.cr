@@ -1,4 +1,5 @@
 require "./data/i18n/ru.cr"
+require "math"
 
 alias FLOAT = Float32
 
@@ -23,8 +24,16 @@ class TEST_RND
 
 end
 
+DEF_RND = TEST_RND.new
+#DEF_RND = Random::DEFAULT
 
-#DEF_RND = TEST_RND.new
-DEF_RND = Random::DEFAULT
+def randg(norm, sigma, random = DEF_RND)
+  u = random.rand
+  v = random.rand
+  x = Math.sqrt(-2*Math.log(u))*Math.cos(2*Math::PI*v)
+  #x = -3 if x < -3
+  #x = 3 if x > 3
+  return x * sigma + norm
+end
 
 # TODO: def fill_hash
