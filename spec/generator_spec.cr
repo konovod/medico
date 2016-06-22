@@ -4,20 +4,32 @@ require "../src/medico/generator.cr"
 
 include Biology
 
-$r = Random.new(2)
-
+$r = Random.new(4)
+$peformance = 0
 def simulate_patient(patient, univ, random, time)
   patient.reset
   dis = univ.diseases_pool.sample(random)
   patient.infect(dis, random)
   time.times do
     patient.process_tick(random)
+    $peformance += 1
     break if patient.health < 0 || patient.diseases.empty?
   end
   return 1 if patient.diseases.empty?
 #  p patient.diseases[dis].antigene
   return -1 if patient.health < 0
   return 0
+end
+
+def stat_patients(univ, random, time, trials)
+  counts = {0 => 0.0, 1 => 0.0, -1 => 0.0}
+  trials.times do
+    john = Patient.new("Test subject", random)
+    result = simulate_patient(john, univ, random, time)
+    counts[result] += 1
+  end
+  counts.keys.each {|k| counts[k] = (1.0*counts[k]) / trials * 100 }
+  counts
 end
 
 describe Universe do
@@ -30,19 +42,19 @@ describe Universe do
   end
 
   it "random effects" do
-    goods = u.random_effects(f(1), random: $r, count: 10)
+    goods = u.random_effects(f(1), random: $r, count: 40)
     goods.any? { |e| e.is_a?(MagicBulletEffect) }.should be_truthy
     goods.any? { |e| e.is_a?(RemoveSympthomEffect) }.should be_truthy
     goods.any? { |e| e.is_a?(AddSympthomEffect) }.should be_falsey
     goods.any? { |e| e.is_a?(ChangeParam) }.should be_truthy
 
-    bads = u.random_effects(f(0), random: $r, count: 10)
+    bads = u.random_effects(f(0), random: $r, count: 20)
     bads.any? { |e| e.is_a?(MagicBulletEffect) }.should be_falsey
     bads.any? { |e| e.is_a?(RemoveSympthomEffect) }.should be_falsey
     bads.any? { |e| e.is_a?(AddSympthomEffect) }.should be_truthy
     bads.any? { |e| e.is_a?(ChangeParam) }.should be_truthy
 
-    heads = u.random_effects(f(0.5), random: $r, count: 10, sys: Set{:Brains})
+    heads = u.random_effects(f(0.5), random: $r, count: 20, sys: Set{:Brains})
     heads.any? { |e| e.is_a?(AddSympthomEffect) && e.sympthom.system == :Brains }.should be_truthy
     heads.any? { |e| e.is_a?(RemoveSympthomEffect) && e.sympthom.system == :Brains }.should be_truthy
     heads.any? { |e| e.is_a?(AddSympthomEffect) && e.sympthom.system != :Brains }.should be_falsey
@@ -53,8 +65,8 @@ describe Universe do
   it "diseases generation" do
     u.init_diseases($r)
     sys_count = u.diseases_pool.map{|d|d.systems.size}.sort
-    #p sys_count.group_by{|x| x}.map{|k, v| {k, v.size}}
-    sys_count.to_set.superset?((1...ALL_SYSTEMS.size).to_set).should be_truthy
+    p sys_count.group_by{|x| x}.map{|k, v| {k, v.size}}
+    sys_count.to_set.superset?((2...ALL_SYSTEMS.size).to_set).should be_truthy
     (sys_count.count(2) > sys_count.count(1)).should eq(true)
     (sys_count.count(3) > sys_count.count(5)).should eq(true)
   end
@@ -73,21 +85,18 @@ describe Universe do
     john.health.should eq(john.maxhealth)
   end
 
-  it "test diseases2" do
-    p simulate_patient(john, u, $r, 20)
-    p simulate_patient(john, u, $r, 20)
-    p simulate_patient(john, u, $r, 20)
-    p simulate_patient(john, u, $r, 20)
-    p simulate_patient(john, u, $r, 20)
+  it "test diseases short" do
+    results = stat_patients(u, $r, 20, 200)
+    puts "stats at initial #{results}"
+    results[0].should be_close(100,15)
   end
 
   it "test disease long" do
-    p simulate_patient(john, u, $r, 200)
-    p simulate_patient(john, u, $r, 200)
-    $verbose = true
-    p simulate_patient(john, u, $r, 200)
-    $verbose = false
-    p simulate_patient(john, u, $r, 200)
-    p simulate_patient(john, u, $r, 200)
+    results = stat_patients(u, $r, 400, 200)
+    puts "stats at longtime #{results}"
+    results[0].should be_close(0,5)
   end
+
+  puts "ticks simulated #{$peformance}"
+
 end
