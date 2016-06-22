@@ -8,13 +8,13 @@ $r = Random.new(2)
 
 describe Biology do
   it "Creating patient" do
-    john = Patient.new("John")
+    john = Patient.new("John", $r)
     s(john.systems.keys.first).should be_truthy
     john.systems.values.first.sympthoms.keys.first.desc.should be_truthy
     john.systems.values.first.params.get.keys.first.desc.should be_truthy
     john.systems.values.first.params.get.values.first.real.should be_truthy
-  end 
-  john = Patient.new("John")
+  end
+  john = Patient.new("John", $r)
   asys = ALL_SYSTEMS.first
   aparam = ALL_PARAMS.first
   asym = ALL_SYMPTHOMS.select { |sym| sym.system == asys }.first
