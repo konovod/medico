@@ -36,6 +36,16 @@ def randg(norm, sigma, random = DEF_RND)
   return x * sigma + norm
 end
 
+def weighted_sample(arr : Array(T), random = DEF_RND)
+   weights = arr.map{|item| yield(item) }
+   total = weights.sum
+   point = random.rand * total
+   arr.zip(weights).each do |n,w|
+     return n if w >= point
+     point -= w
+   end
+end
+
 $verbose = false
 def logs(s)
   puts s if $verbose
