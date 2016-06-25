@@ -105,6 +105,10 @@ module Biology
       super()
     end
 
+    def to_s(io)
+      io<<"(#{@param.desc} is #{@checker.average})"
+    end
+
     def process(**context) : TEffectorData
       newstate = checker.incremental(
         context[:state].params.get(Index::OLD)[@param].real,

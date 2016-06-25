@@ -63,6 +63,12 @@ describe Universe do
     heads.any? { |e| e.is_a?(ChangeParam) }.should be_truthy
   end
 
+
+  it "param rules" do
+    u.init_param_rules($r)
+    #u.param_rules
+  end
+
   it "diseases generation" do
     u.init_diseases($r)
     sys_count = u.diseases_pool.map { |d| d.systems.size }.sort
@@ -101,4 +107,5 @@ describe Universe do
     results[0].should be_close(0, 5)
   end
   puts "ticks simulated #{$performance}, #{($performance * 1.0 / (Time.now - time).total_seconds).to_i} ticks/s"
+
 end

@@ -16,6 +16,7 @@ module Biology
 
     getter effects_pool
     getter diseases_pool
+    getter param_rules
 
     def initialize
       @effects_pool = Array(Effect).new
@@ -24,6 +25,7 @@ module Biology
         @diseases_pool << Disease.new
       end
       @types = Array(Kind).new
+      @param_rules = Array(ParamRule).new
     end
 
     N_DELTA   =   2
@@ -87,6 +89,16 @@ module Biology
 
     def init_diseases(random = DEF_RND)
       @diseases_pool.each { |dis| dis.generate(self, random) }
+    end
+
+    def init_param_rules(random = DEF_RND)
+      ALL_PARAMS.each do |param|
+        @param_rules.concat(BIO_RATER[param].items.select{ |checker|
+          checker.is_a?(Fuzzy::Trapezoid) && checker.rate(param.average) <= 0
+        }.map { |delta|
+          ParamRule.new(param, delta)
+        })
+      end
     end
   end
 end
