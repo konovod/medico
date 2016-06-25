@@ -1,4 +1,5 @@
 require "./biology"
+require "./namegen"
 
 module Biology
 
@@ -8,10 +9,15 @@ module Biology
     end
 
     getter systems : Set(Symbol)
+    getter name
+    getter danger
 
     def initialize
+      @name = ""
+      @danger = 0
       @systems = ALL_SYSTEMS.to_set
       @first = DiseaseStage.new(self, f(1))
+
     end
 
     def to_s(io)
@@ -26,12 +32,11 @@ module Biology
       n.times { arr<<ALL_SYSTEMS.to_a.sample(random) }
       @systems = arr.to_set
       #stages
-      #TODO - danger generation (was in namegen)
-      danger = 5+random.rand(10)
+      @name, @danger = $disease_names.next(random)
       nstages = random.rand(BIO_CONSTS[:MaxStages]-1)+2
       curstage = nil
       nstages.times do |i|
-        astage = DiseaseStage.new(self, f(danger*(nstages - i + 4)*BIO_CONSTS[:DisDanger]))
+        astage = DiseaseStage.new(self, f(@danger*(nstages - i + 4)*BIO_CONSTS[:DisDanger]))
         if i==0
           @first = astage
         else
