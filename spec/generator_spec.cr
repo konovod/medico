@@ -5,14 +5,14 @@ require "../src/medico/generator.cr"
 include Biology
 
 $r = Random.new(4)
-$peformance = 0
+$performance = 0
 def simulate_patient(patient, univ, random, time)
   patient.reset
   dis = univ.diseases_pool.sample(random)
   patient.infect(dis, random)
   time.times do
     patient.process_tick(random)
-    $peformance += 1
+    $performance += 1
     break if patient.health < 0 || patient.diseases.empty?
   end
   return 1 if patient.diseases.empty?
@@ -67,8 +67,8 @@ describe Universe do
     sys_count = u.diseases_pool.map{|d|d.systems.size}.sort
     p sys_count.group_by{|x| x}.map{|k, v| {k, v.size}}
     sys_count.to_set.superset?((2...ALL_SYSTEMS.size).to_set).should be_truthy
-    (sys_count.count(2) > sys_count.count(1)).should eq(true)
-    (sys_count.count(3) > sys_count.count(5)).should eq(true)
+    sys_count.count(2).should be > sys_count.count(1)
+    sys_count.count(3).should be > sys_count.count(5)
   end
 
   john = Patient.new("John", $r)
@@ -78,12 +78,15 @@ describe Universe do
     john.infect(u.diseases_pool.sample($r), $r)
     john.health.should eq(john.maxhealth)
     15.times { john.process_tick($r) }
-    (john.health < john.maxhealth).should be_truthy
+    john.health.should be < john.maxhealth
   end
   it "test reset" do
     john.reset
     john.health.should eq(john.maxhealth)
   end
+
+$performance = 0
+time = Time.now
 
   it "test diseases short" do
     results = stat_patients(u, $r, 20, 200)
@@ -96,7 +99,6 @@ describe Universe do
     puts "stats at longtime #{results}"
     results[0].should be_close(0,5)
   end
-
-  puts "ticks simulated #{$peformance}"
+  puts "ticks simulated #{$performance}, #{($performance * 1.0 / (Time.now - time).total_seconds).to_i} ticks/s"
 
 end

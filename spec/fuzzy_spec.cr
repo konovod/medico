@@ -21,14 +21,14 @@ describe Fuzzy do
     res = histogram do
       triangular(0, 100, $r.rand, $r) / 100
     end
-    (res[0] + res[1] + res[2] < res[9]).should eq(true)
+    (res[0] + res[1] + res[2]).should be < res[9]
   end
 
   it "triangular2" do
     res = histogram do
       triangular(100, 60, $r.rand, $r) / 100
     end
-    (res[8] + res[9] < res[6]).should eq(true)
+    (res[8] + res[9]).should be < res[6]
   end
 
   a = Trapezoid.new(f(0), f(50), f(60), f(100))
