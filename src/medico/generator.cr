@@ -31,8 +31,8 @@ module Biology
     private def gen_adders(p : BioParam)
       delta = {(p.min - p.average)*MAX_DELTA / N_DELTA, (p.max - p.average)*MAX_DELTA / N_DELTA}
       result = [] of Fuzzy::FuzzySet
-      result.concat( (1..N_DELTA).map { |i| Fuzzy::Pike.new(delta[0]*i) }) if p.average != p.min
-      result.concat( (1..N_DELTA).map { |i| Fuzzy::Pike.new(delta[1]*i) }) if p.average != p.max
+      result.concat((1..N_DELTA).map { |i| Fuzzy::Pike.new(delta[0]*i) }) if p.average != p.min
+      result.concat((1..N_DELTA).map { |i| Fuzzy::Pike.new(delta[1]*i) }) if p.average != p.max
       result
     end
 
@@ -41,8 +41,8 @@ module Biology
         [Kind::Param]*BIO_CONSTS[:ParamEff] +
         [Kind::Bullet]*BIO_CONSTS[:BulletEff]
       @effects_pool.clear
-      @effects_pool.concat ALL_SYMPTHOMS.map{|symp| AddSympthomEffect.new(symp)}
-      @effects_pool.concat ALL_SYMPTHOMS.map{|symp| RemoveSympthomEffect.new(symp)}
+      @effects_pool.concat ALL_SYMPTHOMS.map { |symp| AddSympthomEffect.new(symp) }
+      @effects_pool.concat ALL_SYMPTHOMS.map { |symp| RemoveSympthomEffect.new(symp) }
       @effects_pool.concat @diseases_pool.map { |dis| MagicBulletEffect.new(dis) }
       ALL_PARAMS.each do |param|
         @effects_pool.concat gen_adders(param).map { |delta| ChangeParam.new(param, delta) }
@@ -75,7 +75,7 @@ module Biology
     end
 
     def init_diseases(random = DEF_RND)
-      @diseases_pool.each{|dis| dis.generate(self, random)}
+      @diseases_pool.each { |dis| dis.generate(self, random) }
     end
   end
 end

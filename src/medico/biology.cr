@@ -107,7 +107,7 @@ module Biology
     getter effectors
 
     def to_s(io)
-      io<<"#{owner.name} #{name}"
+      io << "#{owner.name} #{name}"
     end
 
     def initialize(@owner : Patient, @name)
@@ -163,7 +163,7 @@ module Biology
     getter diseases
 
     def to_s(io)
-      io<<name.to_s
+      io << name.to_s
     end
 
     def initialize(@name, random = DEF_RND)
@@ -202,7 +202,7 @@ module Biology
       check_immunity
       check_health
       remove_dis = @diseases.select { |dis, state| !dis.process(self, state, random) }
-      remove_dis.each{|dis, x| healed dis}
+      remove_dis.each { |dis, x| healed dis }
     end
 
     def healed(dis : Disease)

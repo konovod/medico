@@ -5,9 +5,9 @@ require "../src/medico/namegen.cr"
 $r = Random.new(1)
 
 it "weighted_sample" do
-  weighted_sample([100,3,4,5,6,7], $r){|i| i}.should eq(100)
-  weighted_sample([-1,-100,-3,4,5,6,7, -1000], $r, &.abs).should eq(-1000)
-  weighted_sample(["low", "high", "low2"], [1,100,3], $r).should eq("high")
+  weighted_sample([100, 3, 4, 5, 6, 7], $r) { |i| i }.should eq(100)
+  weighted_sample([-1, -100, -3, 4, 5, 6, 7, -1000], $r, &.abs).should eq(-1000)
+  weighted_sample(["low", "high", "low2"], [1, 100, 3], $r).should eq("high")
 end
 
 def check_namegen(gen, n, str1, str2, maxval, minval, setn)
@@ -28,6 +28,6 @@ def check_namegen(gen, n, str1, str2, maxval, minval, setn)
 end
 
 it "names gen" do
-  check_namegen $disease_names, 100, s(DIS_NAMES1.first[:name]),s(DIS_NAMES2.last[:name]), 7, 20, 27
-  check_namegen $chemical_names, 100, s(CHEM_NAMES1.first[:name]),s(CHEM_NAMES2.last[:name]), 7, 20, 100
+  check_namegen $disease_names, 100, s(DIS_NAMES1.first[:name]), s(DIS_NAMES2.last[:name]), 7, 20, 27
+  check_namegen $chemical_names, 100, s(CHEM_NAMES1.first[:name]), s(CHEM_NAMES2.last[:name]), 7, 20, 100
 end

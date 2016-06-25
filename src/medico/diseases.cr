@@ -2,7 +2,6 @@ require "./biology"
 require "./namegen"
 
 module Biology
-
   class Disease
     def first : DiseaseStage
       @first.as(DiseaseStage)
@@ -17,7 +16,6 @@ module Biology
       @danger = 0
       @systems = ALL_SYSTEMS.to_set
       @first = DiseaseStage.new(self, 1, f(1))
-
     end
 
     def to_s(io)
@@ -25,19 +23,19 @@ module Biology
     end
 
     def generate(univ : Universe, random = DEF_RND)
-      #TODO names generator
-      #systems
-      n = random.rand(ALL_SYSTEMS.size+1)+2
+      # TODO names generator
+      # systems
+      n = random.rand(ALL_SYSTEMS.size + 1) + 2
       arr = [] of Symbol
-      n.times { arr<<ALL_SYSTEMS.to_a.sample(random) }
+      n.times { arr << ALL_SYSTEMS.to_a.sample(random) }
       @systems = arr.to_set
-      #stages
+      # stages
       @name, @danger = $disease_names.next(random)
-      nstages = random.rand(BIO_CONSTS[:MaxStages]-1)+2
+      nstages = random.rand(BIO_CONSTS[:MaxStages] - 1) + 2
       curstage = nil
       nstages.times do |i|
-        astage = DiseaseStage.new(self, i+1, f(@danger*(nstages - i + 4)*BIO_CONSTS[:DisDanger]))
-        if i==0
+        astage = DiseaseStage.new(self, i + 1, f(@danger*(nstages - i + 4)*BIO_CONSTS[:DisDanger]))
+        if i == 0
           @first = astage
         else
           curstage.as(DiseaseStage).next_stage = astage
@@ -45,13 +43,11 @@ module Biology
         end
         curstage = astage
         curstage.effects.concat(univ.random_effects(f(0), sys: @systems, random: random, count: 2*BIO_CONSTS[:DisRules] / 5))
-        curstage.effects.uniq! #if i > 0
-        #curstage
+        curstage.effects.uniq! # if i > 0
+        # curstage
 
       end
-
     end
-
 
     def process(patient : Patient, state : DiseaseState, random = DEF_RND) : Bool
       # TODO save antigenes after cure
@@ -104,5 +100,4 @@ module Biology
       return v
     end
   end
-
 end

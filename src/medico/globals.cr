@@ -3,7 +3,6 @@ require "math"
 
 alias FLOAT = Float32
 
-
 def f(value) : FLOAT
   return FLOAT.new(value)
 end
@@ -18,40 +17,41 @@ class TEST_RND
   def next_u32
     raise "RANDOM NOT PASSED"
   end
+
   def initialize
-
   end
-
 end
 
 DEF_RND = TEST_RND.new
-#DEF_RND = Random::DEFAULT
+
+# DEF_RND = Random::DEFAULT
 
 def randg(norm, sigma, random = DEF_RND)
   u = random.rand
   v = random.rand
   x = Math.sqrt(-2*Math.log(u))*Math.cos(2*Math::PI*v)
-  #x = -3 if x < -3
-  #x = 3 if x > 3
+  # x = -3 if x < -3
+  # x = 3 if x > 3
   return x * sigma + norm
 end
 
 def weighted_sample(arr : Array(T), random = DEF_RND)
-   weights = arr.map{|item| yield(item) }
-   weighted_sample(arr, weights, random)
+  weights = arr.map { |item| yield(item) }
+  weighted_sample(arr, weights, random)
 end
 
 def weighted_sample(arr : Array(T), weights : Array(Y), random = DEF_RND) : T
-   total = weights.sum
-   point = random.rand * total
-   arr.zip(weights).each do |n,w|
-     return n if w >= point
-     point -= w
-   end
-   return arr.first
+  total = weights.sum
+  point = random.rand * total
+  arr.zip(weights).each do |n, w|
+    return n if w >= point
+    point -= w
+  end
+  return arr.first
 end
 
 $verbose = false
+
 def logs(s)
   puts s if $verbose
 end

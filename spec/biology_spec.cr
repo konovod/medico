@@ -37,7 +37,6 @@ describe Biology do
   end
   john.reset
 
-
   it "param rule" do
     testeff = ChangeParam.new(aparam, Fuzzy::Pike.new(f(-0.25)))
     testdis = TimedEffector.new
@@ -52,8 +51,8 @@ describe Biology do
     john.systems[asys].sympthoms[asym].should eq(0)
     5.times { john.process_tick($r) }
     john.systems[asys].sympthoms[asym].should eq(1)
-    #p john.systems[asys].damage
-    #p john.systems[asys].danger
+    # p john.systems[asys].damage
+    # p john.systems[asys].danger
     10.times { john.process_tick($r) }
     john.systems[asys].sympthoms[asym].should eq(0)
   end

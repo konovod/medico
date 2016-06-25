@@ -108,5 +108,4 @@ module Biology
       Sign::Neutral
     end
   end
-
 end
