@@ -17,6 +17,17 @@ module Biology
     end
   end
 
+  class DummyEffect < Effect
+    def apply(sys : SystemState, power : FLOAT)
+    end
+    def sign
+      Sign::Neutral
+    end
+  end
+
+  DUMMY_EFFECT = DummyEffect.new
+
+
   class RemoveSympthomEffect < Effect
     getter sympthom : Sympthom
 

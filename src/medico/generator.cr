@@ -49,6 +49,19 @@ module Biology
       end
     end
 
+    def random_effects_sys(good : FLOAT, sys, count = 1, random = DEF_RND)
+      random_effects(good, count: count, random: random) do |eff|
+        (!eff.is_a?(RemoveSympthomEffect) || sys.includes?(eff.as(RemoveSympthomEffect).sympthom.system)) &&
+        (!eff.is_a?(AddSympthomEffect) || sys.includes?(eff.as(AddSympthomEffect).sympthom.system))
+      end
+    end
+
+    def random_effects_any(good : FLOAT, count = 1, random = DEF_RND)
+      random_effects(good, count: count, random: random) do |eff|
+        true
+      end
+    end
+
     def random_effects(good : FLOAT, *, sys = ALL_SYSTEMS.to_set, count = 1, random = DEF_RND)
       # TODO optimize later
       result = Set(Effect).new
@@ -62,9 +75,7 @@ module Biology
         classes = KINDS_MAP[typ]
         e = @effects_pool.select do |eff|
           classes.includes?(eff.class) &&
-            (eff.sign == Sign::Neutral || eff.sign == need_sign) &&
-            (!eff.is_a?(RemoveSympthomEffect) || sys.includes?(eff.as(RemoveSympthomEffect).sympthom.system)) &&
-            (!eff.is_a?(AddSympthomEffect) || sys.includes?(eff.as(AddSympthomEffect).sympthom.system))
+            (eff.sign == Sign::Neutral || eff.sign == need_sign) && yield(eff)
         end.sample(random)
         if !result.includes? e
           count -= 1

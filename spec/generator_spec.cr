@@ -43,19 +43,19 @@ describe Universe do
   end
 
   it "random effects" do
-    goods = u.random_effects(f(1), random: $r, count: 40)
+    goods = u.random_effects_any(f(1), random: $r, count: 40)
     goods.any? { |e| e.is_a?(MagicBulletEffect) }.should be_truthy
     goods.any? { |e| e.is_a?(RemoveSympthomEffect) }.should be_truthy
     goods.any? { |e| e.is_a?(AddSympthomEffect) }.should be_falsey
     goods.any? { |e| e.is_a?(ChangeParam) }.should be_truthy
 
-    bads = u.random_effects(f(0), random: $r, count: 20)
+    bads = u.random_effects_any(f(0), random: $r, count: 20)
     bads.any? { |e| e.is_a?(MagicBulletEffect) }.should be_falsey
     bads.any? { |e| e.is_a?(RemoveSympthomEffect) }.should be_falsey
     bads.any? { |e| e.is_a?(AddSympthomEffect) }.should be_truthy
     bads.any? { |e| e.is_a?(ChangeParam) }.should be_truthy
 
-    heads = u.random_effects(f(0.5), random: $r, count: 20, sys: Set{:Brains})
+    heads = u.random_effects_sys(f(0.5), random: $r, count: 20, sys: Set{:Brains})
     heads.any? { |e| e.is_a?(AddSympthomEffect) && e.sympthom.system == :Brains }.should be_truthy
     heads.any? { |e| e.is_a?(RemoveSympthomEffect) && e.sympthom.system == :Brains }.should be_truthy
     heads.any? { |e| e.is_a?(AddSympthomEffect) && e.sympthom.system != :Brains }.should be_falsey
