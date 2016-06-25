@@ -38,12 +38,17 @@ end
 
 def weighted_sample(arr : Array(T), random = DEF_RND)
    weights = arr.map{|item| yield(item) }
+   weighted_sample(arr, weights, random)
+end
+
+def weighted_sample(arr : Array(T), weights : Array(Y), random = DEF_RND) : T
    total = weights.sum
    point = random.rand * total
    arr.zip(weights).each do |n,w|
      return n if w >= point
      point -= w
    end
+   return arr.first
 end
 
 $verbose = false

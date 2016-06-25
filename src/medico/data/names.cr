@@ -1,5 +1,5 @@
 
-CHEM_NAMES1 = {
+CHEM_NAMES1 = [
   { name: :AlchAdj1, value: 4},
   { name: :AlchAdj2, value: 10},
   { name: :AlchAdj3, value: 9},
@@ -18,9 +18,9 @@ CHEM_NAMES1 = {
   { name: :AlchAdj16, value: 3},
   { name: :AlchAdj17, value: 7},
   { name: :AlchAdj18, value: 5},
-}
+]
 
-  CHEM_NAMES2 = {
+  CHEM_NAMES2 = [
   { name: :AlchNoun1, value: 5},
   { name: :AlchNoun2, value: 5},
   { name: :AlchNoun3, value: 5},
@@ -33,10 +33,10 @@ CHEM_NAMES1 = {
   { name: :AlchNoun12, value: 10},
   { name: :AlchNoun13, value: 4},
   { name: :AlchNoun14, value: 3},
-}
+]
 
 
-DIS_NAMES2 = {
+DIS_NAMES2 = [
 { name: :Disease1, value: 5},
 { name: :Disease2, value: 6},
 { name: :Disease3, value: 10},
@@ -46,9 +46,9 @@ DIS_NAMES2 = {
 { name: :Disease7, value: 3},
 { name: :Disease8, value: 3},
 { name: :Disease9, value: 7},
-}
+]
 
-DIS_NAMES1 = {
+DIS_NAMES1 = [
 { name: :AdjPart1, value: 10},
 { name: :AdjPart2, value: 8},
 { name: :AdjPart3, value: 6},
@@ -58,4 +58,4 @@ DIS_NAMES1 = {
 { name: :AdjPart7, value: 12},
 { name: :AdjPart8, value: 4},
 { name: :AdjPart9, value: 4},
-}
+]
