@@ -16,12 +16,12 @@ module Biology
       @name = ""
       @danger = 0
       @systems = ALL_SYSTEMS.to_set
-      @first = DiseaseStage.new(self, f(1))
+      @first = DiseaseStage.new(self, 1, f(1))
 
     end
 
     def to_s(io)
-      io << "disease(#{@systems})"
+      io << @name
     end
 
     def generate(univ : Universe, random = DEF_RND)
@@ -36,7 +36,7 @@ module Biology
       nstages = random.rand(BIO_CONSTS[:MaxStages]-1)+2
       curstage = nil
       nstages.times do |i|
-        astage = DiseaseStage.new(self, f(@danger*(nstages - i + 4)*BIO_CONSTS[:DisDanger]))
+        astage = DiseaseStage.new(self, i+1, f(@danger*(nstages - i + 4)*BIO_CONSTS[:DisDanger]))
         if i==0
           @first = astage
         else
@@ -75,14 +75,15 @@ module Biology
     getter disease : Disease
     property next_stage : DiseaseStage?
     getter speed : FLOAT
+    getter index : Int32
 
-    def initialize(@disease, @speed)
+    def initialize(@disease, @index, @speed)
       super()
       @next_stage = nil
     end
 
     def to_s(io)
-      io << "#{@disease}.#{@effects.size}"
+      io << "#{@disease}-#{@index}"
     end
 
     def process(**context) : TEffectorData

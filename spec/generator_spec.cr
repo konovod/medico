@@ -73,12 +73,12 @@ describe Universe do
 
   john = Patient.new("John", $r)
   it "test diseases" do
-    john.infect(u.diseases_pool.sample($r), $r)
-    john.infect(u.diseases_pool.sample($r), $r)
-    john.infect(u.diseases_pool.sample($r), $r)
+    #$verbose = true
+    3.times { john.infect(u.diseases_pool.sample($r), $r) }
     john.health.should eq(john.maxhealth)
     15.times { john.process_tick($r) }
     john.health.should be < john.maxhealth
+    $verbose = false
   end
   it "test reset" do
     john.reset
