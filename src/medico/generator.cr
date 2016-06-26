@@ -172,10 +172,15 @@ module Biology
       stash.each do |s1|
         stash.reverse.each do |s2|
           break if s1 == s2
+          next unless s1.systems.intersects? s2.systems
           list = [s1, s2].sort_by(&.order)
           a,b = list[0], list[1]
           next if @reactions_generated[{a,b}]
-          @reactions_generated << {a,b}
+          @reactions_generated.add( {a, b})
+          next unless random.rand < BIO_CONSTS[:ReactionChance]
+          react = ReactionRule.new
+          react.substances.concat list
+          react.effects.concat random_effects_sys(0.5, s1.systems & s2.systems, count: 1, random: random)
         end
       end
     end
