@@ -10,12 +10,14 @@ module Biology
     getter systems : Set(Symbol)
     getter kinetics : Int32
     property complexity : Int32
+    getter reactions
 
     def initialize(@name, @power)
       super()
       @kinetics = 1
       @systems = ALL_SYSTEMS.to_set
       @complexity = 1
+      @reactions = [] of ReactionRule
     end
 
     def to_s(io)
@@ -33,6 +35,25 @@ module Biology
         random: random)
     end
 
+    def inject(patient : Patient, effectivity : FLOAT)
+      @systems.map do |sys|
+        n = {(effectivity*@kinetics).to_i, 2}.max
+        state = patient.systems[sys]
+        return if state.effectors.has_key?(self) && state.effectors[self] > n
+        state.effectors[self] = n
+        @reactions.select{|r| r.applicable(state)}.each{|r| state.effectors[r] = 1}
+      end
+    end
+
+    def process(**context) : TEffectorData
+      val = super(**context)
+      if val <= 0
+        state = context[:state]
+        @reactions.select{|r| !r.applicable(state)}.each{|r| state.effectors.delete(r)}
+      end
+      val
+    end
+
 
   end
 
@@ -41,7 +62,11 @@ module Biology
 
     def initialize
       super()
-      substances = Array(Substance).new
+      @substances = Array(Substance).new
+    end
+
+    def applicable(state : SystemState)
+      @substances.all?{|subs| state.effectors[subs] >= 1}
     end
 
     def process(**context) : TEffectorData
