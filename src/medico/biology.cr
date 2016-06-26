@@ -245,7 +245,7 @@ module Biology
 
   BIO_RATER = Hash(BioParam, Fuzzy::RateSet).zip(
     ALL_PARAMS.to_a,
-    ALL_PARAMS.to_a.map { |x| Fuzzy::RateSet.new(x, 1) }
+    ALL_PARAMS.to_a.map { |x| Fuzzy::RateSet.new(x,PARAM_RATE_STAGES-1) }
   )
 
   enum Sign

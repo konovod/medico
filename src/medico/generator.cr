@@ -28,15 +28,14 @@ module Biology
       @param_rules = Array(ParamRule).new
     end
 
-    N_DELTA   =   2
     MAX_DELTA = 0.6
     private def gen_adders(p : BioParam)
-      delta = {(p.min - p.average)*MAX_DELTA / N_DELTA, (p.max - p.average)*MAX_DELTA / N_DELTA}
+      delta = {(p.min - p.average)*MAX_DELTA / PARAM_DELTA_STAGES, (p.max - p.average)*MAX_DELTA / PARAM_DELTA_STAGES}
       result = [] of Fuzzy::FuzzySet
-      result.concat((1..N_DELTA).map { |i| Fuzzy::Pike.new(delta[0]*i) }) if p.average != p.min
-      result.concat((1..N_DELTA).map { |i| Fuzzy::Pike.new(delta[1]*i) }) if p.average != p.max
+      result.concat((1..PARAM_DELTA_STAGES).map { |i| Fuzzy::Pike.new(delta[0]*i) }) if p.average != p.min
+      result.concat((1..PARAM_DELTA_STAGES).map { |i| Fuzzy::Pike.new(delta[1]*i) }) if p.average != p.max
       result
-    end
+    end 
 
     def init_effects
       @types = [Kind::Sympthom]*BIO_CONSTS[:SympthomEff] +

@@ -2,6 +2,10 @@ macro data_bioparams
 
 N_LIQUIDS = 4
 N_PARAMS = 7
+N_UNIMODAL_PARAMS = 2
+
+PARAM_DELTA_STAGES = 3
+PARAM_RATE_STAGES = 2
 
 ALL_PARAMS = {
   LiquidParam.new(:Sangua),
