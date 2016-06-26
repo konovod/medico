@@ -24,6 +24,5 @@ BIO_CONSTS = {
   NRecipes: 4000,
   NFirstRecipes: 1000,
 
-
-  NReactions: 100,
+  ReactionChance: 1.0/30,
 }

@@ -22,6 +22,7 @@ module Biology
     getter reactions
     getter recipes
     getter chemicals
+    getter reactions_generated
 
     def initialize
       @effects_pool = Array(Effect).new
@@ -33,9 +34,10 @@ module Biology
       @param_rules = Array(ParamRule).new
       @flora = Array(Substance).new(FLORA_NAMES.size)
       FLORA_NAMES.each{|item| @flora << Substance.new(s(item[:name]), item[:value])}
-      @reactions = Array(ReactionRule).new(BIO_CONSTS[:NReactions])
+      @reactions = Array(ReactionRule).new
+      @reactions_generated = Set(Tuple(Substance, Substance)).new
       @chemicals = Array(Substance).new
-      @recipes = Array(Alchemy::Recipe).new
+      @recipes = Array(Alchemy::Recipe).new(BIO_CONSTS[:NRecipes])
     end
 
     MAX_DELTA = 0.6
@@ -156,6 +158,25 @@ module Biology
         @chemicals << subs
         optim << subs
         @recipes << recipe
+      end
+      @flora.each_with_index do |s, i|
+        s.order = i
+      end
+      n = @flora.size
+      @chemicals.each_with_index do |s, i|
+        s.order = i+n
+      end
+    end
+
+    def init_reactions(stash : Array(Substance), random = DEF_RND)
+      stash.each do |s1|
+        stash.reverse.each do |s2|
+          break if s1 == s2
+          list = [s1, s2].sort_by(&.order)
+          a,b = list[0], list[1]
+          next if @reactions_generated[{a,b}]
+          @reactions_generated << {a,b}
+        end
       end
     end
 
