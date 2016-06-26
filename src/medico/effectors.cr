@@ -115,12 +115,19 @@ module Biology
         context[:state].params.get(Index::PREV)[@param].real,
         context[:data] > 0,
         context[:random])
+
+        if $verbose
+          oldval = context[:state].params.get(Index::OLD)[@param].real
+          newval = context[:state].params.get(Index::PREV)[@param].real
+          oldstate = context[:data] > 0
+          logs("triggered #{self} at #{oldval}->#{newval}") if newstate && !oldstate
+          logs("disabled #{self} at #{oldval}->#{newval}") if !newstate && oldstate
+          logs("continue #{self} at #{oldval}->#{newval}") if newstate && oldstate
+
+        end
+
       apply(context) if newstate
       return (newstate ? 1 : 0)
-    end
-
-    def sign
-      Sign::Neutral
     end
   end
 end

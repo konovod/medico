@@ -120,7 +120,8 @@ module Biology
     def reset
       @params.reset_all
       @sympthoms.keys.each { |x| @sympthoms[x] = f(0) }
-      @effectors.clear
+      @effectors.select!{|k, v| k.is_a? ParamRule}
+      @effectors.each_key{|k| @effectors[k]=0}
     end
 
     def process_tick(random = DEF_RND)

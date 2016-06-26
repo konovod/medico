@@ -35,7 +35,7 @@ module Biology
       result.concat((1..PARAM_DELTA_STAGES).map { |i| Fuzzy::Pike.new(delta[0]*i) }) if p.average != p.min
       result.concat((1..PARAM_DELTA_STAGES).map { |i| Fuzzy::Pike.new(delta[1]*i) }) if p.average != p.max
       result
-    end 
+    end
 
     def init_effects
       @types = [Kind::Sympthom]*BIO_CONSTS[:SympthomEff] +
@@ -63,24 +63,24 @@ module Biology
       end
     end
 
-    def random_effects(good : FLOAT, *, sys = ALL_SYSTEMS.to_set, count = 1, random = DEF_RND)
+    def random_effects(good : FLOAT, *, count = 1, random = DEF_RND)
       # TODO optimize later
       result = Set(Effect).new
-
-      while count > 0
+      count.times do
         need_sign = random.rand < good ? Sign::Positive : Sign::Negative
-        typ = @types.sample(random)
-        while need_sign == Sign::Negative && (typ == Kind::Bullet)
+        loop do
           typ = @types.sample(random)
-        end
-        classes = KINDS_MAP[typ]
-        e = @effects_pool.select do |eff|
-          classes.includes?(eff.class) &&
-            (eff.sign == Sign::Neutral || eff.sign == need_sign) && yield(eff)
-        end.sample(random)
-        if !result.includes? e
-          count -= 1
+          next if need_sign == Sign::Negative && (typ == Kind::Bullet)
+          classes = KINDS_MAP[typ]
+          elist = @effects_pool.select do |eff|
+            classes.includes?(eff.class) &&
+              (eff.sign == Sign::Neutral || eff.sign == need_sign) && yield(eff)
+          end
+          next if elist.empty?
+          e = elist.sample(random)
+          next if result.includes? e
           result << e
+          break
         end
       end
       result.to_a
@@ -91,6 +91,7 @@ module Biology
     end
 
     def init_param_rules(random = DEF_RND)
+      #gen rules for each variation
       ALL_PARAMS.each do |param|
         @param_rules.concat(BIO_RATER[param].items.select{ |checker|
           checker.is_a?(Fuzzy::Trapezoid) && checker.rate(param.average) <= 0
@@ -98,6 +99,20 @@ module Biology
           ParamRule.new(param, delta)
         })
       end
+      #add effects
+      BIO_CONSTS[:NRules].times do
+        rule = weighted_sample(@param_rules, random){|p| p.param.damage(p.checker.average)}
+        rule.effects.concat random_effects(f(0.1), count: 1, random: random){|eff|
+          case eff
+            when ChangeParam
+              false#eff.param != rule.param #&& !(eff.param.is_a? LiquidParam) && (rule.param.is_a? LiquidParam)
+            else
+              true
+            end
+        }
+      end
+      #remove empty rules
+      @param_rules.reject!{|rule| rule.effects.empty?}
     end
   end
 end
