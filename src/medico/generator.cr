@@ -105,7 +105,7 @@ module Biology
         rule.effects.concat random_effects(f(0.1), count: 1, random: random){|eff|
           case eff
             when ChangeParam
-              false#eff.param != rule.param #&& !(eff.param.is_a? LiquidParam) && (rule.param.is_a? LiquidParam)
+              eff.param != rule.param && !(eff.param.is_a? LiquidParam) && (rule.param.is_a? LiquidParam)
             else
               true
             end
