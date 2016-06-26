@@ -150,5 +150,7 @@ describe Universe do
     recipe_stats(u, 10, 100).first.should be > 4
     recipe_stats(u, 20, 100).last.should be > 2.5
     recipe_stats(u, 40, 100).last.should be > 3.5
+    p recipe_stats(u, 30, 1)
+    p u.chemicals.map(&.complexity).max
   end
 end

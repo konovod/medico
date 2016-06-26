@@ -146,7 +146,7 @@ module Biology
         recipe = Alchemy::Recipe.new(subs)
         random.rand(4)+2.times do
           ingridient = weighted_sample(@flora+@chemicals, random) do |s|
-            recipe.substances.has_key?(s) ? 0.0 : 1.0 / s.complexity
+            recipe.substances.has_key?(s) ? 0.0 : 1.0 / {s.complexity, 2}.max
           end
           recipe.substances[ingridient] = random.rand(5)+1
         end
