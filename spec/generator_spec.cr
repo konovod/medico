@@ -33,6 +33,27 @@ def stat_patients(univ, random, time, trials)
   counts
 end
 
+def possible_substances(univ, stash : Set(Substance)) : Set(Substance)
+  result = Set(Substance).new
+  result.merge stash
+  #changed = false
+  univ.recipes.each do |r|
+    result << r.product if r.substances.all? {|k, v| result.includes? k }
+  end
+  result
+end
+
+def recipe_stats(univ, nsubs, ntries)
+  stats = [] of Tuple(Int32, Int32)
+  ntries.times do
+    aset = univ.flora.sample(nsubs, $r)
+    res = possible_substances(univ, aset.to_set)
+    stats << { res.size, res.map(&.complexity).max }
+  end
+  r = stats.reduce([0,0]){|sum, tup| [sum[0] + tup[0], sum[1]+tup[1]]}
+  [1.0*r[0] / ntries - nsubs,1.0*r[1] / ntries]
+end
+
 describe Universe do
   u = Universe.new
 
@@ -95,9 +116,9 @@ describe Universe do
     john.health.should eq(john.maxhealth)
     1.times { john.process_tick($r) }
     #john.health.should eq(john.maxhealth)
-    $verbose = true
+    #$verbose = true
     15.times { john.process_tick($r) }
-    $verbose = false
+    #$verbose = false
     john.health.should eq(john.maxhealth)
   end
 
@@ -118,6 +139,16 @@ describe Universe do
   puts "ticks simulated #{$performance}, #{($performance * 1.0 / (Time.now - time).total_seconds).to_i} ticks/s"
 
   it "substances gen" do
+    t = Time.now
     u.init_substances($r)
+    puts "recipe generation takes #{(Time.now - time).total_seconds}"
+    p recipe_stats(u, 10, 100)
+    possible_substances(u, u.flora.to_set).size.should eq u.flora.size+u.chemicals.size
+    stats = [] of Tuple(Int32, Int32)
+    recipe_stats(u, 6, 3).first.should be > 0
+    recipe_stats(u, 6, 100).first.should be > 1
+    recipe_stats(u, 10, 100).first.should be > 4
+    recipe_stats(u, 20, 100).last.should be > 2.5
+    recipe_stats(u, 40, 100).last.should be > 3.5
   end
 end

@@ -127,14 +127,30 @@ module Biology
 
     def init_substances(random = DEF_RND)
       @flora.each{|subs| subs.generate(self, random)}
+      BIO_CONSTS[:NFirstRecipes].times do
+        name, power = $chemical_names.next(random)
+        subs = Substance.new(name, power)
+        subs.generate(self, random)
+        recipe = Alchemy::Recipe.new(subs)
+        @flora.sample(random.rand(4)+2, random).each do |ingridient|
+          recipe.substances[ingridient] = random.rand(5)+1
+        end
+        subs.complexity = 1+recipe.substances.keys.map(&.complexity).max
+        @chemicals << subs
+        @recipes << recipe
+      end
       BIO_CONSTS[:NRecipes].times do
         name, power = $chemical_names.next(random)
         subs = Substance.new(name, power)
         subs.generate(self, random)
         recipe = Alchemy::Recipe.new(subs)
-        (@chemicals+@flora).sample(random.rand(4)+2, random).each do |ingridient|
+        random.rand(4)+2.times do
+          ingridient = weighted_sample(@flora+@chemicals, random) do |s|
+            recipe.substances.has_key?(s) ? 0.0 : 1.0 / s.complexity
+          end
           recipe.substances[ingridient] = random.rand(5)+1
         end
+        subs.complexity = 1+recipe.substances.keys.map(&.complexity).max
         @chemicals << subs
         @recipes << recipe
       end

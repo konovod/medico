@@ -9,11 +9,13 @@ module Biology
     getter power : Int32
     getter systems : Set(Symbol)
     getter kinetics : Int32
+    property complexity : Int32
 
     def initialize(@name, @power)
       super()
       @kinetics = 1
       @systems = ALL_SYSTEMS.to_set
+      @complexity = 1
     end
 
     def to_s(io)
@@ -53,10 +55,10 @@ end
 module Alchemy
   class Recipe
     getter substances
-    getter product : Substance
+    getter product : Biology::Substance
 
     def initialize(@product)
-      @substances = Hash(Substance, Int32).new
+      @substances = Hash(Biology::Substance, Int32).new
     end
 
   end
