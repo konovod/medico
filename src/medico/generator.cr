@@ -1,5 +1,6 @@
 require "./biology.cr"
 require "./effectors.cr"
+require "./substances.cr"
 
 module Biology
   class Universe
@@ -17,6 +18,10 @@ module Biology
     getter effects_pool
     getter diseases_pool
     getter param_rules
+    getter flora
+    getter reactions
+    #getter recipes
+    getter chemicals
 
     def initialize
       @effects_pool = Array(Effect).new
@@ -26,6 +31,11 @@ module Biology
       end
       @types = Array(Kind).new
       @param_rules = Array(ParamRule).new
+      @flora = Array(Substance).new(FLORA_NAMES.size)
+      FLORA_NAMES.each{|item| @flora << Substance.new(s(item[:name]), item[:value])}
+      @reactions = Array(ReactionRule).new(BIO_CONSTS[:NReactions])
+      @chemicals = Array(Substance).new
+      #@recipes = Array()
     end
 
     MAX_DELTA = 0.6
@@ -114,5 +124,10 @@ module Biology
       #remove empty rules
       @param_rules.reject!{|rule| rule.effects.empty?}
     end
+
+    def init_substances(random = DEF_RND)
+      @flora.each{|subs| subs.generate(self, random)}
+    end
+
   end
 end

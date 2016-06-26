@@ -23,7 +23,6 @@ module Biology
     end
 
     def generate(univ : Universe, random = DEF_RND)
-      # TODO names generator
       # systems
       n = random.rand(ALL_SYSTEMS.size + 1) + 2
       arr = [] of Symbol

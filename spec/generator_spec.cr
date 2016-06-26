@@ -117,4 +117,7 @@ describe Universe do
   end
   puts "ticks simulated #{$performance}, #{($performance * 1.0 / (Time.now - time).total_seconds).to_i} ticks/s"
 
+  it "substances gen" do
+    u.init_substances($r)
+  end
 end
