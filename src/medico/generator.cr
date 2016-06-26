@@ -139,19 +139,22 @@ module Biology
         @chemicals << subs
         @recipes << recipe
       end
+      optim = Array(Substance).new(@flora.size+BIO_CONSTS[:NRecipes])
+      optim.concat(@flora)
       BIO_CONSTS[:NRecipes].times do
         name, power = $chemical_names.next(random)
         subs = Substance.new(name, power)
         subs.generate(self, random)
         recipe = Alchemy::Recipe.new(subs)
         random.rand(4)+2.times do
-          ingridient = weighted_sample(@flora+@chemicals, random) do |s|
+          ingridient = weighted_sample(optim, random) do |s|
             recipe.substances.has_key?(s) ? 0.0 : 1.0 / {s.complexity, 2}.max
           end
           recipe.substances[ingridient] = random.rand(5)+1
         end
         subs.complexity = 1+recipe.substances.keys.map(&.complexity).max
         @chemicals << subs
+        optim << subs
         @recipes << recipe
       end
     end
