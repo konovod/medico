@@ -47,7 +47,17 @@ module Biology
       return -1
     end
 
+  end
+end
 
+module Alchemy
+  class Recipe
+    getter substances
+    getter product : Substance
+
+    def initialize(@product)
+      @substances = Hash(Substance, Int32).new
+    end
 
   end
 

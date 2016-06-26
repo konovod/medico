@@ -20,7 +20,7 @@ module Biology
     getter param_rules
     getter flora
     getter reactions
-    #getter recipes
+    getter recipes
     getter chemicals
 
     def initialize
@@ -35,7 +35,7 @@ module Biology
       FLORA_NAMES.each{|item| @flora << Substance.new(s(item[:name]), item[:value])}
       @reactions = Array(ReactionRule).new(BIO_CONSTS[:NReactions])
       @chemicals = Array(Substance).new
-      #@recipes = Array()
+      @recipes = Array(Alchemy::Recipe).new
     end
 
     MAX_DELTA = 0.6
@@ -127,6 +127,17 @@ module Biology
 
     def init_substances(random = DEF_RND)
       @flora.each{|subs| subs.generate(self, random)}
+      BIO_CONSTS[:NRecipes].times do
+        name, power = $chemical_names.next(random)
+        subs = Substance.new(name, power)
+        subs.generate(self, random)
+        recipe = Alchemy::Recipe.new(subs)
+        (@chemicals+@flora).sample(random.rand(4)+2, random).each do |ingridient|
+          recipe.substances[ingridient] = random.rand(5)+1
+        end
+        @chemicals << subs
+        @recipes << recipe
+      end
     end
 
   end
