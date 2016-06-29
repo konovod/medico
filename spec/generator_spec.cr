@@ -4,7 +4,7 @@ require "../src/medico/generator.cr"
 
 include Biology
 
-$r = Random.new(1)
+$r = Random.new(2)
 $performance = 0
 
 def simulate_patient(patient, univ, random, time)

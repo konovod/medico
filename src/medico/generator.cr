@@ -22,6 +22,7 @@ module Biology
     getter reactions
     getter recipes
     getter chemicals
+    getter substances
     getter reactions_generated
 
     def initialize
@@ -33,10 +34,12 @@ module Biology
       @types = Array(Kind).new
       @param_rules = Array(ParamRule).new
       @flora = Array(Substance).new(FLORA_NAMES.size)
-      FLORA_NAMES.each{|item| @flora << Substance.new(s(item[:name]), item[:value])}
+      FLORA_NAMES.each_with_index{|item, i| @flora << Substance.new(i, s(item[:name]), item[:value])}
       @reactions = Array(ReactionRule).new
       @reactions_generated = Set(Tuple(Substance, Substance)).new
       @chemicals = Array(Substance).new
+      @substances = Array(Substance).new
+      @substances.concat @flora
       @recipes = Array(Alchemy::Recipe).new(BIO_CONSTS[:NRecipes])
     end
 
@@ -131,7 +134,7 @@ module Biology
       @flora.each{|subs| subs.generate(self, random)}
       BIO_CONSTS[:NFirstRecipes].times do
         name, power = $chemical_names.next(random)
-        subs = Substance.new(name, power)
+        subs = Substance.new(@substances.size-1, name, power)
         subs.generate(self, random)
         recipe = Alchemy::Recipe.new(subs)
         @flora.sample(random.rand(4)+2, random).each do |ingridient|
@@ -139,32 +142,24 @@ module Biology
         end
         subs.complexity = 1+recipe.substances.keys.map(&.complexity).max
         @chemicals << subs
+        @substances << subs
         @recipes << recipe
       end
-      optim = Array(Substance).new(@flora.size+BIO_CONSTS[:NRecipes])
-      optim.concat(@flora)
       BIO_CONSTS[:NRecipes].times do
         name, power = $chemical_names.next(random)
-        subs = Substance.new(name, power)
+        subs = Substance.new(@substances.size-1, name, power)
         subs.generate(self, random)
         recipe = Alchemy::Recipe.new(subs)
         random.rand(4)+2.times do
-          ingridient = weighted_sample(optim, random) do |s|
+          ingridient = weighted_sample(@substances, random) do |s|
             recipe.substances.has_key?(s) ? 0.0 : 1.0 / {s.complexity, 2}.max
           end
           recipe.substances[ingridient] = random.rand(5)+1
         end
         subs.complexity = 1+recipe.substances.keys.map(&.complexity).max
         @chemicals << subs
-        optim << subs
+        @substances << subs
         @recipes << recipe
-      end
-      @flora.each_with_index do |s, i|
-        s.order = i
-      end
-      n = @flora.size
-      @chemicals.each_with_index do |s, i|
-        s.order = i+n
       end
     end
 
