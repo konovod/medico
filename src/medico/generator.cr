@@ -24,6 +24,11 @@ module Biology
     getter chemicals
     getter substances
     getter reactions_generated
+    getter substance_combinations
+    alias TRecipeTuple = Union(Tuple(Substance, Substance),
+                               Tuple(Substance, Substance, Substance),
+                               Tuple(Substance, Substance, Substance, Substance)
+                               )
 
     def initialize
       @effects_pool = Array(Effect).new
@@ -41,6 +46,7 @@ module Biology
       @substances = Array(Substance).new
       @substances.concat @flora
       @recipes = Array(Alchemy::Recipe).new(BIO_CONSTS[:NRecipes])
+      @substance_combinations = Set(TRecipeTuple).new
     end
 
     MAX_DELTA = 0.6
@@ -130,6 +136,19 @@ module Biology
       @param_rules.reject!{|rule| rule.effects.empty?}
     end
 
+    def make_recipe_tuple(arr) : TRecipeTuple
+      case arr.size
+      when 2
+        return {arr[0], arr[1]}
+      when 3
+        return {arr[0], arr[1], arr[2]}
+      when 4
+        return {arr[0], arr[1], arr[2], arr[3]}
+      else
+        raise "make_recipe_tuple: incorrect size #{arr.size}"
+      end
+    end
+
     def init_substances(random = DEF_RND)
       @flora.each{|subs| subs.generate(self, random)}
       BIO_CONSTS[:NFirstRecipes].times do
@@ -137,8 +156,15 @@ module Biology
         subs = Substance.new(@substances.size-1, name, power)
         subs.generate(self, random)
         recipe = Alchemy::Recipe.new(subs)
-        @flora.sample(random.rand(4)+2, random).each do |ingridient|
-          recipe.substances[ingridient] = random.rand(5)+1
+        loop do
+          arr = @flora.sample(random.rand(3)+2, random)
+          tuple = make_recipe_tuple(arr)
+          next if @substance_combinations.includes?(tuple)
+          @substance_combinations <<tuple
+          arr.each do |ingridient|
+            recipe.substances[ingridient] = random.rand(5)+1
+          end
+          break
         end
         subs.complexity = 1+recipe.substances.keys.map(&.complexity).max
         @chemicals << subs
