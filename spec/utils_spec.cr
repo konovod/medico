@@ -32,3 +32,22 @@ it "names gen" do
   check_namegen($disease_names, 100, s(DIS_NAMES1.first[:name]), s(DIS_NAMES2.last[:name]), 7, 20).should be < 100
   check_namegen($chemical_names, 100, s(CHEM_NAMES1.first[:name]), s(CHEM_NAMES2.last[:name]), 7, 20).should eq 100
 end
+
+it "combination" do
+  n = 10
+  each_combination(3, ["a","b","c","d"]) do |v|
+    n = n-1
+    if n == 0
+      v.should eq({"b","c","d"})
+    end
+  end
+  n.should eq 10-24
+  n = 10
+  each_combination(4, ["a","b","c","d", "e"]) do |v|
+    n = n-1
+    if n <= 0
+      v.should eq({"a","c","d", "e"})
+      break
+    end
+  end
+end

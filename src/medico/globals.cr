@@ -50,6 +50,48 @@ def weighted_sample(arr : Array(T), weights : Array(Y), random = DEF_RND) : T
   return arr.first
 end
 
+#todo - replace with universal function? how to yield in recursive implementation?
+def each_combination(n : Int32, aset : Enumerable(T))
+  case n
+  when 1
+    aset.each do |e1|
+      yield({e1})
+    end
+  when 2
+    aset.each do |e1|
+      aset.each do |e2|
+        yield({e1, e2}) if e1 != e2
+      end
+    end
+  when 3
+    aset.each do |e1|
+      aset.each do |e2|
+        next if e1 == e2
+        aset.each do |e3|
+          next if e1 == e3 || e2 == e3
+          yield({e1, e2, e3})
+        end
+      end
+    end
+  when 4
+    aset.each do |e1|
+      aset.each do |e2|
+        next if e1 == e2
+        aset.each do |e3|
+          next if e1 == e3 || e2 == e3
+          aset.each do |e4|
+            next if e1 == e4 || e2 == e4 || e3 == e4
+            yield({e1, e2, e3, e4})
+          end
+        end
+      end
+    end
+  else
+    raise "each_combination not implementated for #{n}"
+  end
+end
+
+
 $verbose = false
 
 def logs(s)
