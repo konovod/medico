@@ -9,15 +9,14 @@ module Biology
     getter power : Int32
     getter systems : Set(Symbol)
     getter kinetics : Int32
-    property complexity : Int32
+    getter complexity : Int32
     getter reactions
     getter order : Int32
 
-    def initialize(@order, @name, @power)
+    def initialize(@order, @complexity, @name, @power)
       super()
       @kinetics = 1
       @systems = ALL_SYSTEMS.to_set
-      @complexity = 1
       @reactions = [] of ReactionRule
     end
 

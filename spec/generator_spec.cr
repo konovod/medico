@@ -36,9 +36,8 @@ end
 def possible_substances(univ, stash : Set(Substance)) : Set(Substance)
   result = Set(Substance).new
   result.merge stash
-  #changed = false
   univ.recipes.each do |r|
-    result << r.product if r.substances.all? {|k, v| result.includes? k }
+    result << r.product if (!result.includes?(r.product)) && r.substances.all? {|k, v| result.includes? k }
   end
   result
 end
@@ -46,9 +45,20 @@ end
 def recipe_stats(univ, nsubs, ntries)
   stats = [] of Tuple(Int32, Int32)
   ntries.times do
+    p "RESET"
+    univ.reset_recipes
     aset = univ.flora.sample(nsubs, $r)
-    res = possible_substances(univ, aset.to_set)
-    stats << { res.size, res.map(&.complexity).max }
+    univ.init_substances(aset, $r)
+    loop do
+      oldsize = aset.size
+      res = possible_substances(univ, aset.to_set)
+      res.each do |subs|
+        univ.generate_recipes(aset, subs, $r)
+        aset << subs
+      end
+      break if aset.size == oldsize
+    end
+    stats << { aset.size, aset.map(&.complexity).max }
   end
   r = stats.reduce([0,0]){|sum, tup| [sum[0] + tup[0], sum[1]+tup[1]]}
   [1.0*r[0] / ntries - nsubs,1.0*r[1] / ntries]
@@ -140,11 +150,8 @@ describe Universe do
 
   it "substances gen" do
     t = Time.now
-    u.init_substances($r)
-    puts "recipe generation takes #{(Time.now - time).total_seconds}"
     p recipe_stats(u, 10, 100)
     possible_substances(u, u.flora.to_set).size.should eq u.flora.size+u.chemicals.size
-    stats = [] of Tuple(Int32, Int32)
     recipe_stats(u, 6, 3).first.should be > 0
     recipe_stats(u, 6, 100).first.should be > 1
     recipe_stats(u, 10, 100).first.should be > 4
