@@ -191,6 +191,11 @@ module Biology
 
     private def try_recipe(combination : TRecipeTuple, random = DEF_RND)
       return if random.rand > BIO_CONSTS[:RecipeChance]
+      if @substance_combinations.includes?(combination)
+        raise "very bad"
+        return
+      end
+      @substance_combinations << combination
       complexity = 1+combination.map(&.complexity).max
       name, power = $chemical_names.next(random)
       power += complexity
