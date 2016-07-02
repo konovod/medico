@@ -20,13 +20,13 @@ module Biology
   class DummyEffect < Effect
     def apply(sys : SystemState, power : FLOAT)
     end
+
     def sign
       Sign::Neutral
     end
   end
 
   DUMMY_EFFECT = DummyEffect.new
-
 
   class RemoveSympthomEffect < Effect
     getter sympthom : Sympthom
@@ -106,7 +106,7 @@ module Biology
     end
 
     def to_s(io)
-      io<<"(#{@param.desc} is #{@checker.average})"
+      io << "(#{@param.desc} is #{@checker.average})"
     end
 
     def process(**context) : TEffectorData
@@ -116,15 +116,14 @@ module Biology
         context[:data] > 0,
         context[:random])
 
-        if $verbose
-          oldval = context[:state].params.get(Index::OLD)[@param].real
-          newval = context[:state].params.get(Index::PREV)[@param].real
-          oldstate = context[:data] > 0
-          logs("triggered #{self} at #{oldval}->#{newval}") if newstate && !oldstate
-          logs("disabled #{self} at #{oldval}->#{newval}") if !newstate && oldstate
-          logs("continue #{self} at #{oldval}->#{newval}") if newstate && oldstate
-
-        end
+      if $verbose
+        oldval = context[:state].params.get(Index::OLD)[@param].real
+        newval = context[:state].params.get(Index::PREV)[@param].real
+        oldstate = context[:data] > 0
+        logs("triggered #{self} at #{oldval}->#{newval}") if newstate && !oldstate
+        logs("disabled #{self} at #{oldval}->#{newval}") if !newstate && oldstate
+        logs("continue #{self} at #{oldval}->#{newval}") if newstate && oldstate
+      end
 
       apply(context) if newstate
       return (newstate ? 1 : 0)

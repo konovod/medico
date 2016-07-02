@@ -26,10 +26,7 @@ module Biology
     getter reactions_generated
     getter substance_combinations
     getter recipes_limit
-    alias TRecipeTuple = Union(Tuple(Substance, Substance),
-                               Tuple(Substance, Substance, Substance),
-                               Tuple(Substance, Substance, Substance, Substance)
-                               )
+    alias TRecipeTuple = Union(Tuple(Substance, Substance), Tuple(Substance, Substance, Substance), Tuple(Substance, Substance, Substance, Substance))
 
     def initialize
       @effects_pool = Array(Effect).new
@@ -40,7 +37,7 @@ module Biology
       @types = Array(Kind).new
       @param_rules = Array(ParamRule).new
       @flora = Array(Substance).new(FLORA_NAMES.size)
-      FLORA_NAMES.each_with_index{|item, i| @flora << Substance.new(i, 1, s(item[:name]), item[:value])}
+      FLORA_NAMES.each_with_index { |item, i| @flora << Substance.new(i, 1, s(item[:name]), item[:value]) }
       @reactions = Array(ReactionRule).new
       @reactions_generated = Set(Tuple(Substance, Substance)).new
       @chemicals = Array(Substance).new
@@ -76,7 +73,7 @@ module Biology
     def random_effects_sys(good : FLOAT, sys, count = 1, random = DEF_RND)
       random_effects(good, count: count, random: random) do |eff|
         (!eff.is_a?(RemoveSympthomEffect) || sys.includes?(eff.as(RemoveSympthomEffect).sympthom.system)) &&
-        (!eff.is_a?(AddSympthomEffect) || sys.includes?(eff.as(AddSympthomEffect).sympthom.system))
+          (!eff.is_a?(AddSympthomEffect) || sys.includes?(eff.as(AddSympthomEffect).sympthom.system))
       end
     end
 
@@ -114,28 +111,28 @@ module Biology
     end
 
     def init_param_rules(random = DEF_RND)
-      #gen rules for each variation
+      # gen rules for each variation
       ALL_PARAMS.each do |param|
-        @param_rules.concat(BIO_RATER[param].items.select{ |checker|
+        @param_rules.concat(BIO_RATER[param].items.select { |checker|
           checker.is_a?(Fuzzy::Trapezoid) && checker.rate(param.average) <= 0
         }.map { |delta|
           ParamRule.new(param, delta)
         })
       end
-      #add effects
+      # add effects
       BIO_CONSTS[:NRules].times do
-        rule = weighted_sample(@param_rules, random){|p| p.param.damage(p.checker.average)}
-        rule.effects.concat random_effects(f(0.1), count: 1, random: random){|eff|
+        rule = weighted_sample(@param_rules, random) { |p| p.param.damage(p.checker.average) }
+        rule.effects.concat random_effects(f(0.1), count: 1, random: random) { |eff|
           case eff
-            when ChangeParam
-              eff.param != rule.param && !(eff.param.is_a? LiquidParam) && (rule.param.is_a? LiquidParam)
-            else
-              true
-            end
+          when ChangeParam
+            eff.param != rule.param && !(eff.param.is_a? LiquidParam) && (rule.param.is_a? LiquidParam)
+          else
+            true
+          end
         }
       end
-      #remove empty rules
-      @param_rules.reject!{|rule| rule.effects.empty?}
+      # remove empty rules
+      @param_rules.reject! { |rule| rule.effects.empty? }
     end
 
     def make_recipe_tuple(arr) : TRecipeTuple
@@ -154,18 +151,18 @@ module Biology
     private def try_recipe(combination : TRecipeTuple, random = DEF_RND)
       return if @substance_combinations.includes?(combination)
       @substance_combinations << combination
-      return if combination.any?{|subs| @recipes_limit[subs] >= BIO_CONSTS[:RecipesLimiter]}
-      counter_chance = 1+combination.sum{|subs| subs.complexity-1}
+      return if combination.any? { |subs| @recipes_limit[subs] >= BIO_CONSTS[:RecipesLimiter] }
+      counter_chance = 1 + combination.sum { |subs| subs.complexity - 1 }
       return if random.rand > BIO_CONSTS[:RecipeChance] / counter_chance
-      combination.each{|subs| @recipes_limit[subs] += 1}
-      complexity = 1+combination.map(&.complexity).max
+      combination.each { |subs| @recipes_limit[subs] += 1 }
+      complexity = 1 + combination.map(&.complexity).max
       name, power = $chemical_names.next(random)
       power += complexity
-      subs = Substance.new(@substances.size-1, complexity, name, power)
+      subs = Substance.new(@substances.size - 1, complexity, name, power)
       subs.generate(self, random)
       recipe = Alchemy::Recipe.new(subs)
       combination.each do |ingridient|
-        recipe.substances[ingridient] = random.rand(5)+1
+        recipe.substances[ingridient] = random.rand(5) + 1
       end
       @chemicals << subs
       @substances << subs
@@ -173,8 +170,8 @@ module Biology
     end
 
     def generate_recipes(base : Array(Substance), added : Substance, random = DEF_RND)
-      #check 2-5 combinations
-      #p "generating for #{added.name} @ #{base.size}, already - #{@recipes.size}"
+      # check 2-5 combinations
+      # p "generating for #{added.name} @ #{base.size}, already - #{@recipes.size}"
       (1...BIO_CONSTS[:MaxRecipeSize]).each do |i|
         each_combination(i, base) do |combo|
           arr = combo.to_a
@@ -210,9 +207,9 @@ module Biology
           break if s1 == s2
           next unless s1.systems.intersects? s2.systems
           list = [s1, s2].sort_by(&.order)
-          a,b = list[0], list[1]
-          next if @reactions_generated[{a,b}]
-          @reactions_generated <<  {a, b}
+          a, b = list[0], list[1]
+          next if @reactions_generated[{a, b}]
+          @reactions_generated << {a, b}
           next unless random.rand < BIO_CONSTS[:ReactionChance]
           react = ReactionRule.new
           react.substances.concat list
@@ -220,6 +217,5 @@ module Biology
         end
       end
     end
-
   end
 end

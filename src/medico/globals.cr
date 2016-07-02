@@ -50,7 +50,7 @@ def weighted_sample(arr : Array(T), weights : Array(Y), random = DEF_RND) : T
   return arr.first
 end
 
-#todo - replace with universal function? how to yield in recursive implementation?
+# todo - replace with universal function? how to yield in recursive implementation?
 def each_combination(n : Int32, aset : Enumerable(T))
   case n
   when 1
@@ -90,7 +90,6 @@ def each_combination(n : Int32, aset : Enumerable(T))
     raise "each_combination not implementated for #{n}"
   end
 end
-
 
 $verbose = false
 

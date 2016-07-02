@@ -3,7 +3,6 @@ require "./effectors"
 require "./namegen"
 
 module Biology
-
   class Substance < TimedEffector
     getter name : String
     getter power : Int32
@@ -29,9 +28,9 @@ module Biology
       arr = [] of Symbol
       @power.times { arr << ALL_SYSTEMS.to_a.sample(random) }
       @systems = arr.to_set
-      @kinetics = 5+@power+random.rand(2*@power)
+      @kinetics = 5 + @power + random.rand(2*@power)
       @effects.concat univ.random_effects_sys(f(0.9), @systems.to_a,
-        count: @power/2+1+random.rand(@power/2+1),
+        count: @power/2 + 1 + random.rand(@power/2 + 1),
         random: random)
     end
 
@@ -41,7 +40,7 @@ module Biology
         state = patient.systems[sys]
         return if state.effectors.has_key?(self) && state.effectors[self] > n
         state.effectors[self] = n
-        @reactions.select{|r| r.applicable(state)}.each{|r| state.effectors[r] = 1}
+        @reactions.select { |r| r.applicable(state) }.each { |r| state.effectors[r] = 1 }
       end
     end
 
@@ -49,12 +48,10 @@ module Biology
       val = super(**context)
       if val <= 0
         state = context[:state]
-        @reactions.select{|r| !r.applicable(state)}.each{|r| state.effectors.delete(r)}
+        @reactions.select { |r| !r.applicable(state) }.each { |r| state.effectors.delete(r) }
       end
       val
     end
-
-
   end
 
   class ReactionRule < Effector
@@ -66,14 +63,13 @@ module Biology
     end
 
     def applicable(state : SystemState)
-      @substances.all?{|subs| state.effectors[subs] >= 1}
+      @substances.all? { |subs| state.effectors[subs] >= 1 }
     end
 
     def process(**context) : TEffectorData
-      #TODO
+      # TODO
       return -1
     end
-
   end
 end
 
@@ -85,7 +81,5 @@ module Alchemy
     def initialize(@product)
       @substances = Hash(Biology::Substance, Int32).new
     end
-
   end
-
 end

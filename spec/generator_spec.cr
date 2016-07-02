@@ -39,7 +39,7 @@ describe Universe do
   it "init" do
     u.init_effects
     u.diseases_pool.size.should eq(BIO_CONSTS[:NDiseases])
-    u.effects_pool.size.should eq(BIO_CONSTS[:NDiseases] + ALL_SYMPTHOMS.size*2 + N_PARAMS*2*PARAM_DELTA_STAGES-N_UNIMODAL_PARAMS*PARAM_DELTA_STAGES)
+    u.effects_pool.size.should eq(BIO_CONSTS[:NDiseases] + ALL_SYMPTHOMS.size*2 + N_PARAMS*2*PARAM_DELTA_STAGES - N_UNIMODAL_PARAMS*PARAM_DELTA_STAGES)
   end
 
   it "random effects" do
@@ -63,24 +63,23 @@ describe Universe do
     heads.any? { |e| e.is_a?(ChangeParam) }.should be_truthy
   end
 
-
   it "param rules" do
     u.init_param_rules($r)
-    u.param_rules.size.should be_close(N_PARAMS*2*PARAM_RATE_STAGES-N_UNIMODAL_PARAMS*PARAM_RATE_STAGES, 5)
-    u.param_rules.sum{|r|r.effects.size}.should eq BIO_CONSTS[:NRules]
+    u.param_rules.size.should be_close(N_PARAMS*2*PARAM_RATE_STAGES - N_UNIMODAL_PARAMS*PARAM_RATE_STAGES, 5)
+    u.param_rules.sum { |r| r.effects.size }.should eq BIO_CONSTS[:NRules]
   end
 
   it "diseases generation" do
     u.init_diseases($r)
     sys_count = u.diseases_pool.map { |d| d.systems.size }.sort
-    puts sys_count.group_by { |x| x }.map { |k, v| "#{v.size} affects #{k} systems"}.join("\n")
+    puts sys_count.group_by { |x| x }.map { |k, v| "#{v.size} affects #{k} systems" }.join("\n")
     sys_count.to_set.superset?((2...ALL_SYSTEMS.size).to_set).should be_truthy
     sys_count.count(2).should be >= sys_count.count(1)
     sys_count.count(3).should be > sys_count.count(5)
   end
 
   john = Patient.new("John", $r)
-  u.param_rules.each {|r| john.systems.each_value {|sys| sys.effectors[r] = 0}}
+  u.param_rules.each { |r| john.systems.each_value { |sys| sys.effectors[r] = 0 } }
 
   it "test diseases" do
     # $verbose = true
@@ -94,10 +93,10 @@ describe Universe do
     john.reset
     john.health.should eq(john.maxhealth)
     1.times { john.process_tick($r) }
-    #john.health.should eq(john.maxhealth)
-    #$verbose = true
+    # john.health.should eq(john.maxhealth)
+    # $verbose = true
     15.times { john.process_tick($r) }
-    #$verbose = false
+    # $verbose = false
     john.health.should eq(john.maxhealth)
   end
 
@@ -116,5 +115,4 @@ describe Universe do
     results[0].should be < 10
   end
   puts "ticks simulated #{$performance}, #{($performance * 1.0 / (Time.now - time).total_seconds).to_i} ticks/s"
-
 end

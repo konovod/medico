@@ -35,18 +35,18 @@ end
 
 it "combination" do
   n = 10
-  each_combination(3, ["a","b","c","d"]) do |v|
-    n = n-1
+  each_combination(3, ["a", "b", "c", "d"]) do |v|
+    n = n - 1
     if n == 0
-      v.should eq({"b","c","d"})
+      v.should eq({"b", "c", "d"})
     end
   end
-  n.should eq 10-24
+  n.should eq 10 - 24
   n = 10
-  each_combination(4, ["a","b","c","d", "e"]) do |v|
-    n = n-1
+  each_combination(4, ["a", "b", "c", "d", "e"]) do |v|
+    n = n - 1
     if n <= 0
-      v.should eq({"a","c","d", "e"})
+      v.should eq({"a", "c", "d", "e"})
       break
     end
   end

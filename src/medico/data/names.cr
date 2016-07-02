@@ -58,7 +58,6 @@ DIS_NAMES1 = [
   {name: :AdjPart9, value: 4},
 ]
 
-
 FLORA_NAMES = [
   {name: :AcoruscalamusL, value: 5},
   {name: :AloearborescensMill, value: 7},
