@@ -25,6 +25,7 @@ module Biology
     getter substances
     getter reactions_generated
     getter substance_combinations
+    getter recipes_limit
     alias TRecipeTuple = Union(Tuple(Substance, Substance),
                                Tuple(Substance, Substance, Substance),
                                Tuple(Substance, Substance, Substance, Substance)
@@ -47,6 +48,7 @@ module Biology
       @substances.concat @flora
       @recipes = Array(Alchemy::Recipe).new
       @substance_combinations = Set(TRecipeTuple).new
+      @recipes_limit = Hash(Substance, Int32).new(0)
     end
 
     MAX_DELTA = 0.6
@@ -149,53 +151,13 @@ module Biology
       end
     end
 
-    # def init_substances(random = DEF_RND)
-    #   @flora.each{|subs| subs.generate(self, random)}
-    #   BIO_CONSTS[:NFirstRecipes].times do
-    #     name, power = $chemical_names.next(random)
-    #     subs = Substance.new(@substances.size-1, name, power)
-    #     subs.generate(self, random)
-    #     recipe = Alchemy::Recipe.new(subs)
-    #     loop do
-    #       arr = @flora.sample(random.rand(3)+2, random)
-    #       tuple = make_recipe_tuple(arr)
-    #       next if @substance_combinations.includes?(tuple)
-    #       @substance_combinations <<tuple
-    #       arr.each do |ingridient|
-    #         recipe.substances[ingridient] = random.rand(5)+1
-    #       end
-    #       break
-    #     end
-    #     subs.complexity = 1+recipe.substances.keys.map(&.complexity).max
-    #     @chemicals << subs
-    #     @substances << subs
-    #     @recipes << recipe
-    #   end
-    #   BIO_CONSTS[:NRecipes].times do
-    #     name, power = $chemical_names.next(random)
-    #     subs = Substance.new(@substances.size-1, name, power)
-    #     subs.generate(self, random)
-    #     recipe = Alchemy::Recipe.new(subs)
-    #     random.rand(4)+2.times do
-    #       ingridient = weighted_sample(@substances, random) do |s|
-    #         recipe.substances.has_key?(s) ? 0.0 : 1.0 / {s.complexity, 2}.max
-    #       end
-    #       recipe.substances[ingridient] = random.rand(5)+1
-    #     end
-    #     subs.complexity = 1+recipe.substances.keys.map(&.complexity).max
-    #     @chemicals << subs
-    #     @substances << subs
-    #     @recipes << recipe
-    #   end
-    # end
-
     private def try_recipe(combination : TRecipeTuple, random = DEF_RND)
-      return if random.rand > BIO_CONSTS[:RecipeChance]
-      if @substance_combinations.includes?(combination)
-        raise "very bad"
-        return
-      end
+      return if @substance_combinations.includes?(combination)
       @substance_combinations << combination
+      return if combination.any?{|subs| @recipes_limit[subs] >= BIO_CONSTS[:RecipesLimiter]}
+      counter_chance = 1+combination.sum{|subs| subs.complexity-1}
+      return if random.rand > BIO_CONSTS[:RecipeChance] / counter_chance
+      combination.each{|subs| @recipes_limit[subs] += 1}
       complexity = 1+combination.map(&.complexity).max
       name, power = $chemical_names.next(random)
       power += complexity
@@ -212,7 +174,7 @@ module Biology
 
     def generate_recipes(base : Array(Substance), added : Substance, random = DEF_RND)
       #check 2-5 combinations
-      p "generating for #{added.name} @ #{base.size}, already - #{@recipes.size}"
+      #p "generating for #{added.name} @ #{base.size}, already - #{@recipes.size}"
       (1...BIO_CONSTS[:MaxRecipeSize]).each do |i|
         each_combination(i, base) do |combo|
           arr = combo.to_a
@@ -224,7 +186,6 @@ module Biology
 
     def init_substances(stash : Array(Substance), random = DEF_RND)
       return if stash.empty?
-      p "init_substances"
       aset = stash.dup
       base = [aset.pop]
       while !aset.empty?
@@ -239,7 +200,7 @@ module Biology
       @recipes.clear
       @substances.clear
       @substance_combinations.clear
-
+      @recipes_limit.clear
       @substances.concat @flora
     end
 
