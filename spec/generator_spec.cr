@@ -93,10 +93,9 @@ describe Universe do
     john.reset
     john.health.should eq(john.maxhealth)
     1.times { john.process_tick($r) }
-    # john.health.should eq(john.maxhealth)
-    # $verbose = true
+    $verbose = true
     15.times { john.process_tick($r) }
-    # $verbose = false
+    $verbose = false
     john.health.should eq(john.maxhealth)
   end
 
@@ -115,4 +114,35 @@ describe Universe do
     results[0].should be < 10
   end
   puts "ticks simulated #{$performance}, #{($performance * 1.0 / (Time.now - time).total_seconds).to_i} ticks/s"
+
+  u.generate_flora($r)
+  it "test subs effects" do
+    u.flora.sum{|subs| subs.effects.size }.should be_close u.flora.size*3, u.flora.size
+    u.flora.sum{|subs| subs.effects.count {|eff| eff.is_a? MagicBulletEffect}}.should be > 10
+    u.flora.sum{|subs| subs.effects.count {|eff| eff.is_a? AddSympthomEffect}}.should be_close 10,9
+  end
+
+  it "test injecting" do
+    john.reset
+    drug = u.flora.sample($r)
+    drug.inject(john, f(0.5))
+    sys = drug.systems.to_a.sample($r)
+    john.systems[sys].effectors[drug].should be_close drug.kinetics/2, 1
+  end
+
+  it "test reactions" do
+    john.reset
+
+    u.init_reactions(u.flora, $r)
+    drug1 = (u.flora.select{|subs| subs.reactions.size > 1 }).sample($r)
+    first, second = drug1.reactions[0], drug1.reactions[1]
+    first.substances.each &.inject(john, f(1.0))
+    sys = (first.substances[0].systems & first.substances[1].systems).to_a.sample($r)
+    john.systems[sys].effectors[first]?.should eq 1
+    john.systems[sys].effectors[second]?.should be_falsey
+
+    t = first.substances.map(&.kinetics).min+1
+    t.times { john.process_tick($r) }
+    john.systems[sys].effectors[first]?.should be_falsey  
+  end
 end

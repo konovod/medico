@@ -155,12 +155,13 @@ module Biology
       return unless sorted_by?(combination, &.order)
       return if combination.any? { |subs| @recipes_limit[subs] >= BIO_CONSTS[:RecipesLimiter] }
       counter_chance = 1 + combination.sum { |subs| subs.complexity - 1 }
-      return if random.rand > BIO_CONSTS[:RecipeChance] / counter_chance
+      return if random.rand > BIO_CONSTS[:RecipeChance] / counter_chance / counter_chance
       combination.each { |subs| @recipes_limit[subs] += 1 }
       complexity = 1 + combination.map(&.complexity).max
       name, power = $chemical_names.next(false, random)
       power += complexity
-      subs = (@chemicals.find{|it| it.name == name}) || Substance.new(@substances.size - 1, complexity, name, power).generate(self, random)
+      subs = (@chemicals.find{|it| it.name == name}) ||
+             Substance.new(@substances.size - 1, complexity, name, power).generate(self, random)
       recipe = Alchemy::Recipe.new(subs.as(Substance))
       combination.each do |ingridient|
         recipe.substances[ingridient] = random.rand(5) + 1
@@ -201,19 +202,24 @@ module Biology
       @substances.concat @flora
     end
 
+    def generate_flora(random = DEF_RND)
+      @flora.each &.generate(self, random)
+    end
+
     def init_reactions(stash : Array(Substance), random = DEF_RND)
       stash.each do |s1|
         stash.reverse.each do |s2|
           break if s1 == s2
           next unless s1.systems.intersects? s2.systems
           list = [s1, s2].sort_by(&.order)
-          a, b = list[0], list[1]
-          next if @reactions_generated[{a, b}]
-          @reactions_generated << {a, b}
+          tuple = {list[0], list[1]}
+          next if @reactions_generated.includes?(tuple)
+          @reactions_generated << tuple
           next unless random.rand < BIO_CONSTS[:ReactionChance]
           react = ReactionRule.new
           react.substances.concat list
-          react.effects.concat random_effects_sys(0.5, s1.systems & s2.systems, count: 1, random: random)
+          react.effects.concat random_effects_sys(f(0.5), s1.systems & s2.systems, count: 1, random: random)
+          list.each {|subs| subs.reactions << react}
         end
       end
     end

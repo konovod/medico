@@ -34,6 +34,7 @@ def recipe_stats(univ, nsubs, ntries)
       end
       break if aset.size == oldsize
       break if aset.size > 50+nsubs
+      univ.init_reactions(aset.to_a, $r)
     end
     stats << {aset.size, aset.map(&.complexity).max}
   end
@@ -44,6 +45,7 @@ end
 describe Universe do
   u = Universe.new
   u.init_effects
+  u.generate_flora($r)
   it "substances gen" do
     t = Time.now
     #    possible_substances(u, u.flora.to_set).size.should eq u.flora.size+u.chemicals.

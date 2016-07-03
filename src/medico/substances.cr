@@ -39,7 +39,7 @@ module Biology
       @systems.map do |sys|
         n = {(effectivity*@kinetics).to_i, 2}.max
         state = patient.systems[sys]
-        return if state.effectors.has_key?(self) && state.effectors[self] > n
+        return if state.effectors.fetch(self, -1) > n
         state.effectors[self] = n
         @reactions.select { |r| r.applicable(state) }.each { |r| state.effectors[r] = 1 }
       end
@@ -64,7 +64,7 @@ module Biology
     end
 
     def applicable(state : SystemState)
-      @substances.all? { |subs| state.effectors[subs] >= 1 }
+      @substances.all? { |subs| state.effectors.fetch(subs, 0) >= 1 }
     end
 
     def process(**context) : TEffectorData
