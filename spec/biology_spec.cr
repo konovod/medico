@@ -56,4 +56,8 @@ describe Biology do
     10.times { john.process_tick($r) }
     john.systems[asys].sympthoms[asym].should eq(0)
   end
+
+  it "special raters" do
+#    HEALTH_RATER.estimate_s(f(0.5))
+  end
 end

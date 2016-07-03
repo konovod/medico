@@ -141,7 +141,7 @@ module Fuzzy
 
   def trap_or_pike(min, topmin, topmax, max)
     if min == max
-      Pike.new(min)
+      Pike.new(f(min))
     else
       Trapezoid.new(min, topmin, topmax, max)
     end
@@ -171,9 +171,13 @@ module Fuzzy
     getter items
     getter names
 
-    def initialize(param : Param, additional = 0)
+    def initialize()
       @items = Array(FuzzySet).new
       @names = Array(Symbol).new
+    end
+
+    def initialize(param : Param, additional = 0)
+      initialize()
       generate_for(param, additional)
     end
 
@@ -183,17 +187,17 @@ module Fuzzy
 
     def estimate_s(value : ParamValue,
                    oldvalue : (ParamValue | Nil) = nil,
-                   oldestimate : (Int32 | Nil) = nil) : Int32
+                   oldestimate : (Int32 | Nil) = nil) : Symbol
       return @names[estimate(value, oldvalue, oldestimate)]
     end
 
     def estimate(value : ParamValue,
                  oldvalue : (ParamValue | Nil) = nil,
-                 oldestimate : (Int32 | Nil) = nil) : Int32
+                 oldestimate : (Int32 | Nil) = nil) : (Int32|Symbol)
       rates = items.zip((0...items.size).to_a).map do |(x, i)|
         {i, x.rate(value.real)}
       end.select { |(i, v)| v > 0 }
-      case rates.size
+      index = case rates.size
       when 0
         dump
         raise "estimate failed for #{value.real} (#{self})"
@@ -202,6 +206,11 @@ module Fuzzy
       else
         # TODO: incremental estimating
         rates.max_by { |(i, v)| v }.first
+      end
+      if index < @names.size
+        return @names[index]
+      else
+        return index
       end
     end
 
@@ -233,13 +242,12 @@ module Fuzzy
       end
     end
 
-    def fill_fixed(data)
-      @items.clear
-      @names.clear
-      data.each do |item|
+    def initialize(*, fixed)
+      initialize()
+      fixed.each do |item|
         @names << item[:name]
         width = item[:max] - item[:min]
-        @items << trap_or_pike(item[:min] - width, item[:min], item[:max], item[:max] + width)
+        @items << Fuzzy.trap_or_pike(item[:min] - width, item[:min], item[:max], item[:max] + width)
       end
     end
 
