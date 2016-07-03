@@ -19,10 +19,12 @@ def recipe_stats(univ, nsubs, ntries)
   stats = [] of Tuple(Int32, Int32)
   ntries.times do
     univ.reset_recipes
-    aset = univ.flora.sample(nsubs, $r)
+    baseset = univ.flora.sample(nsubs, $r)
+    aset = [baseset.pop]
     univ.init_substances(aset, $r)
     loop do
       oldsize = aset.size
+      aset << baseset.pop unless baseset.empty?
       res = possible_substances(univ, aset.to_set)
       res.each do |subs|
         univ.generate_recipes(aset, subs, $r)

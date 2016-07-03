@@ -151,6 +151,7 @@ module Biology
     private def try_recipe(combination : TRecipeTuple, random = DEF_RND)
       return if @substance_combinations.includes?(combination)
       @substance_combinations << combination
+      return unless sorted_by?(combination, &.order)
       return if combination.any? { |subs| @recipes_limit[subs] >= BIO_CONSTS[:RecipesLimiter] }
       counter_chance = 1 + combination.sum { |subs| subs.complexity - 1 }
       return if random.rand > BIO_CONSTS[:RecipeChance] / counter_chance
@@ -170,7 +171,6 @@ module Biology
     end
 
     def generate_recipes(base : Array(Substance), added : Substance, random = DEF_RND)
-      # check 2-5 combinations
       # p "generating for #{added.name} @ #{base.size}, already - #{@recipes.size}"
       (1...BIO_CONSTS[:MaxRecipeSize]).each do |i|
         each_combination(i, base) do |combo|

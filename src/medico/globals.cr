@@ -91,7 +91,7 @@ def each_combination(n : Int32, aset : Enumerable(T))
   end
 end
 
-def sorted_by?(coll : Enumerable(T))
+def sorted_by?(coll : Enumerable(T)) : Bool
   return true if coll.empty?
   prev_value = yield(coll.first)
   first = true
@@ -104,6 +104,7 @@ def sorted_by?(coll : Enumerable(T))
     return false if value < prev_value
     prev_value = value
   end
+  return true
 end
 
 def sorted?(coll : Enumerable(T))
