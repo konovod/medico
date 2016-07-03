@@ -151,6 +151,7 @@ module Biology
     private def try_recipe(combination : TRecipeTuple, random = DEF_RND)
       return if @substance_combinations.includes?(combination)
       @substance_combinations << combination
+      #TODO optimize each_combination, lol
       return unless sorted_by?(combination, &.order)
       return if combination.any? { |subs| @recipes_limit[subs] >= BIO_CONSTS[:RecipesLimiter] }
       counter_chance = 1 + combination.sum { |subs| subs.complexity - 1 }
