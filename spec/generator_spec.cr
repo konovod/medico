@@ -138,12 +138,13 @@ describe Universe do
     first, second = drug1.reactions[0], drug1.reactions[1]
     first.substances.each &.inject(john, f(1.0))
     sys = (first.substances[0].systems & first.substances[1].systems).to_a.sample($r)
-    john.systems[sys].effectors[first]?.should eq 1
-    john.systems[sys].effectors[second]?.should be_falsey
+    state = john.systems[sys]
+    state.effectors[first]?.should eq 1
+    state.effectors[second]?.should be_falsey
     1.times { john.process_tick($r) }
-    john.systems[sys].effectors[first]?.should eq 1
+    state.effectors[first]?.should eq 1
     t = first.substances.map(&.kinetics).min
     t.times { john.process_tick($r) }
-    john.systems[sys].effectors[first]?.should be_falsey
+    state.effectors[first]?.should be_falsey
   end
 end

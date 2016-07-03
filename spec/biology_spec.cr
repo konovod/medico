@@ -59,6 +59,6 @@ describe Biology do
 
   it "special raters" do
     HEALTH_RATER.estimate_f(f(0.6)).should eq :HeavyDiseased
-    CON_RATER.estimate_f(f(10)).should eq :ConLevel3   
+    CON_RATER.estimate_f(f(10)).should eq :ConLevel3
   end
 end

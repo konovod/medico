@@ -171,7 +171,7 @@ module Fuzzy
     getter items
     getter names
 
-    def initialize()
+    def initialize
       @items = Array(FuzzySet).new
       @names = Array(Symbol).new
     end
@@ -187,26 +187,26 @@ module Fuzzy
 
     def estimate(value : ParamValue,
                  oldvalue : (ParamValue | Nil) = nil,
-                 oldestimate : (Int32|Symbol| Nil) = nil) : (Int32|Symbol)
+                 oldestimate : (Int32 | Symbol | Nil) = nil) : (Int32 | Symbol)
       estimate_f(value.real, oldvalue ? oldvalue.real : nil, oldestimate)
     end
 
     def estimate_f(value : FLOAT,
-                 oldvalue : (FLOAT | Nil) = nil,
-                 oldestimate : (Int32 | Symbol | Nil) = nil) : (Int32|Symbol)
+                   oldvalue : (FLOAT | Nil) = nil,
+                   oldestimate : (Int32 | Symbol | Nil) = nil) : (Int32 | Symbol)
       rates = items.zip((0...items.size).to_a).map do |(x, i)|
         {i, x.rate(value)}
       end.select { |(i, v)| v > 0 }
       index = case rates.size
-      when 0
-        dump
-        raise "estimate failed for #{value} (#{self})"
-      when 1
-        return rates.first.first
-      else
-        # TODO: incremental estimating
-        rates.max_by { |(i, v)| v }.first
-      end
+              when 0
+                dump
+                raise "estimate failed for #{value} (#{self})"
+              when 1
+                return rates.first.first
+              else
+                # TODO: incremental estimating
+                rates.max_by { |(i, v)| v }.first
+              end
       if index < @names.size
         return @names[index]
       else
