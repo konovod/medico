@@ -22,20 +22,23 @@ class NameGen
     @history = Set(String).new
   end
 
-  def next(random = DEF_RND)
-    @history.clear if @history.size > 0.9*@first.size*@second.size
+  def next(unique, random = DEF_RND)
+    raise("too many names #{@history.size}, max=#{@first.size*@second.size}") if unique && @history.size > 0.9*@first.size*@second.size
     result = {"", 0}
     loop do
       it1 = weighted_sample(@first, @chances1, random)
       it2 = weighted_sample(@second, @chances2, random)
       str = s(it1[:name]) + " " + s(it2[:name])
-      next if @history.includes?(str)
-      @history << str
+      if unique
+        next if @history.includes?(str)
+        @history << str
+      end
       result = {str, it1[:value] + it2[:value]}
       break
     end
     result
   end
+
 end
 
 $disease_names = NameGen.new(DIS_NAMES1, DIS_NAMES2)

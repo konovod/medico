@@ -32,6 +32,7 @@ module Biology
       @effects.concat univ.random_effects_sys(f(0.9), @systems.to_a,
         count: @power/2 + 1 + random.rand(@power/2 + 1),
         random: random)
+      self
     end
 
     def inject(patient : Patient, effectivity : FLOAT)

@@ -15,7 +15,7 @@ def check_namegen(gen, n, str1, str2, maxval, minval)
   amin, amax = maxval, minval
   fl1, fl2 = false, false
   n.times do
-    item, val = gen.next($r)
+    item, val = gen.next(true, $r)
     fl1 = true if item.index(str1)
     fl2 = true if item.index(str2)
     amin = val if amin > val
@@ -25,12 +25,12 @@ def check_namegen(gen, n, str1, str2, maxval, minval)
   amax.should be > maxval
   fl1.should be_truthy
   fl2.should be_truthy
-  return gen.history.size
+  gen.history.size.should eq n
 end
 
 it "names gen" do
-  check_namegen($disease_names, 100, s(DIS_NAMES1.first[:name]), s(DIS_NAMES2.last[:name]), 7, 20).should be < 100
-  check_namegen($chemical_names, 100, s(CHEM_NAMES1.first[:name]), s(CHEM_NAMES2.last[:name]), 7, 20).should eq 100
+  check_namegen($disease_names, 60, s(DIS_NAMES1.first[:name]), s(DIS_NAMES2.last[:name]), 7, 20)
+  check_namegen($chemical_names, 100, s(CHEM_NAMES1.first[:name]), s(CHEM_NAMES2.last[:name]), 7, 20)
 end
 
 it "combination" do

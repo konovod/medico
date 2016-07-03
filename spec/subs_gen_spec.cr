@@ -20,20 +20,20 @@ def recipe_stats(univ, nsubs, ntries)
   ntries.times do
     univ.reset_recipes
     baseset = univ.flora.sample(nsubs, $r)
-    aset = [baseset.pop]
-    univ.init_substances(aset, $r)
+    aset = [baseset.pop].to_set
+    univ.init_substances(aset.to_a, $r)
     loop do
       oldsize = aset.size
       aset << baseset.pop unless baseset.empty?
-      res = possible_substances(univ, aset.to_set)
+      #p nsubs-baseset.size #if baseset.size % 10 == 0
+      res = possible_substances(univ, aset)
       res.each do |subs|
-        univ.generate_recipes(aset, subs, $r)
+        univ.generate_recipes(aset.to_a, subs, $r)
         aset << subs
-        break if aset.size > 80
+        break if aset.size > 50+nsubs
       end
-      aset.uniq!
       break if aset.size == oldsize
-      break if aset.size > 80
+      break if aset.size > 50+nsubs
     end
     stats << {aset.size, aset.map(&.complexity).max}
   end
@@ -46,17 +46,18 @@ describe Universe do
   u.init_effects
   it "substances gen" do
     t = Time.now
-    #    possible_substances(u, u.flora.to_set).size.should eq u.flora.size+u.chemicals.size
+    #    possible_substances(u, u.flora.to_set).size.should eq u.flora.size+u.chemicals.
     # p recipe_stats(u, 6, 3)
     # p recipe_stats(u, 6, 100)
     # p recipe_stats(u, 10, 5)
     # p recipe_stats(u, 20, 5)
-    # p recipe_stats(u, 40, 1)
+    #  p recipe_stats(u, 40, 1)
+    #  p recipe_stats(u, u.flora.size, 1)
     recipe_stats(u, 6, 3).first.should be > 0
     recipe_stats(u, 6, 100).first.should be > 1
     recipe_stats(u, 10, 5).first.should be > 4
     recipe_stats(u, 20, 5).last.should be > 2.5
     recipe_stats(u, 40, 1).last.should be > 3.5
-    #p u.chemicals.map(&.complexity).max
+    puts "max recipe level #{u.chemicals.map(&.complexity).max}"
   end
 end

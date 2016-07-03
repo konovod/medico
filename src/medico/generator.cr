@@ -158,11 +158,10 @@ module Biology
       return if random.rand > BIO_CONSTS[:RecipeChance] / counter_chance
       combination.each { |subs| @recipes_limit[subs] += 1 }
       complexity = 1 + combination.map(&.complexity).max
-      name, power = $chemical_names.next(random)
+      name, power = $chemical_names.next(false, random)
       power += complexity
-      subs = Substance.new(@substances.size - 1, complexity, name, power)
-      subs.generate(self, random)
-      recipe = Alchemy::Recipe.new(subs)
+      subs = (@chemicals.find{|it| it.name == name}) || Substance.new(@substances.size - 1, complexity, name, power).generate(self, random)
+      recipe = Alchemy::Recipe.new(subs.as(Substance))
       combination.each do |ingridient|
         recipe.substances[ingridient] = random.rand(5) + 1
       end
