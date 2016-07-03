@@ -173,4 +173,26 @@ s = {
   :EucalyptusglobulusLabill     => "Eucalyptus globulus Labill.",
   :EphedradistachyaL            => "Ephedra distachya L.",
 
+  :ConLevel1 => "ConLevel1",
+  :ConLevel2 => "ConLevel2",
+  :ConLevel3 => "ConLevel3",
+  :ConLevel4 => "ConLevel4",
+  :ConLevel5 => "ConLevel5",
+
+  :Healthy => "Healthy",
+  :SlghtlySick => "Slghtly sick",
+  :Sick => "Sick",
+  :Diseased => "Diseased",
+  :HeavyDiseased => "Heavy diseased",
+  :CriticallyDiseased => "Critically diseased",
+  :Hopeless => "Hopeless",
+  :Dying => "Dying",
+
+  :SkillLevel1 => "Awful",
+  :SkillLevel2 => "Bad",
+  :SkillLevel3 => "Average",
+  :SkillLevel4 => "Good",
+  :SkillLevel5 => "Expert",
+  :SkillLevel6 => "Master",
+
 }

@@ -173,4 +173,26 @@ $s = {
   :EucalyptusglobulusLabill     => "Эвкалипт шаровидный",
   :EphedradistachyaL            => "Хвойник двуколосковый",
 
+  :ConLevel1 => "Очень хилая",
+  :ConLevel2 => "Хилая",
+  :ConLevel3 => "Нормальная",
+  :ConLevel4 => "Кровь с молоком",
+  :ConLevel5 => "Атлетическая",
+
+  :Healthy => "Здоров",
+  :SlghtlySick => "Легкое недомогание",
+  :Sick => "Недомогание",
+  :Diseased => "Болен",
+  :HeavyDiseased => "Серьезно болен",
+  :CriticallyDiseased => "Опасно болен",
+  :Hopeless => "Безнадежен",
+  :Dying => "При смерти",
+
+  :SkillLevel1 => "Ужасно",
+  :SkillLevel2 => "Посредственно",
+  :SkillLevel3 => "Средне",
+  :SkillLevel4 => "Хорошо",
+  :SkillLevel5 => "Эксперт",
+  :SkillLevel6 => "Мастер",
+
 }
