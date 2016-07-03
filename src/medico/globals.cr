@@ -91,6 +91,25 @@ def each_combination(n : Int32, aset : Enumerable(T))
   end
 end
 
+def sorted_by?(coll : Enumerable(T))
+  return true if coll.empty?
+  prev_value = yield(coll.first)
+  first = true
+  coll.each do |item|
+    if first
+      first = false
+      next
+    end
+    value = yield(item)
+    return false if value < prev_value
+    prev_value = value
+  end
+end
+
+def sorted?(coll : Enumerable(T))
+  sorted_by?(coll){|it| it}
+end
+
 $verbose = false
 
 def logs(s)
