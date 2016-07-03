@@ -38,7 +38,6 @@ class NameGen
     end
     result
   end
-
 end
 
 $disease_names = NameGen.new(DIS_NAMES1, DIS_NAMES2)

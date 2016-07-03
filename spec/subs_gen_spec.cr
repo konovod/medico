@@ -25,15 +25,15 @@ def recipe_stats(univ, nsubs, ntries)
     loop do
       oldsize = aset.size
       aset << baseset.pop unless baseset.empty?
-      #p nsubs-baseset.size #if baseset.size % 10 == 0
+      # p nsubs-baseset.size #if baseset.size % 10 == 0
       res = possible_substances(univ, aset)
       res.each do |subs|
         univ.generate_recipes(aset.to_a, subs, $r)
         aset << subs
-        break if aset.size > 50+nsubs
+        break if aset.size > 50 + nsubs
       end
       break if aset.size == oldsize
-      break if aset.size > 50+nsubs
+      break if aset.size > 50 + nsubs
       univ.init_reactions(aset.to_a, $r)
     end
     stats << {aset.size, aset.map(&.complexity).max}

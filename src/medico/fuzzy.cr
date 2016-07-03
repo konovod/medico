@@ -20,7 +20,6 @@ module Fuzzy
       return random.rand < arate
     end
 
-
     def incremental(oldvalue, newvalue, oldstate, random = DEF_RND)
       # sanity checks
       return oldstate if oldvalue == newvalue
@@ -183,8 +182,8 @@ module Fuzzy
     end
 
     def estimate_s(value : ParamValue,
-                 oldvalue : (ParamValue | Nil) = nil,
-                 oldestimate : (Int32 | Nil) = nil) : Int32
+                   oldvalue : (ParamValue | Nil) = nil,
+                   oldestimate : (Int32 | Nil) = nil) : Int32
       return @names[estimate(value, oldvalue, oldestimate)]
     end
 
@@ -239,14 +238,13 @@ module Fuzzy
       @names.clear
       data.each do |item|
         @names << item[:name]
-        width = item[:max]-item[:min]
-        @items << trap_or_pike(item[:min]-width, item[:min], item[:max], item[:max]+width)
+        width = item[:max] - item[:min]
+        @items << trap_or_pike(item[:min] - width, item[:min], item[:max], item[:max] + width)
       end
     end
 
     def generate_for(param : Param, additional = 0)
       generate_for(param.min, param.average, param.max, additional)
     end
-
   end
 end

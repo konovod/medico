@@ -1,10 +1,9 @@
-
 CON_LEVELS = {
-{name: :ConLevel1, min: 0, max: 5},
-{name: :ConLevel2, min: 5, max: 9},
-{name: :ConLevel3, min: 9, max: 12},
-{name: :ConLevel4, min: 12, max: 15},
-{name: :ConLevel5, min: 15, max: 19},
+  {name: :ConLevel1, min: 0, max: 5},
+  {name: :ConLevel2, min: 5, max: 9},
+  {name: :ConLevel3, min: 9, max: 12},
+  {name: :ConLevel4, min: 12, max: 15},
+  {name: :ConLevel5, min: 15, max: 19},
 }
 
 HEALTH_LEVELS = {

@@ -108,7 +108,7 @@ def sorted_by?(coll : Enumerable(T)) : Bool
 end
 
 def sorted?(coll : Enumerable(T))
-  sorted_by?(coll){|it| it}
+  sorted_by?(coll) { |it| it }
 end
 
 $verbose = false

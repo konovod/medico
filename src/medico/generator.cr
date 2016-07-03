@@ -151,7 +151,7 @@ module Biology
     private def try_recipe(combination : TRecipeTuple, random = DEF_RND)
       return if @substance_combinations.includes?(combination)
       @substance_combinations << combination
-      #TODO optimize each_combination, lol
+      # TODO optimize each_combination, lol
       return unless sorted_by?(combination, &.order)
       return if combination.any? { |subs| @recipes_limit[subs] >= BIO_CONSTS[:RecipesLimiter] }
       counter_chance = 1 + combination.sum { |subs| subs.complexity - 1 }
@@ -160,8 +160,8 @@ module Biology
       complexity = 1 + combination.map(&.complexity).max
       name, power = $chemical_names.next(false, random)
       power += complexity
-      subs = (@chemicals.find{|it| it.name == name}) ||
-             Substance.new(@substances.size - 1, complexity, name, power).generate(self, random)
+      subs = (@chemicals.find { |it| it.name == name }) ||
+        Substance.new(@substances.size - 1, complexity, name, power).generate(self, random)
       recipe = Alchemy::Recipe.new(subs.as(Substance))
       combination.each do |ingridient|
         recipe.substances[ingridient] = random.rand(5) + 1
@@ -219,7 +219,7 @@ module Biology
           react = ReactionRule.new
           react.substances.concat list
           react.effects.concat random_effects_sys(f(0.5), s1.systems & s2.systems, count: 1, random: random)
-          list.each {|subs| subs.reactions << react}
+          list.each { |subs| subs.reactions << react }
         end
       end
     end

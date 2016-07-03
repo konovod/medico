@@ -117,9 +117,9 @@ describe Universe do
 
   u.generate_flora($r)
   it "test subs effects" do
-    u.flora.sum{|subs| subs.effects.size }.should be_close u.flora.size*3, u.flora.size
-    u.flora.sum{|subs| subs.effects.count {|eff| eff.is_a? MagicBulletEffect}}.should be > 10
-    u.flora.sum{|subs| subs.effects.count {|eff| eff.is_a? AddSympthomEffect}}.should be_close 10,9
+    u.flora.sum { |subs| subs.effects.size }.should be_close u.flora.size*3, u.flora.size
+    u.flora.sum { |subs| subs.effects.count { |eff| eff.is_a? MagicBulletEffect } }.should be > 10
+    u.flora.sum { |subs| subs.effects.count { |eff| eff.is_a? AddSympthomEffect } }.should be_close 10, 9
   end
 
   it "test injecting" do
@@ -134,15 +134,15 @@ describe Universe do
     john.reset
 
     u.init_reactions(u.flora, $r)
-    drug1 = (u.flora.select{|subs| subs.reactions.size > 1 }).sample($r)
+    drug1 = (u.flora.select { |subs| subs.reactions.size > 1 }).sample($r)
     first, second = drug1.reactions[0], drug1.reactions[1]
     first.substances.each &.inject(john, f(1.0))
     sys = (first.substances[0].systems & first.substances[1].systems).to_a.sample($r)
     john.systems[sys].effectors[first]?.should eq 1
     john.systems[sys].effectors[second]?.should be_falsey
 
-    t = first.substances.map(&.kinetics).min+1
+    t = first.substances.map(&.kinetics).min + 1
     t.times { john.process_tick($r) }
-    john.systems[sys].effectors[first]?.should be_falsey  
+    john.systems[sys].effectors[first]?.should be_falsey
   end
 end

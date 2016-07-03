@@ -54,7 +54,6 @@ it "combination" do
 end
 
 it "sorted?" do
-  sorted?({1,2,3}).should be_truthy
-  sorted?({1,3,2}).should be_falsey
-
+  sorted?({1, 2, 3}).should be_truthy
+  sorted?({1, 3, 2}).should be_falsey
 end
