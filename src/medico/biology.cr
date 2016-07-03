@@ -250,6 +250,7 @@ module Biology
   )
   HEALTH_RATER = Fuzzy::RateSet.new(fixed: HEALTH_LEVELS)
   CON_RATER = Fuzzy::RateSet.new(fixed: CON_LEVELS)
+  SKILL_RATER = Fuzzy::RateSet.new(fixed: SKILL_LEVELS)
 
   enum Sign
     Negative
