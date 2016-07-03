@@ -68,8 +68,9 @@ module Biology
     end
 
     def process(**context) : TEffectorData
-      # TODO
-      return -1
+      # TODO ?
+      apply(context)
+      return 1
     end
   end
 end

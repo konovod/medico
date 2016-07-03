@@ -140,8 +140,9 @@ describe Universe do
     sys = (first.substances[0].systems & first.substances[1].systems).to_a.sample($r)
     john.systems[sys].effectors[first]?.should eq 1
     john.systems[sys].effectors[second]?.should be_falsey
-
-    t = first.substances.map(&.kinetics).min + 1
+    1.times { john.process_tick($r) }
+    john.systems[sys].effectors[first]?.should eq 1
+    t = first.substances.map(&.kinetics).min
     t.times { john.process_tick($r) }
     john.systems[sys].effectors[first]?.should be_falsey
   end
