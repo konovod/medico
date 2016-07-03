@@ -1,8 +1,6 @@
-require "spec"
+require "./spec_helper"
 require "../src/medico/globals.cr"
 require "../src/medico/namegen.cr"
-
-$r = Random.new(2)
 
 it "weighted_sample" do
   weighted_sample([1000, 3, 4, 5, 6, 7], $r) { |i| i }.should eq(1000)

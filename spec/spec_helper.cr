@@ -1,2 +1,4 @@
 require "spec"
-require "../src/medico"
+
+
+$r = Random.new(1)

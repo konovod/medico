@@ -1,10 +1,9 @@
-require "spec"
+require "./spec_helper"
 require "../src/medico/biology.cr"
 require "../src/medico/generator.cr"
 
 include Biology
 
-$r = Random.new(2)
 $performance = 0
 
 def simulate_patient(patient, univ, random, time)

@@ -1,10 +1,8 @@
-require "spec"
+require "./spec_helper"
 require "../src/medico/biology.cr"
 require "../src/medico/generator.cr"
 
 include Biology
-
-$r = Random.new(2)
 
 def possible_substances(univ, stash : Set(Substance)) : Set(Substance)
   result = Set(Substance).new

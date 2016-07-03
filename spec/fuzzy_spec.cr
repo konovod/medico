@@ -1,9 +1,7 @@
-require "spec"
+require "./spec_helper"
 require "../src/medico/fuzzy.cr"
 
 include Fuzzy
-
-$r = Random.new(1)
 
 def histogram(&block : -> FLOAT)
   hist = Array(Int32).new(10, 0)

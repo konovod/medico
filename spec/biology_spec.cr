@@ -1,10 +1,8 @@
-require "spec"
+require "./spec_helper"
 require "../src/medico/biology.cr"
 require "../src/medico/effectors.cr"
 
 include Biology
-
-$r = Random.new(2)
 
 describe Biology do
   it "Creating patient" do
