@@ -26,6 +26,7 @@ def check_namegen(gen, n, str1, str2, maxval, minval)
   fl1.should be_truthy
   fl2.should be_truthy
   gen.history.size.should eq n
+  gen.history.clear
 end
 
 it "names gen" do

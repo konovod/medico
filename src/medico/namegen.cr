@@ -22,7 +22,7 @@ class NameGen
     @history = Set(String).new
   end
 
-  def next(unique, random = DEF_RND)
+  def next(unique : Bool, random = DEF_RND)
     raise("too many names #{@history.size}, max=#{@first.size*@second.size}") if unique && @history.size > 0.9*@first.size*@second.size
     result = {"", 0}
     loop do

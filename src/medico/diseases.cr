@@ -29,7 +29,7 @@ module Biology
       n.times { arr << ALL_SYSTEMS.to_a.sample(random) }
       @systems = arr.to_set
       # stages
-      @name, @danger = $disease_names.next(random)
+      @name, @danger = $disease_names.next(true, random)
       nstages = random.rand(BIO_CONSTS[:MaxStages] - 1) + 2
       curstage = nil
       nstages.times do |i|
