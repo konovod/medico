@@ -70,7 +70,7 @@ module Biology
       end
     end
 
-    def random_effects_sys(good : FLOAT, sys, count = 1, random = DEF_RND)
+    def random_effects_sys(good : FLOAT, sys : Enumerable(System), count = 1, random = DEF_RND)
       random_effects(good, count: count, random: random) do |eff|
         (!eff.is_a?(RemoveSympthomEffect) || sys.includes?(eff.as(RemoveSympthomEffect).sympthom.system)) &&
           (!eff.is_a?(AddSympthomEffect) || sys.includes?(eff.as(AddSympthomEffect).sympthom.system))

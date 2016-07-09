@@ -54,11 +54,11 @@ describe Universe do
     bads.any? { |e| e.is_a?(AddSympthomEffect) }.should be_truthy
     bads.any? { |e| e.is_a?(ChangeParam) }.should be_truthy
 
-    heads = u.random_effects_sys(f(0.5), random: $r, count: 20, sys: Set{:Brains})
-    heads.any? { |e| e.is_a?(AddSympthomEffect) && e.sympthom.system == :Brains }.should be_truthy
-    heads.any? { |e| e.is_a?(RemoveSympthomEffect) && e.sympthom.system == :Brains }.should be_truthy
-    heads.any? { |e| e.is_a?(AddSympthomEffect) && e.sympthom.system != :Brains }.should be_falsey
-    heads.any? { |e| e.is_a?(RemoveSympthomEffect) && e.sympthom.system != :Brains }.should be_falsey
+    heads = u.random_effects_sys(f(0.5), random: $r, count: 20, sys: Set{System::Brains})
+    heads.any? { |e| e.is_a?(AddSympthomEffect) && e.sympthom.system == System::Brains }.should be_truthy
+    heads.any? { |e| e.is_a?(RemoveSympthomEffect) && e.sympthom.system == System::Brains }.should be_truthy
+    heads.any? { |e| e.is_a?(AddSympthomEffect) && e.sympthom.system != System::Brains }.should be_falsey
+    heads.any? { |e| e.is_a?(RemoveSympthomEffect) && e.sympthom.system != System::Brains }.should be_falsey
     heads.any? { |e| e.is_a?(ChangeParam) }.should be_truthy
   end
 
@@ -72,7 +72,7 @@ describe Universe do
     u.init_diseases($r)
     sys_count = u.diseases_pool.map { |d| d.systems.size }.sort
     #puts sys_count.group_by { |x| x }.map { |k, v| "#{v.size} affects #{k} systems" }.join("\n")
-    (2...ALL_SYSTEMS.size).each do |i|
+    (2...Biology::System.values.size).each do |i|
       sys_count.should contain(i)
     end
     sys_count.count(2).should be >= sys_count.count(1)

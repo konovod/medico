@@ -35,7 +35,7 @@ module Biology
     getter name : Symbol
     getter damage : FLOAT
     getter danger : FLOAT
-    getter system : Symbol
+    getter system : System
 
     def desc
       s(@name)
@@ -93,24 +93,24 @@ module Biology
   end
 
   class SystemState
+    getter params : ParamsBuffer
+    getter sympthoms # TODO: cache sympthoms too?
+    getter effectors
+    getter sys : System
+
     def owner : Patient
       @owner.as(Patient)
     end
 
-    getter params : ParamsBuffer
-    getter sympthoms # TODO: cache sympthoms too?
-    getter name : Symbol
-    getter effectors
-
     def to_s(io)
-      io << "#{owner.name} #{name}"
+      io << "#{owner.name} #{sys.name}"
     end
 
-    def initialize(@owner : Patient, @name)
+    def initialize(@owner : Patient, @sys)
       @sympthoms = Hash(Sympthom, FLOAT).new
       @params = ParamsBuffer.new
       @effectors = Hash(Effector, TEffectorData).new
-      ALL_SYMPTHOMS.select { |sy| sy.system == @name }.each { |sy| @sympthoms[sy] = f(0) }
+      ALL_SYMPTHOMS.select { |sy| sy.system == @sys }.each { |sy| @sympthoms[sy] = f(0) }
     end
 
     def reset
@@ -167,8 +167,8 @@ module Biology
       @maxhealth = f(randg(10, 3, random).clamp(2,25))
       @health = @maxhealth
       @diseases = Hash(Disease, DiseaseState).new
-      @systems = Hash(Symbol, SystemState).new
-      ALL_SYSTEMS.each { |sys| @systems[sys] = SystemState.new(self, sys) }
+      @systems = Hash(System, SystemState).new
+      System.values.each { |sys| @systems[sys] = SystemState.new(self, sys) }
       check_immunity
     end
 

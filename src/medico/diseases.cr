@@ -7,14 +7,14 @@ module Biology
       @first.as(DiseaseStage)
     end
 
-    getter systems : Set(Symbol)
+    getter systems : Set(System)
     getter name
     getter danger
 
     def initialize
       @name = ""
       @danger = 0
-      @systems = ALL_SYSTEMS.to_set
+      @systems = System.values.to_set
       @first = DiseaseStage.new(self, 1, f(1))
     end
 
@@ -24,9 +24,9 @@ module Biology
 
     def generate(univ : Universe, random = DEF_RND)
       # systems
-      n = random.rand(ALL_SYSTEMS.size + 1) + 2
-      arr = [] of Symbol
-      n.times { arr << ALL_SYSTEMS.to_a.sample(random) }
+      n = random.rand(System.values.size + 1) + 2
+      arr = [] of System
+      n.times { arr << System.values.sample(random) }
       @systems = arr.to_set
       # stages
       @name, @danger = $disease_names.next(true, random)
