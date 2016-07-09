@@ -1,3 +1,5 @@
+require "../grammar.cr"
+
 module Biology
   enum System
     Circulatory
@@ -7,8 +9,8 @@ module Biology
     Brains
     LOR
 
-    def name
-      SYSTEM_NAMES[self.value]
+    def name(*args)
+      SYSTEM_NAMES[self.value].to_s(*args)
     end
   end
 
@@ -19,5 +21,6 @@ module Biology
     :Lungs,
     :Brains,
     :LOR,
-  }
+  }.map{|sym| Grammar::Noun.new(parse: s(sym)) }
+
 end

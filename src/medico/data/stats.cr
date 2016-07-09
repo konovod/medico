@@ -1,3 +1,5 @@
+require "../grammar.cr"
+
 module Medico
   enum Stat
     Int
@@ -13,6 +15,6 @@ module Medico
     :Chr,
     :Dil,
     :Intu,
-  }
+  }.map{|sym| Grammar::Noun.new(parse: s(sym)) }
   N_STATS = Stat.values.size
 end

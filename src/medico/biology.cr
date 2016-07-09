@@ -100,7 +100,7 @@ module Biology
     getter owner : Patient
 
     def to_s(io)
-      io << "#{owner.name} #{s(sys.name)}"
+      io << "#{owner.name} #{sys.name}"
     end
 
     def initialize(@owner, @sys)
