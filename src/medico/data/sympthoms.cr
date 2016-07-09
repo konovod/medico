@@ -1,4 +1,4 @@
-macro data_sympthoms
+module Biology
 
 ALL_SYMPTHOMS = {
 

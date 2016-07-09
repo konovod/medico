@@ -1,4 +1,4 @@
-macro data_systems
+module Biology
   ALL_SYSTEMS = {
     :Circulatory,
     :Digestion,

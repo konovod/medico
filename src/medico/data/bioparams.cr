@@ -1,4 +1,4 @@
-macro data_bioparams
+module Biology
 
 N_LIQUIDS = 4
 N_PARAMS = 7

@@ -4,10 +4,6 @@ require "./data/*"
 module Biology
   extend self
 
-  data_bioparams
-  data_systems
-  data_sympthoms
-
   class BioParam < Fuzzy::Param
     getter name : Symbol
 
@@ -248,9 +244,6 @@ module Biology
     ALL_PARAMS.to_a,
     ALL_PARAMS.to_a.map { |x| Fuzzy::RateSet.new(x, PARAM_RATE_STAGES - 1) }
   )
-  HEALTH_RATER = Fuzzy::RateSet.new(fixed: HEALTH_LEVELS)
-  CON_RATER    = Fuzzy::RateSet.new(fixed: CON_LEVELS)
-  SKILL_RATER  = Fuzzy::RateSet.new(fixed: SKILL_LEVELS)
 
   enum Sign
     Negative
