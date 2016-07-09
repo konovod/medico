@@ -97,16 +97,13 @@ module Biology
     getter sympthoms # TODO: cache sympthoms too?
     getter effectors
     getter sys : System
-
-    def owner : Patient
-      @owner.as(Patient)
-    end
+    getter owner : Patient
 
     def to_s(io)
-      io << "#{owner.name} #{sys.name}"
+      io << "#{owner.name} #{s(sys.name)}"
     end
 
-    def initialize(@owner : Patient, @sys)
+    def initialize(@owner, @sys)
       @sympthoms = Hash(Sympthom, FLOAT).new
       @params = ParamsBuffer.new
       @effectors = Hash(Effector, TEffectorData).new
