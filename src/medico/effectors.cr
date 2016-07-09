@@ -106,7 +106,7 @@ module Biology
     end
 
     def to_s(io)
-      io << "(#{@param.desc} is #{@checker.average})"
+      io << "(#{@param.name} is #{@checker.average})"
     end
 
     def process(**context) : TEffectorData

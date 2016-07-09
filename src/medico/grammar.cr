@@ -1,4 +1,5 @@
 module Grammar
+  extend self
   enum Gender
     He
     She
@@ -54,8 +55,8 @@ module Grammar
       end
     end
 
-    def to_s(acase = Case::Nominative, number = Number::Single)
-      @case_data[number.to_i][acase.to_i]
+    def get(acase = Case::Nominative, number = Number::Single)
+      @case_data[number.value][acase.value]
     end
   end
 end

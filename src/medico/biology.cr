@@ -1,18 +1,16 @@
 require "./fuzzy"
+require "./grammar"
 require "./data/*"
 
 module Biology
   extend self
 
   class BioParam < Fuzzy::Param
-    getter name : Symbol
+    getter name
 
-    def desc
-      s(@name)
-    end
-
-    def initialize(@name, min, average, max)
+    def initialize(aname, min, average, max)
       super(f(min), f(average), f(max))
+      @name = Grammar::Noun.new(parse: s(aname))
     end
 
     def damage(value)
