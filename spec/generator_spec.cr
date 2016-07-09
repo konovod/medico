@@ -76,7 +76,7 @@ describe Universe do
       sys_count.should contain(i)
     end
     sys_count.count(2).should be >= sys_count.count(1)
-    sys_count.count(3).should be > sys_count.count(5)
+    sys_count.count(3).should be >= sys_count.count(5)
   end
 
   john = Patient.new("John", $r)
