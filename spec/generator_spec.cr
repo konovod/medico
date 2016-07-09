@@ -71,8 +71,10 @@ describe Universe do
   it "diseases generation" do
     u.init_diseases($r)
     sys_count = u.diseases_pool.map { |d| d.systems.size }.sort
-    puts sys_count.group_by { |x| x }.map { |k, v| "#{v.size} affects #{k} systems" }.join("\n")
-    sys_count.to_set.superset?((2...ALL_SYSTEMS.size).to_set).should be_truthy
+    #puts sys_count.group_by { |x| x }.map { |k, v| "#{v.size} affects #{k} systems" }.join("\n")
+    (2...ALL_SYSTEMS.size).each do |i|
+      sys_count.should contain(i)
+    end
     sys_count.count(2).should be >= sys_count.count(1)
     sys_count.count(3).should be > sys_count.count(5)
   end
@@ -81,12 +83,10 @@ describe Universe do
   u.param_rules.each { |r| john.systems.each_value { |sys| sys.effectors[r] = 0 } }
 
   it "test diseases" do
-    # $verbose = true
     3.times { john.infect(u.diseases_pool.sample($r), $r) }
     john.health.should eq(john.maxhealth)
     15.times { john.process_tick($r) }
     john.health.should be < john.maxhealth
-    $verbose = false
   end
   it "test reset" do
     john.reset
@@ -103,16 +103,20 @@ describe Universe do
 
   it "test diseases short" do
     results = stat_patients(u, $r, 20, 200)
-    puts "stats at initial #{results}"
+    #puts "stats at initial #{results}"
     results[0].should be_close(100, 15)
   end
 
   it "test disease long" do
     results = stat_patients(u, $r, 400, 200)
-    puts "stats at longtime #{results}"
+    #puts "stats at longtime #{results}"
     results[0].should be < 10
   end
-  puts "ticks simulated #{$performance}, #{($performance * 1.0 / (Time.now - time).total_seconds).to_i} ticks/s"
+  it "simulation performance" do
+    speed = ($performance * 1.0 / (Time.now - time).total_seconds).to_i
+    #puts "ticks simulated #{$performance}, #{speed} ticks/s"
+    speed.should be > 10000
+  end
 
   u.generate_flora($r)
   it "test subs effects" do

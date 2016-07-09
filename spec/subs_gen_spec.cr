@@ -58,6 +58,6 @@ describe Universe do
     recipe_stats(u, 10, 5).first.should be > 4
     recipe_stats(u, 20, 5).last.should be > 2.5
     recipe_stats(u, 40, 1).last.should be > 3.5
-    puts "max recipe level #{u.chemicals.map(&.complexity).max}"
+    #puts "max recipe level #{u.chemicals.map(&.complexity).max}"
   end
 end
