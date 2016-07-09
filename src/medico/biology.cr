@@ -168,7 +168,7 @@ module Biology
     end
 
     def initialize(@name, random = DEF_RND)
-      @maxhealth = f([2, randg(10, 3, random)].max)
+      @maxhealth = f(randg(10, 3, random).clamp(2,25))
       @health = @maxhealth
       @diseases = Hash(Disease, DiseaseState).new
       @systems = Hash(Symbol, SystemState).new
@@ -177,7 +177,7 @@ module Biology
     end
 
     private def check_immunity
-      imm = [f(0.5), @health/@maxhealth].max
+      imm = {f(0.5), @health/@maxhealth}.max
       imm = @systems.values.reduce(imm) do |mul, sys|
         dam = sys.damage
         dam > 0.5 ? mul*dam : mul
