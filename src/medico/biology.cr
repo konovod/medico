@@ -161,7 +161,7 @@ module Biology
     end
 
     def initialize(@name, random = DEF_RND)
-      @maxhealth = f(randg(10, 3, random).clamp(2,25))
+      @maxhealth = f(randg(10, 3, random).clamp(2, 25))
       @health = @maxhealth
       @diseases = Hash(Disease, DiseaseState).new
       @systems = Hash(System, SystemState).new

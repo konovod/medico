@@ -15,6 +15,4 @@ module Medico
     :Intu,
   }
   N_STATS = Stat.values.size
-
-
 end

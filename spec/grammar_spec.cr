@@ -14,6 +14,4 @@ describe Grammar do
     n = Noun.new(Gender::They, "money")
     n.to_s(Case::Accusative, Number::Plural).should eq "money"
   end
-
-
 end

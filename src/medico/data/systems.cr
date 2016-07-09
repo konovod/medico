@@ -18,7 +18,6 @@ module Biology
     :Joints,
     :Lungs,
     :Brains,
-    :LOR
+    :LOR,
   }
-
 end

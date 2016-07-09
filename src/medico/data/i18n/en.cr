@@ -195,9 +195,9 @@ s = {
   :SkillLevel5 => "Expert",
   :SkillLevel6 => "Master",
 
-  :Int => "Intelligence",
-  :Emp => "Empathy",
-  :Chr => "Charisma",
-  :Dil => "Diligence",
+  :Int  => "Intelligence",
+  :Emp  => "Empathy",
+  :Chr  => "Charisma",
+  :Dil  => "Diligence",
   :Intu => "Intuition",
 }

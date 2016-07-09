@@ -71,7 +71,7 @@ describe Universe do
   it "diseases generation" do
     u.init_diseases($r)
     sys_count = u.diseases_pool.map { |d| d.systems.size }.sort
-    #puts sys_count.group_by { |x| x }.map { |k, v| "#{v.size} affects #{k} systems" }.join("\n")
+    # puts sys_count.group_by { |x| x }.map { |k, v| "#{v.size} affects #{k} systems" }.join("\n")
     (2...Biology::System.values.size).each do |i|
       sys_count.should contain(i)
     end
@@ -103,18 +103,18 @@ describe Universe do
 
   it "test diseases short" do
     results = stat_patients(u, $r, 20, 200)
-    #puts "stats at initial #{results}"
+    # puts "stats at initial #{results}"
     results[0].should be_close(100, 15)
   end
 
   it "test disease long" do
     results = stat_patients(u, $r, 400, 200)
-    #puts "stats at longtime #{results}"
+    # puts "stats at longtime #{results}"
     results[0].should be < 10
   end
   it "simulation performance" do
     speed = ($performance * 1.0 / (Time.now - time).total_seconds).to_i
-    #puts "ticks simulated #{$performance}, #{speed} ticks/s"
+    # puts "ticks simulated #{$performance}, #{speed} ticks/s"
     speed.should be > 10000
   end
 
