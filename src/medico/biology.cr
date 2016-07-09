@@ -30,16 +30,13 @@ module Biology
   end
 
   class Sympthom
-    getter name : Symbol
+    getter name : Grammar::Noun
     getter damage : FLOAT
     getter danger : FLOAT
     getter system : System
 
-    def desc
-      s(@name)
-    end
-
-    def initialize(@system, @name, adanger, adamage)
+    def initialize(@system, aname, adanger, adamage)
+      @name = Grammar::Noun.new(parse: s(aname))
       @damage = f(adamage)
       @danger = f(adanger)
     end
