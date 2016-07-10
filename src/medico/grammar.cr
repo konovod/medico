@@ -63,7 +63,7 @@ module Grammar
         @gender = GENDER_NAMES[match[1]]
         base = match[2]
       end
-      parts = split_string(base, 2*N_CASES)
+      parts = Grammar.split_string(base, 2*N_CASES)
       @case_data = {parts[0...N_CASES], parts[N_CASES...2*N_CASES]}
     end
 
@@ -85,7 +85,7 @@ module Grammar
 
     def initialize(*, parse : String)
       initialize("")
-      parts = split_string parse, N_GENDERS*N_CASES
+      parts = Grammar.split_string parse, N_GENDERS*N_CASES
       @case_data = parts.in_groups_of(N_CASES, "")
     end
 

@@ -7,6 +7,7 @@ module Medico
     Chr
     Dil
     Intu
+    Acc
   end
 
   STAT_NAMES = {
@@ -15,6 +16,7 @@ module Medico
     :Chr,
     :Dil,
     :Intu,
+    :Acc,
   }.map { |sym| s(sym) }
   N_STATS = Stat.values.size
 end

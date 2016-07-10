@@ -7,4 +7,6 @@ describe Medico do
   doc = Doctor.new
 
   doc.generate($r)
+
+  p ALL_SKILLS.first.name.get
 end

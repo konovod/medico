@@ -128,5 +128,6 @@ FLORA_NAMES = [
   {name: :RosamajalisHerrm, value: 3},
   {name: :EucalyptusglobulusLabill, value: 4},
   {name: :EphedradistachyaL, value: 2},
+  {name: :DactylorhizamaculataLSo, value: 7},
 
 ]

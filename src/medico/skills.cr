@@ -20,7 +20,7 @@ module Medico
     getter ap : Int32
 
     def initialize(@id, @first_stat, @second_stat, ause, @ap)
-      super
+      super(@id, @first_stat, @second_stat)
       @use_name = $s[ause] # TODO verbs
     end
   end

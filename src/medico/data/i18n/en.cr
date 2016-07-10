@@ -172,12 +172,14 @@ s = {
   :RosamajalisHerrm             => "Rosa majalis Herrm.",
   :EucalyptusglobulusLabill     => "Eucalyptus globulus Labill.",
   :EphedradistachyaL            => "Ephedra distachya L.",
+  :DactylorhizamaculataLSo => "Dactylorhiza maculata (L.) Soó",
 
   :ConLevel1 => "ConLevel1",
   :ConLevel2 => "ConLevel2",
   :ConLevel3 => "ConLevel3",
   :ConLevel4 => "ConLevel4",
   :ConLevel5 => "ConLevel5",
+  :ConLevel5 => "ConLevel6",
 
   :Healthy            => "Healthy",
   :SlghtlySick        => "Slghtly sick",
@@ -187,6 +189,7 @@ s = {
   :CriticallyDiseased => "Critically diseased",
   :Hopeless           => "Hopeless",
   :Dying              => "Dying",
+  :Dead => "Dead",
 
   :SkillLevel1 => "Awful",
   :SkillLevel2 => "Bad",
@@ -194,12 +197,14 @@ s = {
   :SkillLevel4 => "Good",
   :SkillLevel5 => "Expert",
   :SkillLevel6 => "Master",
+  :SkillLevel7 => "Grandmaster",
 
   :Int  => "Intelligence",
   :Emp  => "Empathy",
   :Chr  => "Charisma",
   :Dil  => "Diligence",
   :Intu => "Intuition",
+  :Acc => "Accuracy",
 
   :Gather_name          => "Gather",
   :GeneralDiagnose_name => "GeneralDiagnose",
@@ -212,6 +217,7 @@ s = {
   :Haggle_name          => "Haggle",
   :Advertising_name     => "Advertising",
   :SelfDiag_name        => "SelfDiag",
+  :Hygiene_name => "Hygiene",
   :Gather_use           => "Gather",
   :ApplySubs_use        => "Apply substance",
   :SeekRecipe_use       => "Seek recipe",
