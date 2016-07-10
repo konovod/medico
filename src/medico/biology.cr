@@ -6,11 +6,11 @@ module Biology
   extend self
 
   class BioParam < Fuzzy::Param
-    getter name
+    getter name : Grammar::Noun
 
     def initialize(aname, min, average, max)
       super(f(min), f(average), f(max))
-      @name = Grammar::Noun.new(parse: s(aname))
+      @name = s(aname)
     end
 
     def damage(value)
@@ -36,7 +36,7 @@ module Biology
     getter system : System
 
     def initialize(@system, aname, adanger, adamage)
-      @name = Grammar::Noun.new(parse: s(aname))
+      @name = s(aname)
       @damage = f(adamage)
       @danger = f(adanger)
     end

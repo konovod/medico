@@ -16,7 +16,6 @@ def simulate_patient(patient, univ, random, time)
     break if patient.health < 0 || patient.diseases.empty?
   end
   return 1 if patient.diseases.empty?
-  #  p patient.diseases[dis].antigene
   return -1 if patient.health < 0
   return 0
 end
@@ -71,12 +70,12 @@ describe Universe do
   it "diseases generation" do
     u.init_diseases($r)
     sys_count = u.diseases_pool.map { |d| d.systems.size }.sort
-    # puts sys_count.group_by { |x| x }.map { |k, v| "#{v.size} affects #{k} systems" }.join("\n")
+     #puts sys_count.group_by { |x| x }.map { |k, v| "#{v.size} affects #{k} systems" }.join("\n")
     (2...Biology::System.values.size).each do |i|
       sys_count.should contain(i)
     end
     sys_count.count(2).should be >= sys_count.count(1)
-    sys_count.count(3).should be >= sys_count.count(5)
+    sys_count.count(3).should be > sys_count.count(6)
   end
 
   john = Patient.new("John", $r)

@@ -1,5 +1,6 @@
 require "./data/names"
 require "./globals"
+require "./grammar"
 
 class NameGen
   getter history
@@ -19,24 +20,24 @@ class NameGen
     @second += asecond
     @chances1 = @first.map { |item| itemchance(item) }
     @chances2 = @second.map { |item| itemchance(item) }
-    @history = Set(String).new
+    @history = Set(Tuple(Symbol, Symbol)).new
   end
 
   def next(unique : Bool, random = DEF_RND)
     raise("too many names #{@history.size}, max=#{@first.size*@second.size}") if unique && @history.size > 0.9*@first.size*@second.size
-    result = {"", 0}
+    #result = {"", 0}
     loop do
       it1 = weighted_sample(@first, @chances1, random)
       it2 = weighted_sample(@second, @chances2, random)
-      str = s(it1[:name]) + " " + s(it2[:name])
       if unique
-        next if @history.includes?(str)
-        @history << str
+        tuple = {it1[:name], it2[:name]}
+        next if @history.includes?(tuple)
+        @history << tuple
       end
+      str = s(it1[:name], Grammar::Adjective) + s(it2[:name])
       result = {str, it1[:value] + it2[:value]}
-      break
+      break result
     end
-    result
   end
 end
 

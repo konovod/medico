@@ -1,10 +1,11 @@
 require "./biology"
 require "./effectors"
 require "./namegen"
+require "./grammar"
 
 module Biology
   class Substance < TimedEffector
-    getter name : String
+    getter name : Grammar::Noun
     getter power : Int32
     getter systems : Set(System)
     getter kinetics : Int32

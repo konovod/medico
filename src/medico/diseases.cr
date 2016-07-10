@@ -12,7 +12,7 @@ module Biology
     getter danger
 
     def initialize
-      @name = ""
+      @name = Grammar::Noun.new(parse: "")
       @danger = 0
       @systems = System.values.to_set
       @first = DiseaseStage.new(self, 1, f(1))

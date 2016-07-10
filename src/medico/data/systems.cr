@@ -10,7 +10,7 @@ module Biology
     LOR
 
     def name(*args)
-      SYSTEM_NAMES[self.value].to_s(*args)
+      SYSTEM_NAMES[self.value].get(*args)
     end
   end
 
@@ -21,6 +21,6 @@ module Biology
     :Lungs,
     :Brains,
     :LOR,
-  }.map{|sym| Grammar::Noun.new(parse: s(sym)) }
+  }.map{|sym| s(sym) }
 
 end

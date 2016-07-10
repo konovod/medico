@@ -1,5 +1,6 @@
 require "./data/i18n/ru.cr"
 require "math"
+require "./grammar"
 
 alias FLOAT = Float32
 
@@ -7,8 +8,8 @@ def f(value) : FLOAT
   return FLOAT.new(value)
 end
 
-def s(value)
-  return $s[value]
+def s(value, t = Grammar::Noun)
+  return t.new(parse: $s[value])
 end
 
 class TEST_RND
