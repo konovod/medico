@@ -25,7 +25,6 @@ module Grammar
     Plural
   end
 
-
   def split_string(s, n)
     result = Array(String).new(n)
     (s.split(/[\{\}]/).in_groups_of(2, "").map do |pair|
@@ -35,18 +34,15 @@ module Grammar
       when 1
         [base]*n
       when n
-        suf.map{|x| base+x }
+        suf.map { |x| base + x }
       else
         raise "cant parse name #{s}, expected #{n} variations got #{suf.size}"
       end
-    end).reduce([""]*n)do |acc, it|
-      it.each_with_index{|x,i| acc[i]=acc[i]+x}
+    end).reduce([""]*n) do |acc, it|
+      it.each_with_index { |x, i| acc[i] = acc[i] + x }
       acc
     end
-
   end
-
-
 
   class Noun
     getter gender : Gender
@@ -90,12 +86,7 @@ module Grammar
     def initialize(*, parse : String)
       initialize("")
       parts = split_string parse, N_GENDERS*N_CASES
-      parts.reverse!
-      N_GENDERS.times do |i|
-        N_CASES.times do |j|
-          @case_data[i][j] += parts.pop
-        end
-      end
+      @case_data = parts.in_groups_of(N_CASES, "")
     end
 
     def get(gender : Gender, acase = Case::Nominative)
