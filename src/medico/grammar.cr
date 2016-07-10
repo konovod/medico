@@ -25,6 +25,29 @@ module Grammar
     Plural
   end
 
+
+  def split_string(s, n)
+    result = Array(String).new(n)
+    (s.split(/[\{\}]/).in_groups_of(2, "").map do |pair|
+      base = pair[0]
+      suf = pair[1].split(",")
+      case suf.size
+      when 1
+        [base]*n
+      when n
+        suf.map{|x| base+x }
+      else
+        raise "cant parse name #{s}, expected #{n} variations got #{suf.size}"
+      end
+    end).reduce([""]*n)do |acc, it|
+      it.each_with_index{|x,i| acc[i]=acc[i]+x}
+      acc
+    end
+
+  end
+
+
+
   class Noun
     getter gender : Gender
     getter case_data : Tuple(Array(String), Array(String))
@@ -35,25 +58,17 @@ module Grammar
 
     def initialize(*, parse : String)
       initialize(Gender::It, "")
-      regex = /(.)(.*)\{(.*)\}/
+      regex = /([MWUN])(.*)/
       match = regex.match(parse)
       case match
       when nil
-        initialize(Gender::It, parse)
-        return
+        base = parse
       else
-        agender = GENDER_NAMES[match[1]]?
-        if agender
-          base = match[2]
-          @gender = agender
-        else
-          base = match[1] + match[2]
-          @gender = Gender::He
-        end
-        parts = match[3].split ","
-        raise "cant parse case data: #{parse}" if parts.size < 2*N_CASES
-        @case_data = {parts[0...N_CASES].map { |s| base + s }, parts[N_CASES...2*N_CASES].map { |s| base + s }}
+        @gender = GENDER_NAMES[match[1]]
+        base = match[2]
       end
+      parts = split_string(base, 2*N_CASES)
+      @case_data = {parts[0...N_CASES], parts[N_CASES...2*N_CASES]}
     end
 
     def get(acase = Case::Nominative, number = Number::Single)
@@ -73,22 +88,12 @@ module Grammar
     end
 
     def initialize(*, parse : String)
-      regex = /(.*)\{(.*)\}/
-      match = regex.match(parse)
-      case match
-      when nil
-        initialize(parse)
-        return
-      else
-        base = match[1]
-        initialize(base)
-        parts = match[2].split ","
-        raise "cant parse case data: #{parse}" if parts.size < N_GENDERS*N_CASES
-        parts.reverse!
-        N_GENDERS.times do |i|
-          N_CASES.times do |j|
-            @case_data[i][j] += parts.pop
-          end
+      initialize("")
+      parts = split_string parse, N_GENDERS*N_CASES
+      parts.reverse!
+      N_GENDERS.times do |i|
+        N_CASES.times do |j|
+          @case_data[i][j] += parts.pop
         end
       end
     end
