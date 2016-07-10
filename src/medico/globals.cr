@@ -37,44 +37,57 @@ def randg(norm, sigma, random = DEF_RND)
 end
 
 # TODO: monkey patching all the way
-def weighted_sample(arr : Enumerable(T), random = DEF_RND)
-  weights = arr.map { |item| yield(item) }
-  weighted_sample(arr, weights, random)
-end
-
-def weighted_sample(arr : Enumerable(T), weights : Enumerable(Y), random = DEF_RND) : T
-  total = weights.sum
-  point = random.rand * total
-  arr.zip(weights).each do |n, w|
-    return n if w >= point
-    point -= w
+module Enumerable(T)
+  def weighted_sample(random = DEF_RND)
+    weights = map { |item| yield(item) }
+    weighted_sample(weights, random)
   end
-  return arr.first
-end
 
-def sorted_by?(coll : Enumerable(T)) : Bool
-  return true if coll.empty?
-  prev_value = yield(coll.first)
-  first = true
-  coll.each do |item|
-    if first
-      first = false
-      next
+  def zip(other : Enumerable)
+    each_with_index do |elem, i|
+      yield elem, other[i]
     end
-    value = yield(item)
-    return false if value < prev_value
-    prev_value = value
   end
-  return true
+
+  def zip(other : Enumerable(U))
+    pairs = Array({T, U}).new(size)
+    zip(other) { |x, y| pairs << {x, y} }
+    pairs
+  end
+
+  def weighted_sample(weights : Enumerable(Y), random = DEF_RND) : T
+    total = weights.sum
+    point = random.rand * total
+    zip(weights).each do |n, w|
+      return n if w >= point
+      point -= w
+    end
+    return first # to prevent "nillable" complain
+  end
+
+  def sorted_by? : Bool
+    return true if empty?
+    prev_value = yield(first)
+    first = true
+    each do |item|
+      if first
+        first = false
+        next
+      end
+      value = yield(item)
+      return false if value < prev_value
+      prev_value = value
+    end
+    return true
+  end
+
+  def sorted?
+    sorted_by? { |it| it }
+  end
 end
 
-def sorted?(coll : Enumerable(T))
-  sorted_by?(coll) { |it| it }
-end
-
-
-#TODO - replace with universal function? how to yield in recursive implementation?
-#TODO - repeatable, sorted combinations, use std product?
+# TODO - replace with universal function? how to yield in recursive implementation?
+# TODO - repeatable, sorted combinations, use std product?
 def each_combination(n : Int32, aset : Enumerable(T))
   case n
   when 1
@@ -117,6 +130,7 @@ end
 
 # TODO: replace to std logger
 $verbose = false
+
 def logs(s)
   puts s if $verbose
 end

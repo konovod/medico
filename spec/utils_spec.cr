@@ -3,9 +3,9 @@ require "../src/medico/globals.cr"
 require "../src/medico/namegen.cr"
 
 it "weighted_sample" do
-  weighted_sample([1000, 3, 4, 5, 6, 7], $r) { |i| i }.should eq(1000)
-  weighted_sample([-1, -100, -3, 4, 5, 6, 7, -10000], $r, &.abs).should eq(-10000)
-  weighted_sample(["low", "high", "low2"], [1, 1000, 3], $r).should eq("high")
+  {1000, 3, 4, 5, 6, 7}.weighted_sample($r) { |i| i }.should eq(1000)
+  [-1, -100, -3, 4, 5, 6, 7, -10000].weighted_sample($r, &.abs).should eq(-10000)
+  {"low", "high", "low2"}.weighted_sample([1, 1000, 3], $r).should eq("high")
 end
 
 def check_namegen(gen, n, str1, str2, maxval, minval)
@@ -56,8 +56,8 @@ it "combination" do
 end
 
 it "sorted?" do
-  sorted?({1, 2, 3}).should be_truthy
-  sorted?({1, 3, 2}).should be_falsey
+  {1, 2, 3}.sorted?.should be_truthy
+  {1, 3, 2}.sorted?.should be_falsey
 end
 
 it "stat_to_int" do

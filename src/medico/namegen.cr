@@ -27,8 +27,8 @@ class NameGen
     raise("too many names #{@history.size}, max=#{@first.size*@second.size}") if unique && @history.size > 0.9*@first.size*@second.size
     # result = {"", 0}
     loop do
-      it1 = weighted_sample(@first, @chances1, random)
-      it2 = weighted_sample(@second, @chances2, random)
+      it1 = @first.weighted_sample(@chances1, random)
+      it2 = @second.weighted_sample(@chances2, random)
       if unique
         tuple = {it1[:name], it2[:name]}
         next if @history.includes?(tuple)

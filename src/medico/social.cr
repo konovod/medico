@@ -16,6 +16,6 @@ module Social
   end
 
   def gen_status(random = DEF_RND)
-    weighted_sample(ALL_STATUSES.to_a, random, &.level)
+    ALL_STATUSES.weighted_sample(random, &.level)
   end
 end

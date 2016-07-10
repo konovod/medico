@@ -121,7 +121,7 @@ module Biology
       end
       # add effects
       BIO_CONSTS[:NRules].times do
-        rule = weighted_sample(@param_rules, random) { |p| p.param.damage(p.checker.average) }
+        rule = @param_rules.weighted_sample(random) { |p| p.param.damage(p.checker.average) }
         rule.effects.concat random_effects(f(0.1), count: 1, random: random) { |eff|
           case eff
           when ChangeParam
@@ -152,7 +152,7 @@ module Biology
       return if @substance_combinations.includes?(combination)
       @substance_combinations << combination
       # TODO optimize each_combination, lol
-      return unless sorted_by?(combination, &.order)
+      return unless combination.sorted_by?(&.order)
       return if combination.any? { |subs| @recipes_limit[subs] >= BIO_CONSTS[:RecipesLimiter] }
       counter_chance = 1 + combination.sum { |subs| subs.complexity - 1 }
       return if random.rand > BIO_CONSTS[:RecipeChance] / counter_chance / counter_chance
