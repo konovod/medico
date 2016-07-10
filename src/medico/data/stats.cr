@@ -15,6 +15,6 @@ module Medico
     :Chr,
     :Dil,
     :Intu,
-  }.map{|sym| s(sym) }
+  }.map { |sym| s(sym) }
   N_STATS = Stat.values.size
 end

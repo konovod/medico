@@ -6,7 +6,7 @@ module Grammar
     It
     They
   end
-  N_GENDERS = Gender.values.size
+  N_GENDERS    = Gender.values.size
   GENDER_NAMES = {"W" => Gender::She, "M" => Gender::He, "U" => Gender::It, "N" => Gender::They}
 
   enum Case
@@ -59,14 +59,13 @@ module Grammar
     def get(acase = Case::Nominative, number = Number::Single)
       @case_data[number.value][acase.value]
     end
-
   end
 
   class Adjective
     @case_data : Array(Array(String))
 
     def initialize(str)
-      @case_data =Array(Array(String)).new
+      @case_data = Array(Array(String)).new
       N_GENDERS.times do
         arr = Array(String).new(N_CASES, str)
         @case_data << arr
@@ -98,7 +97,7 @@ module Grammar
       @case_data[gender.value][acase.value]
     end
 
-    def + (noun : Noun)
+    def +(noun : Noun)
       result = Noun.new(noun.gender, "")
       [noun.gender, Gender::They].each_with_index do |g, i|
         Case.values.each_with_index do |c, j|
@@ -108,5 +107,4 @@ module Grammar
       result
     end
   end
-
 end

@@ -70,7 +70,7 @@ describe Universe do
   it "diseases generation" do
     u.init_diseases($r)
     sys_count = u.diseases_pool.map { |d| d.systems.size }.sort
-     #puts sys_count.group_by { |x| x }.map { |k, v| "#{v.size} affects #{k} systems" }.join("\n")
+    # puts sys_count.group_by { |x| x }.map { |k, v| "#{v.size} affects #{k} systems" }.join("\n")
     (2...Biology::System.values.size).each do |i|
       sys_count.should contain(i)
     end

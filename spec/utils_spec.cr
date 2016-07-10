@@ -28,8 +28,12 @@ def check_namegen(gen, n, str1, str2, maxval, minval)
 end
 
 it "names gen" do
-  check_namegen($disease_names, 60, s(DIS_NAMES1.first[:name], Grammar::Adjective).get(Grammar::Gender::She), s(DIS_NAMES2.last[:name]).get, 7, 20)
-  check_namegen($chemical_names, 100, s(CHEM_NAMES1.first[:name], Grammar::Adjective).get(Grammar::Gender::She), s(CHEM_NAMES2.last[:name]).get, 7, 20)
+  check_namegen($disease_names, 60,
+    s(DIS_NAMES1.first[:name], Grammar::Adjective).get(Grammar::Gender::She),
+    s(DIS_NAMES2.last[:name]).get, 7, 20)
+  check_namegen($chemical_names, 100,
+    s(CHEM_NAMES1.first[:name], Grammar::Adjective).get(Grammar::Gender::She),
+    s(CHEM_NAMES2.last[:name]).get, 7, 20)
 end
 
 it "combination" do

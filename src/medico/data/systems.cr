@@ -21,6 +21,5 @@ module Biology
     :Lungs,
     :Brains,
     :LOR,
-  }.map{|sym| s(sym) }
-
+  }.map { |sym| s(sym) }
 end
