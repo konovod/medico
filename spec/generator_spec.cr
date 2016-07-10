@@ -23,7 +23,7 @@ end
 def stat_patients(univ, random, time, trials)
   counts = {0 => 0.0, 1 => 0.0, -1 => 0.0}
   trials.times do
-    john = Patient.new("Test subject", random)
+    john = Patient.new(random)
     result = simulate_patient(john, univ, random, time)
     counts[result] += 1
   end
@@ -78,7 +78,7 @@ describe Universe do
     sys_count.count(3).should be > sys_count.count(6)
   end
 
-  john = Patient.new("John", $r)
+  john = Patient.new($r)
   u.param_rules.each { |r| john.systems.each_value { |sys| sys.effectors[r] = 0 } }
 
   it "test diseases" do

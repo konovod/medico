@@ -1,6 +1,5 @@
 module Social
-
-ALL_STATUSES = {
+  ALL_STATUSES = {
     Status.new(:Beggar, 1, 0),
     Status.new(:Alco, 1, 0),
     Status.new(:Guy, 3, 5),
@@ -10,6 +9,5 @@ ALL_STATUSES = {
     Status.new(:Feodal, 10, 20),
     Status.new(:Graf, 25, 50),
     Status.new(:King, 100, 1000),
-}
-
+  }
 end

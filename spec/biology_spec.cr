@@ -6,13 +6,13 @@ include Biology
 
 describe Biology do
   it "Creating patient" do
-    john = Patient.new("John", $r)
+    john = Patient.new($r)
     john.systems.keys.first.name.should be_truthy
     john.systems.values.first.sympthoms.keys.first.name.get.should be_truthy
     john.systems.values.first.params.get.keys.first.name.get.should be_truthy
     john.systems.values.first.params.get.values.first.real.should be_truthy
   end
-  john = Patient.new("John", $r)
+  john = Patient.new($r)
   asys = Biology::System.values.first
   aparam = ALL_PARAMS.first
   asym = ALL_SYMPTHOMS.select { |sym| sym.system == asys }.first

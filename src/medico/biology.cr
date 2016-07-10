@@ -1,5 +1,6 @@
 require "./fuzzy"
 require "./grammar"
+require "./social"
 require "./data/*"
 
 module Biology
@@ -144,7 +145,7 @@ module Biology
   end
 
   class Patient
-    getter name : String
+    getter name : Grammar::Noun
     getter status : Social::Status
     getter systems
     property maxhealth : FLOAT
@@ -156,7 +157,9 @@ module Biology
       io << name.to_s
     end
 
-    def initialize(@name, @social, random = DEF_RND)
+    def initialize(random = DEF_RND)
+      @status = Social.gen_status(random)
+      @name = @status.name + s(Social::HUMAN_NAMES.to_a.sample(random))
       @maxhealth = f(randg(10, 3, random).clamp(2, 25))
       @health = @maxhealth
       @diseases = Hash(Disease, DiseaseState).new
