@@ -1,50 +1,42 @@
 require "./data/skill_data"
 require "./grammar"
 require "./globals"
-require "./player"
+require "./doctor"
 
 module Medico
+  class PassiveSkill
+    getter id : Symbol
+    getter name : Grammar::Noun
+    getter first_stat : Stat
+    getter second_stat : Stat
 
-class PassiveSkill
-  getter id : Symbol
-  getter name : Grammar::Noun
-  getter first_stat : Stat
-  getter second_stat : Stat
-  def initialize(@id, @first_stat, @second_stat)
-    @name = s(@id)
-  end
-end
-
-class ActiveSkill < PassiveSkill
-  getter use_name : String
-  getter ap : Int32
-
-  def initialize(@id, @first_stat, @second_stat, ause, @ap)
-    super
-    @use_name = $s[ause] #TODO verbs
+    def initialize(@id, @first_stat, @second_stat)
+      @name = s(@id)
+    end
   end
 
-end
+  class ActiveSkill < PassiveSkill
+    getter use_name : String
+    getter ap : Int32
 
-class Gather < ActiveSkill
+    def initialize(@id, @first_stat, @second_stat, ause, @ap)
+      super
+      @use_name = $s[ause] # TODO verbs
+    end
+  end
 
-end
+  class Gather < ActiveSkill
+  end
 
-class ApplySubs < ActiveSkill
+  class ApplySubs < ActiveSkill
+  end
 
-end
+  class AlchemicalTheory < ActiveSkill
+  end
 
-class AlchemicalTheory < ActiveSkill
+  class PracticalAlchemy < ActiveSkill
+  end
 
-end
-
-class PracticalAlchemy < ActiveSkill
-
-end
-
-class Bibliology < ActiveSkill
-
-end
-
-
+  class Bibliology < ActiveSkill
+  end
 end

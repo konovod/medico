@@ -1,5 +1,5 @@
 require "./spec_helper"
-require "../src/medico/player.cr"
+require "../src/medico/doctor.cr"
 
 include Medico
 
