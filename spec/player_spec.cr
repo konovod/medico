@@ -8,5 +8,8 @@ describe Medico do
 
   doc.generate($r)
 
-  p ALL_SKILLS.first.name.get
+  it "skills here" do
+    ALL_SKILLS.first.name.get.should be_truthy
+    doc.skills_training[ALL_SKILLS.first].should be_truthy
+  end
 end

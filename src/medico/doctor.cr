@@ -7,9 +7,12 @@ require "./data/*"
 module Medico
   class Doctor
     getter stats
+    getter skills_training
 
     def initialize
       @stats = Hash(Stat, Int32).new
+      @skills_training = Hash(Skill, Int32).new
+      ALL_SKILLS.each { |sk| @skills_training[sk] = 1 }
     end
 
     def generate(random = DEF_RND)

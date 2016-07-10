@@ -4,7 +4,7 @@ require "./globals"
 require "./doctor"
 
 module Medico
-  class PassiveSkill
+  class Skill
     getter id : Symbol
     getter name : Grammar::Noun
     getter first_stat : Stat
@@ -15,7 +15,10 @@ module Medico
     end
   end
 
-  class ActiveSkill < PassiveSkill
+  class PassiveSkill < Skill
+  end
+
+  class ActiveSkill < Skill
     getter use_name : String
     getter ap : Int32
 
