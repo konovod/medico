@@ -145,6 +145,7 @@ module Biology
 
   class Patient
     getter name : String
+    getter status : Social::Status
     getter systems
     property maxhealth : FLOAT
     property health : FLOAT
@@ -155,7 +156,7 @@ module Biology
       io << name.to_s
     end
 
-    def initialize(@name, random = DEF_RND)
+    def initialize(@name, @social, random = DEF_RND)
       @maxhealth = f(randg(10, 3, random).clamp(2, 25))
       @health = @maxhealth
       @diseases = Hash(Disease, DiseaseState).new

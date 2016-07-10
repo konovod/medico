@@ -224,4 +224,13 @@ s = {
   :MakeRecipe_use       => "Make recipe",
   :ReadBooks_use        => "Read books",
 
+  :Beggar => "Beggar",
+  :Alco => "Drunk",
+  :Guy => "Citizen",
+  :Trader => "Trader",
+  :Crafter => "Crafter",
+  :Guard => "Guard",
+  :Feodal => "Feodal",
+  :Graf => "Duke",
+  :King => "King",
 }
