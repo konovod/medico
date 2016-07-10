@@ -4,7 +4,7 @@ require "./substances.cr"
 require "./data/*"
 
 module Medico
-  class Player
+  class Doctor
     getter stats
 
     def initialize

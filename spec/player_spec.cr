@@ -4,7 +4,7 @@ require "../src/medico/player.cr"
 include Medico
 
 describe Medico do
-  p = Player.new
+  doc = Doctor.new
 
-  p.generate($r)
+  doc.generate($r)
 end
