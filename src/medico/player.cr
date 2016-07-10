@@ -1,6 +1,7 @@
 require "./biology.cr"
 require "./generator.cr"
 require "./substances.cr"
+require "./skills.cr"
 require "./data/*"
 
 module Medico

@@ -200,4 +200,23 @@ s = {
   :Chr  => "Charisma",
   :Dil  => "Diligence",
   :Intu => "Intuition",
-}
+
+  :Gather_name => "Gather",
+  :GeneralDiagnose_name => "GeneralDiagnose",
+  :ApplySubs_name => "ApplySubs",
+  :SeekRecipe_name => "SeekRecipe",
+  :MakeRecipe_name => "MakeRecipe",
+  :ReadBooks_name => "ReadBooks",
+  :SpecDiagnose_name => "SpecDiagnose",
+  :Therapy_name => "Therapy",
+  :Haggle_name => "Haggle",
+  :Advertising_name => "Advertising",
+  :SelfDiag_name => "SelfDiag",
+  :Gather_use => "Gather",
+  :ApplySubs_use => "Apply substance",
+  :SeekRecipe_use => "Seek recipe",
+  :MakeRecipe_use => "Make recipe",
+  :ReadBooks_use => "Read books",
+
+
+  }
