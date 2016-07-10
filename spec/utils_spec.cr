@@ -59,3 +59,9 @@ it "sorted?" do
   sorted?({1, 2, 3}).should be_truthy
   sorted?({1, 3, 2}).should be_falsey
 end
+
+it "stat_to_int" do
+  n = 0
+  1000.times { n += stat_to_int(5.1, $r) }
+  (n/1000.0).should be_close 5.1, 0.05
+end
