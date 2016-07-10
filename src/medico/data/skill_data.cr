@@ -1,5 +1,4 @@
 module Medico
-
   ALL_SKILLS = {
     Gather.new(:Gather_name, Stat::Dil, Stat::Intu, :Gather_use, 4),
     PassiveSkill.new(:GeneralDiagnose_name, Stat::Emp, Stat::Intu),
