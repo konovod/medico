@@ -18,5 +18,9 @@ module Medico
     def generate(random = DEF_RND)
       Stat.values.each { |k| @stats[k] = randg(10, 3, random).to_i.clamp(5, 20) }
     end
+
+    def train(skill)
+      @skills_training[skill] += stat_to_int(BIO_CONSTS[:TrainRate]) # TODO specific TrainRate
+    end
   end
 end

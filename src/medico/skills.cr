@@ -13,6 +13,18 @@ module Medico
     def initialize(@id, @first_stat, @second_stat)
       @name = s(@id)
     end
+
+    def level(doc : Doctor)
+      doc.stats[first_stat] + doc.stats[second_stat] / 2 + doc.skills_training[self]
+    end
+
+    def roll(difficulty, doc : Doctor, random = DEF_RND)
+      random.rand*level(doc) > random.rand*difficulty
+    end
+
+    def to_power(difficulty, doc : Doctor, random = DEF_RND)
+      {(random.rand + 0.5)*level(doc) / difficulty, 0.5}.max
+    end
   end
 
   class PassiveSkill < Skill
