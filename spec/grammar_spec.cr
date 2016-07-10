@@ -14,4 +14,11 @@ describe Grammar do
     n = Noun.new(Gender::They, "money")
     n.get(Case::Accusative, Number::Plural).should eq "money"
   end
+
+  it "adjectives" do
+    n = Noun.new(parse: "M{человек,человека,человеку,человека,человеком,человеке,человеке,люди,людей,людям,людей,людьми,людях,людях}")
+    adj = Adjective.new(parse: "Черн{ый,ого,ому,ого,ым,ом,ом,ая,ой,ой,ую,ой,ой,ой,ое,ого,ому,ое,ым,ом,ом,ые,ых,ым,ых,ыми,ых,ых}")
+    adj.get(Gender::It, Case::Locative).should eq "Черном"
+    (adj+n).get(Case::Accusative, Number::Single).should eq "Черного человека"
+  end
 end
