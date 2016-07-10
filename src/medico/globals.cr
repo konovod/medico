@@ -108,14 +108,21 @@ def sorted_by?(coll : Enumerable(T)) : Bool
   return true
 end
 
+#TODO: monkey patching all the way
 def sorted?(coll : Enumerable(T))
   sorted_by?(coll) { |it| it }
 end
 
 $verbose = false
-
+#TODO: replace to std logger
 def logs(s)
   puts s if $verbose
 end
 
 # TODO: def fill_hash
+
+
+def stat_to_int(value, random = DEF_RND)
+  result = value.to_i
+  result+=1 if value != result && random.rand < value-result
+end
