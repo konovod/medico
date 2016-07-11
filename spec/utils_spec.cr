@@ -5,7 +5,10 @@ require "../src/medico/namegen.cr"
 it "weighted_sample" do
   {1000, 3, 4, 5, 6, 7}.weighted_sample($r) { |i| i }.should eq(1000)
   [-1, -100, -3, 4, 5, 6, 7, -10000].weighted_sample($r, &.abs).should eq(-10000)
+  ["low", "high", "low2"].weighted_sample([1, 1000, 3], $r).should eq("high")
+  ["low", "high", "low2"].weighted_sample({1, 1000, 3}, $r).should eq("high")
   {"low", "high", "low2"}.weighted_sample([1, 1000, 3], $r).should eq("high")
+  {"low", "high", "low2"}.weighted_sample({1, 1000, 3}, $r).should eq("high")
 end
 
 def check_namegen(gen, n, str1, str2, maxval, minval)

@@ -36,29 +36,29 @@ def randg(norm, sigma, random = DEF_RND)
   return x * sigma + norm
 end
 
-# TODO: monkey patching all the way
 module Enumerable(T)
   def weighted_sample(random = DEF_RND)
     weights = map { |item| yield(item) }
     weighted_sample(weights, random)
   end
 
-  def zip(other : Enumerable)
+  private def zip(other)
     each_with_index do |elem, i|
       yield elem, other[i]
     end
   end
 
-  def zip(other : Enumerable(U))
+  private def zip(other : Array(U))
     pairs = Array({T, U}).new(size)
     zip(other) { |x, y| pairs << {x, y} }
     pairs
   end
 
-  def weighted_sample(weights : Enumerable(Y), random = DEF_RND) : T
+  # TODO - iterator support?
+  def weighted_sample(weights : (Array | Tuple), random = DEF_RND) : T
     total = weights.sum
     point = random.rand * total
-    zip(weights).each do |n, w|
+    zip(weights) do |n, w|
       return n if w >= point
       point -= w
     end
@@ -124,7 +124,7 @@ def each_combination(n : Int32, aset : Enumerable(T))
       end
     end
   else
-    raise "each_combination not implementated for #{n}"
+    raise "each_combination not implemented for #{n}"
   end
 end
 
