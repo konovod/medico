@@ -168,6 +168,18 @@ module Biology
       check_immunity
     end
 
+    def feels_good
+      @health >= @maxhealth
+    end
+
+    def is_good
+      feels_good && @diseases.empty? 
+    end
+
+    def dead
+      @health <= 0
+    end
+
     private def check_immunity
       imm = {f(0.5), @health/@maxhealth}.max
       imm = @systems.values.reduce(imm) do |mul, sys|
@@ -178,9 +190,11 @@ module Biology
     end
 
     private def check_health
-      hp_dam = -BIO_CONSTS[:HealthDump] + @systems.values.sum(&.danger)
-      @health -= hp_dam if hp_dam > 0
-      @health += BIO_CONSTS[:HealthRegen] if @health < @maxhealth
+      unless dead
+        hp_dam = -BIO_CONSTS[:HealthDump] + @systems.values.sum(&.danger)
+        @health -= hp_dam if hp_dam > 0
+        @health += BIO_CONSTS[:HealthRegen] if @health < @maxhealth
+      end
     end
 
     def reset
