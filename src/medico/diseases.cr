@@ -30,10 +30,10 @@ module Biology
       @systems = arr.to_set
       # stages
       @name, @danger = $disease_names.next(true, random)
-      nstages = random.rand(BIO_CONSTS[:MaxStages] - 1) + 2
+      nstages = random.rand(CONFIG[:MaxStages] - 1) + 2
       curstage = nil
       nstages.times do |i|
-        astage = DiseaseStage.new(self, i + 1, f(@danger*(nstages - i + 4)*BIO_CONSTS[:DisDanger]))
+        astage = DiseaseStage.new(self, i + 1, f(@danger*(nstages - i + 4)*CONFIG[:DisDanger]))
         if i == 0
           @first = astage
         else
@@ -41,7 +41,7 @@ module Biology
           astage.effects.concat(curstage.as(DiseaseStage).effects)
         end
         curstage = astage
-        curstage.effects.concat(univ.random_effects_sys(f(0), sys: @systems, random: random, count: 2*BIO_CONSTS[:DisRules] / 5))
+        curstage.effects.concat(univ.random_effects_sys(f(0), sys: @systems, random: random, count: 2*CONFIG[:DisRules] / 5))
         curstage.effects.uniq! # if i > 0
         # curstage
 

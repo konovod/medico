@@ -30,8 +30,8 @@ module Biology
 
     def initialize
       @effects_pool = Array(Effect).new
-      @diseases_pool = Array(Disease).new(BIO_CONSTS[:NDiseases])
-      BIO_CONSTS[:NDiseases].times do |i|
+      @diseases_pool = Array(Disease).new(CONFIG[:NDiseases])
+      CONFIG[:NDiseases].times do |i|
         @diseases_pool << Disease.new
       end
       @types = Array(Kind).new
@@ -58,9 +58,9 @@ module Biology
     end
 
     def init_effects
-      @types = [Kind::Sympthom]*BIO_CONSTS[:SympthomEff] +
-        [Kind::Param]*BIO_CONSTS[:ParamEff] +
-        [Kind::Bullet]*BIO_CONSTS[:BulletEff]
+      @types = [Kind::Sympthom]*CONFIG[:SympthomEff] +
+        [Kind::Param]*CONFIG[:ParamEff] +
+        [Kind::Bullet]*CONFIG[:BulletEff]
       @effects_pool.clear
       @effects_pool.concat ALL_SYMPTHOMS.map { |symp| AddSympthomEffect.new(symp) }
       @effects_pool.concat ALL_SYMPTHOMS.map { |symp| RemoveSympthomEffect.new(symp) }
@@ -120,7 +120,7 @@ module Biology
         })
       end
       # add effects
-      BIO_CONSTS[:NRules].times do
+      CONFIG[:NRules].times do
         rule = @param_rules.weighted_sample(random) { |p| p.param.damage(p.checker.average) }
         rule.effects.concat random_effects(f(0.1), count: 1, random: random) { |eff|
           case eff
@@ -153,9 +153,9 @@ module Biology
       @substance_combinations << combination
       # TODO optimize each_combination, lol
       return unless combination.sorted_by?(&.order)
-      return if combination.any? { |subs| @recipes_limit[subs] >= BIO_CONSTS[:RecipesLimiter] }
+      return if combination.any? { |subs| @recipes_limit[subs] >= CONFIG[:RecipesLimiter] }
       counter_chance = 1 + combination.sum { |subs| subs.complexity - 1 }
-      return if random.rand > BIO_CONSTS[:RecipeChance] / counter_chance / counter_chance
+      return if random.rand > CONFIG[:RecipeChance] / counter_chance / counter_chance
       combination.each { |subs| @recipes_limit[subs] += 1 }
       complexity = 1 + combination.map(&.complexity).max
       name, power = $chemical_names.next(false, random)
@@ -173,7 +173,7 @@ module Biology
 
     def generate_recipes(base : Array(Substance), added : Substance, random = DEF_RND)
       # p "generating for #{added.name} @ #{base.size}, already - #{@recipes.size}"
-      (1...BIO_CONSTS[:MaxRecipeSize]).each do |i|
+      (1...CONFIG[:MaxRecipeSize]).each do |i|
         each_combination(i, base) do |combo|
           arr = combo.to_a
           arr << added
@@ -215,7 +215,7 @@ module Biology
           tuple = {list[0], list[1]}
           next if @reactions_generated.includes?(tuple)
           @reactions_generated << tuple
-          next unless random.rand < BIO_CONSTS[:ReactionChance]
+          next unless random.rand < CONFIG[:ReactionChance]
           react = ReactionRule.new
           react.substances.concat list
           react.effects.concat random_effects_sys(f(0.5), s1.systems & s2.systems, count: 1, random: random)

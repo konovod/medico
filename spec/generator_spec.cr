@@ -36,8 +36,8 @@ describe Universe do
 
   it "init" do
     u.init_effects
-    u.diseases_pool.size.should eq(BIO_CONSTS[:NDiseases])
-    u.effects_pool.size.should eq(BIO_CONSTS[:NDiseases] + ALL_SYMPTHOMS.size*2 + N_PARAMS*2*PARAM_DELTA_STAGES - N_UNIMODAL_PARAMS*PARAM_DELTA_STAGES)
+    u.diseases_pool.size.should eq(CONFIG[:NDiseases])
+    u.effects_pool.size.should eq(CONFIG[:NDiseases] + ALL_SYMPTHOMS.size*2 + N_PARAMS*2*PARAM_DELTA_STAGES - N_UNIMODAL_PARAMS*PARAM_DELTA_STAGES)
   end
 
   it "random effects" do
@@ -64,7 +64,7 @@ describe Universe do
   it "param rules" do
     u.init_param_rules($r)
     u.param_rules.size.should be_close(N_PARAMS*2*PARAM_RATE_STAGES - N_UNIMODAL_PARAMS*PARAM_RATE_STAGES, 5)
-    u.param_rules.sum { |r| r.effects.size }.should eq BIO_CONSTS[:NRules]
+    u.param_rules.sum { |r| r.effects.size }.should eq CONFIG[:NRules]
   end
 
   it "diseases generation" do

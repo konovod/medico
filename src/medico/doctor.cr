@@ -37,7 +37,7 @@ module Medico
     end
 
     def train(skill, random = DEF_RND)
-      @skills_training[skill] += stat_to_int(BIO_CONSTS[:TrainRate], random) # TODO specific TrainRate
+      @skills_training[skill] += stat_to_int(CONFIG[:TrainRate], random) # TODO specific TrainRate
     end
 
     def skill_power(name : Passive, difficulty, random = DEF_RND, *, should_train : Bool = true)

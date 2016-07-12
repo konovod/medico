@@ -1,4 +1,4 @@
-BIO_CONSTS = {
+CONFIG = {
   NRules:    120,
   NDiseases: 36,
   DisRules:  10,
