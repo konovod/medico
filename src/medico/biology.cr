@@ -159,7 +159,11 @@ module Biology
     end
 
     def initialize(random = DEF_RND)
-      @status = Social.gen_status(random)
+      initialize(random, status: Social.gen_status(random))
+    end
+
+    def initialize(random = DEF_RND, *, status)
+      @status = status
       @name = @status.name + s(Social::HUMAN_NAMES.to_a.sample(random))
       @maxhealth = f(randg(10, 3, random).clamp(2, 25))
       @health = @maxhealth

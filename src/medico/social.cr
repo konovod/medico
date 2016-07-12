@@ -32,7 +32,13 @@ module Social
   end
 
   def gen_patient(doc, random = DEF_RND)
-    # status = {*ALL_STATUSES, nil}.sample
-    Biology::Patient.new($r)
+    status = (ALL_STATUSES.to_a + [nil]).weighted_sample(random) do |st|
+      if st.nil?
+        (BIO_CONSTS[:NoPatientDelta] + BIO_CONSTS[:NoPatientKoeff]*doc.patients.size).round(0)
+      else
+        (1000.0 / {st.level, 1}.max + doc.fame * BIO_CONSTS[:FameKoeff] + BIO_CONSTS[:FameDelta]).round(0)
+      end
+    end
+    status.nil? ? nil : Biology::Patient.new($r, status: status)
   end
 end
