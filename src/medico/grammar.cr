@@ -56,8 +56,7 @@ module Grammar
       initialize(Gender::It, "")
       regex = /([MWUN])(.*)/
       match = regex.match(parse)
-      case match
-      when nil
+      if match.nil?
         base = parse
       else
         @gender = GENDER_NAMES[match[1]]
