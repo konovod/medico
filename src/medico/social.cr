@@ -18,4 +18,7 @@ module Social
   def gen_status(random = DEF_RND)
     ALL_STATUSES.weighted_sample(random, &.level)
   end
+
+  def fame_change(doc, patient, result) : Int32
+  end
 end

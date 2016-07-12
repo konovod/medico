@@ -4,7 +4,10 @@ require "./globals"
 require "./doctor"
 
 module Medico
-  class Skill
+  class Action
+  end
+
+  abstract class Skill
     getter id : Symbol
     getter name : Grammar::Noun
     getter first_stat : Stat
@@ -25,12 +28,17 @@ module Medico
     def to_power(difficulty, doc : Doctor, random = DEF_RND)
       {(random.rand + 0.5)*level(doc) / difficulty, 0.5}.max
     end
+
+    abstract def possible_actions(doc : Doctor)
   end
 
   class PassiveSkill < Skill
+    def possible_actions(doc : Doctor)
+      # nothing
+    end
   end
 
-  class ActiveSkill < Skill
+  abstract class ActiveSkill < Skill
     getter use_name : String
     getter ap : Int32
 
@@ -41,17 +49,32 @@ module Medico
   end
 
   class Gather < ActiveSkill
+    def possible_actions(doc : Doctor)
+      # TODO
+    end
   end
 
   class ApplySubs < ActiveSkill
+    def possible_actions(doc : Doctor)
+      # TODO
+    end
   end
 
   class AlchemicalTheory < ActiveSkill
+    def possible_actions(doc : Doctor)
+      # TODO
+    end
   end
 
   class PracticalAlchemy < ActiveSkill
+    def possible_actions(doc : Doctor)
+      # TODO
+    end
   end
 
   class Bibliology < ActiveSkill
+    def possible_actions(doc : Doctor)
+      # TODO
+    end
   end
 end

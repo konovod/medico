@@ -13,4 +13,25 @@ module Medico
     PassiveSkill.new(:SelfDiag_name, Stat::Intu, Stat::Dil),
     PassiveSkill.new(:Hygiene_name, Stat::Acc, Stat::Acc),
   }
+
+  # TODO autogeneration
+  enum Passive
+    GeneralDiagnose
+    SpecDiagnose
+    Therapy
+    Haggle
+    Advertising
+    SelfDiag
+    Hygiene
+  end
+
+  PASSIVE_SKILLS = {
+    Passive::GeneralDiagnose => ALL_SKILLS[1],
+    Passive::SpecDiagnose    => ALL_SKILLS[6],
+    Passive::Therapy         => ALL_SKILLS[7],
+    Passive::Haggle          => ALL_SKILLS[8],
+    Passive::Advertising     => ALL_SKILLS[9],
+    Passive::SelfDiag        => ALL_SKILLS[10],
+    Passive::Hygiene         => ALL_SKILLS[11],
+  }
 end
