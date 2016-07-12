@@ -13,10 +13,10 @@ def simulate_patient(patient, univ, random, time)
   time.times do
     patient.process_tick(random)
     $performance += 1
-    break if patient.health < 0 || patient.diseases.empty?
+    break if patient.dead || patient.diseases.empty?
   end
   return 1 if patient.diseases.empty?
-  return -1 if patient.health < 0
+  return -1 if patient.dead
   return 0
 end
 

@@ -12,4 +12,8 @@ describe Medico do
     ALL_SKILLS.first.name.get.should be_truthy
     doc.skills_training[ALL_SKILLS.first].should be_truthy
   end
+
+  it "lazy doctor" do
+    10.times { doc.next_day($r) }
+  end
 end

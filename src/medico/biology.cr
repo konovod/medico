@@ -84,10 +84,6 @@ module Biology
 
   alias TEffectorData = Int32
 
-  def effector_dead(data : TEffectorData) : Bool
-    data < 0
-  end
-
   class SystemState
     getter params : ParamsBuffer
     getter sympthoms # TODO: cache sympthoms too?
@@ -111,6 +107,10 @@ module Biology
       @sympthoms.keys.each { |x| @sympthoms[x] = f(0) }
       @effectors.select! { |k, v| k.is_a? ParamRule }
       @effectors.each_key { |k| @effectors[k] = 0 }
+    end
+
+    private def effector_dead(data : TEffectorData) : Bool
+      data < 0
     end
 
     def process_tick(random = DEF_RND)
@@ -149,6 +149,7 @@ module Biology
     getter status : Social::Status
     getter systems
     property maxhealth : FLOAT
+    property starting_health : FLOAT
     property health : FLOAT
     getter immunity : FLOAT = f(1)
     getter diseases
@@ -162,6 +163,7 @@ module Biology
       @name = @status.name + s(Social::HUMAN_NAMES.to_a.sample(random))
       @maxhealth = f(randg(10, 3, random).clamp(2, 25))
       @health = @maxhealth
+      @starting_health = health
       @diseases = Hash(Disease, DiseaseState).new
       @systems = Hash(System, SystemState).new
       System.values.each { |sys| @systems[sys] = SystemState.new(self, sys) }
@@ -173,7 +175,7 @@ module Biology
     end
 
     def is_good
-      feels_good && @diseases.empty? 
+      feels_good && @diseases.empty?
     end
 
     def dead
