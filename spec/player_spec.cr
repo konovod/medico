@@ -1,11 +1,15 @@
 require "./spec_helper"
 require "../src/medico/doctor.cr"
+require "../src/medico/generator.cr"
 
 include Medico
+include Biology
 
 describe Medico do
-  doc = Doctor.new
+  univ = Universe.new
+  univ.generate($r)
 
+  doc = Doctor.new(univ)
   doc.generate($r)
 
   it "skills here" do

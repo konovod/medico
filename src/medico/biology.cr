@@ -92,7 +92,7 @@ module Biology
     getter owner : Patient
 
     def to_s(io)
-      io << "#{owner.name} #{sys.name}"
+      io << "#{sys.name} #{owner.name.get(Grammar::Case::Genitive)}"
     end
 
     def initialize(@owner, @sys)

@@ -18,8 +18,9 @@ module Medico
     getter patients
     getter askers
     getter corpses
+    getter universe : Biology::Universe
 
-    def initialize
+    def initialize(@universe)
       @stats = Hash(Stat, Int32).new
       @skills_training = Hash(Skill, Int32).new
       ALL_SKILLS.each { |sk| @skills_training[sk] = 1 }
@@ -75,7 +76,10 @@ module Medico
       end
       if skill_roll(Passive::Advertising, 10, random, should_train: false)
         pat = Social.gen_patient(self, random)
-        @askers << pat unless pat.nil?
+        unless pat.nil?
+          @universe.generate_infection(pat, random)
+          @askers << pat
+        end
       end
       # 4 - final
       @ap = MAX_AP

@@ -48,6 +48,17 @@ module Biology
       @recipes_limit = Hash(Substance, Int32).new(0)
     end
 
+    def generate(random = DEF_RND)
+      logs("initializing effects")
+      init_effects
+      logs("initializing param rules")
+      init_param_rules(random)
+      logs("initializing diseases")
+      init_diseases(random)
+      logs("initializing flora")
+      generate_flora(random)
+    end
+
     MAX_DELTA = 0.6
     private def gen_adders(p : BioParam)
       delta = {(p.min - p.average)*MAX_DELTA / PARAM_DELTA_STAGES, (p.max - p.average)*MAX_DELTA / PARAM_DELTA_STAGES}
@@ -223,5 +234,23 @@ module Biology
         end
       end
     end
+
+    def generate_infection(patient : Patient, random = DEF_RND)
+      loop do
+        patient.reset
+        dis = diseases_pool.sample(random)
+        patient.infect(dis, random)
+        time = 10+random.rand(10)
+        felt_bad = false
+        time.times do
+          patient.process_tick(random)
+          break if patient.dead || patient.diseases.empty?
+          felt_bad |= !patient.feels_good
+        end
+        break if felt_bad && !patient.dead && !patient.diseases.empty?
+      end
+    end
+
   end
+
 end

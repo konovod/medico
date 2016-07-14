@@ -69,6 +69,10 @@ module Grammar
     def get(acase = Case::Nominative, number = Number::Single)
       @case_data[number.value][acase.value]
     end
+
+    def to_s(io)
+      io<<get
+    end
   end
 
   class Adjective
@@ -90,6 +94,10 @@ module Grammar
 
     def get(gender : Gender, acase = Case::Nominative)
       @case_data[gender.value][acase.value]
+    end
+
+    def to_s(io)
+      io<<get(Gender::He)
     end
 
     def +(noun : Noun)
