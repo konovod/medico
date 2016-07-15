@@ -71,7 +71,7 @@ module Grammar
     end
 
     def to_s(io)
-      io<<get
+      io << get
     end
   end
 
@@ -97,7 +97,7 @@ module Grammar
     end
 
     def to_s(io)
-      io<<get(Gender::He)
+      io << get(Gender::He)
     end
 
     def +(noun : Noun)

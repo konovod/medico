@@ -113,7 +113,7 @@ describe Universe do
   end
   it "simulation performance" do
     speed = ($performance * 1.0 / (Time.now - time).total_seconds).to_i
-    # puts "ticks simulated #{$performance}, #{speed} ticks/s"
+    puts "ticks simulated #{$performance}, #{speed} ticks/s"
     speed.should be > 10000
   end
 

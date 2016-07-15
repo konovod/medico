@@ -29,7 +29,7 @@ module Medico
       @corpses = Array(Biology::Patient).new
       @ap = MAX_AP
       @day = 1
-      @fame = 0
+      @fame = 1
       @money = 100
     end
 
