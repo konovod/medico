@@ -19,6 +19,8 @@ CONFIG = {
   NoPatientDelta: 5000,
   NoPatientKoeff: 2000,
 
+  PatientSimulation: 10,
+
   NStartFeats: 3,
 
   # NRecipes: 4000,

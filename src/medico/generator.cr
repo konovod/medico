@@ -240,7 +240,7 @@ module Biology
         patient.reset
         dis = diseases_pool.sample(random)
         patient.infect(dis, random)
-        time = 10+random.rand(10)
+        time = CONFIG[:PatientSimulation]+random.rand(CONFIG[:PatientSimulation])
         felt_bad = false
         time.times do
           patient.process_tick(random)

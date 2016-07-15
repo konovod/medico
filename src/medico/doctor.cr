@@ -55,6 +55,14 @@ module Medico
       result
     end
 
+    def add_asker(random = DEF_RND)
+      pat = Social.gen_patient(self, random)
+      unless pat.nil?
+        @universe.generate_infection(pat, random)
+        @askers << pat
+      end
+    end
+
     def next_day(random = DEF_RND)
       # 1 - corpses
       @corpses.clear
@@ -74,13 +82,7 @@ module Medico
       @askers.reject! do |pat|
         pat.dead || pat.is_good || random.rand < 0.01
       end
-      if skill_roll(Passive::Advertising, 10, random, should_train: false)
-        pat = Social.gen_patient(self, random)
-        unless pat.nil?
-          @universe.generate_infection(pat, random)
-          @askers << pat
-        end
-      end
+      add_asker(random) if skill_roll(Passive::Advertising, 10, random, should_train: false)
       # 4 - final
       @ap = MAX_AP
       @day += 1

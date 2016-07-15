@@ -17,7 +17,17 @@ describe Medico do
     doc.skills_training[ALL_SKILLS.first].should be_truthy
   end
 
-  it "lazy doctor" do
-    10.times { doc.next_day($r) }
+  it "initial askers" do
+    10.times do
+      doc.askers.clear
+      10.times do
+        doc.add_asker($r)
+      end
+      doc.askers.size.should be > 2
+    end
   end
+
+  # it "lazy doctor" do
+  #   10.times { doc.next_day($r) }
+  # end
 end
