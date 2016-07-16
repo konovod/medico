@@ -4,48 +4,45 @@ require "./globals"
 require "./doctor"
 
 module Medico
-  class Action
-  end
-
   abstract class Skill
-    getter id : Symbol
-    getter name : Grammar::Noun
-    getter first_stat : Stat
-    getter second_stat : Stat
-
-    def initialize(@id, @first_stat, @second_stat)
-      @name = s(@id)
+    def self.first_stat : Stat
+      @@first_stat
     end
 
-    def level(doc : Doctor)
+    def self.second_stat : Stat
+      @@second_stat
+    end
+
+    def self.name : Grammar::Noun
+      @@name
+    end
+
+    def self.level(doc : Doctor)
       doc.stats[first_stat] + doc.stats[second_stat] / 2 + doc.skills_training[self]
     end
 
-    def roll(difficulty, doc : Doctor, random = DEF_RND)
+    def self.roll(difficulty, doc : Doctor, random = DEF_RND)
       random.rand*level(doc) > random.rand*difficulty
     end
 
-    def to_power(difficulty, doc : Doctor, random = DEF_RND)
+    def self.to_power(difficulty, doc : Doctor, random = DEF_RND)
       {(random.rand + 0.5)*level(doc) / difficulty, 0.5}.max
     end
-
-    abstract def possible_actions(doc : Doctor)
   end
 
-  class PassiveSkill < Skill
-    def possible_actions(doc : Doctor)
-      # nothing
-    end
+  abstract class PassiveSkill < Skill
   end
 
   abstract class ActiveSkill < Skill
-    getter use_name : String
-    getter ap : Int32
-
-    def initialize(@id, @first_stat, @second_stat, ause, @ap)
-      super(@id, @first_stat, @second_stat)
-      @use_name = $s[ause] # TODO verbs
+    def self.use_name : String
+      @@use_name
     end
+
+    def self.ap : Int32
+      @@ap
+    end
+
+    abstract def possible_actions(doc : Doctor)
   end
 
   class Gather < ActiveSkill
@@ -55,18 +52,35 @@ module Medico
   end
 
   class ApplySubs < ActiveSkill
+    getter whom : Biology::Patient
+    getter what : Biology::Substance
+
+    def initialize(@whom, @what)
+    end
+
     def possible_actions(doc : Doctor)
       # TODO
     end
   end
 
   class AlchemicalTheory < ActiveSkill
+    getter used : Array(Biology::Substance)
+
+    def initialize(aused)
+      @used = aused.dup
+    end
+
     def possible_actions(doc : Doctor)
       # TODO
     end
   end
 
   class PracticalAlchemy < ActiveSkill
+    getter what : Alchemy::Recipe
+
+    def initialize(@what)
+    end
+
     def possible_actions(doc : Doctor)
       # TODO
     end
@@ -77,4 +91,24 @@ module Medico
       # TODO
     end
   end
+
+  macro active_skill(atype, name, first_stat, second_stat, use_name, ap)
+    class {{atype}}
+      @@name : Grammar::Noun = s({{name}})
+      @@first_stat = {{first_stat}}
+      @@second_stat = {{second_stat}}
+      @@use_name : String = s({{use_name}}).get #TODO - grammar verbs
+      def ap; {{ap}}; end
+    end
+  end
+
+  macro passive_skill(atype, name, first_stat, second_stat)
+    class {{atype}} < PassiveSkill
+      @@name : Grammar::Noun = s({{name}})
+      @@first_stat = {{first_stat}}
+      @@second_stat = {{second_stat}}
+    end
+  end
+
+  skill_data
 end

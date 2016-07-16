@@ -45,7 +45,4 @@ describe Medico do
     doc.askers.size.should be >= 3
     doc.known_flora.size.should eq 10
   end
-
-
-
 end

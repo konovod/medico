@@ -1,4 +1,4 @@
-s = {
+I18N = {
   :Sangua      => "Sangua     ",
   :Flegma      => "Flegma     ",
   :Chole       => "Chole      ",

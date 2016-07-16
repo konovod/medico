@@ -9,7 +9,7 @@ def f(value) : FLOAT
 end
 
 def s(value, t = Grammar::Noun)
-  return t.new(parse: $s[value])
+  return t.new(parse: I18N[value])
 end
 
 class TEST_RND

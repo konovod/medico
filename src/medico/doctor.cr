@@ -23,11 +23,13 @@ module Medico
     getter known_recipes
     getter bag
 
-
     def initialize(@universe)
       @stats = Hash(Stat, Int32).new
-      @skills_training = Hash(Skill, Int32).new
-      ALL_SKILLS.each { |sk| @skills_training[sk] = 1 }
+      @skills_training = Hash(Skill.class, Int32).new
+      ALL_SKILLS.each do |sk|
+        @skills_training[sk] = 1
+      end
+      # @skills_training = ALL_SKILLS.map{|sk| {sk, 1} }.to_h
       @patients = Array(Biology::Patient).new
       @askers = Array(Biology::Patient).new
       @corpses = Array(Biology::Patient).new
@@ -55,7 +57,7 @@ module Medico
       @universe.init_substances(starting_flora, random)
       starting_flora.each do |fl|
         @known_flora << fl
-        @bag[fl] = random.rand(5)+1
+        @bag[fl] = random.rand(5) + 1
       end
     end
 
@@ -63,15 +65,13 @@ module Medico
       @skills_training[skill] += stat_to_int(CONFIG[:TrainRate], random) # TODO specific TrainRate
     end
 
-    def skill_power(name : Passive, difficulty, random = DEF_RND, *, should_train : Bool = true)
-      sk = PASSIVE_SKILLS[name]
+    def skill_power(sk, difficulty, random = DEF_RND, *, should_train : Bool = true)
       result = sk.to_power(difficulty, self, random)
       train(sk, random) if should_train
       result
     end
 
-    def skill_roll(name : Passive, difficulty, random = DEF_RND, *, should_train : Bool = true)
-      sk = PASSIVE_SKILLS[name]
+    def skill_roll(sk, difficulty, random = DEF_RND, *, should_train : Bool = true)
       result = sk.roll(difficulty, self, random)
       train(sk, random) if should_train
       result
@@ -104,7 +104,7 @@ module Medico
       @askers.reject! do |pat|
         pat.dead || pat.is_good || random.rand < 0.01
       end
-      add_asker(random) if skill_roll(Passive::Advertising, 10, random, should_train: false)
+      add_asker(random) if skill_roll(Advertising, 10, random, should_train: false)
       # 4 - final
       @ap = MAX_AP
       @day += 1
