@@ -6,15 +6,18 @@ require "./doctor"
 module Medico
   abstract class Skill
     def self.first_stat : Stat
-      @@first_stat
+      # raise "Skill is abstract"
+      Stat::Int
     end
 
     def self.second_stat : Stat
-      @@second_stat
+      # raise "Skill is abstract"
+      Stat::Int
     end
 
     def self.skill_name : Grammar::Noun
-      @@name
+      # raise "Skill is abstract"
+      Grammar::Noun.new(parse: "")
     end
 
     def self.level(doc : Doctor)
@@ -35,22 +38,24 @@ module Medico
 
   abstract class ActiveSkill < Skill
     def self.use_name : String
-      @@use_name
+      ""
+      # raise "ActiveSkill is abstract"
     end
 
     def self.ap : Int32
-      @@ap
+      0
+      # raise "ActiveSkill is abstract"
     end
 
-    def self.possible_actions(doc : Doctor)
-      throw "ActiveSkill possible_actions is abstract"
+    def self.possible_actions(doc : Doctor, &block)
+      #raise "ActiveSkill is abstract"
     end
 
     abstract def apply(doc : Doctor, random = DEF_RND)
   end
 
   class Gather < ActiveSkill
-    def self.possible_actions(doc : Doctor)
+    def self.possible_actions(doc : Doctor, &block)
       yield new() unless doc.known_flora.empty?
     end
 
@@ -69,7 +74,7 @@ module Medico
     def initialize(@whom, @what)
     end
 
-    def possible_actions(doc : Doctor)
+    def self.possible_actions(doc : Doctor, &block)
       # TODO
     end
 
@@ -85,7 +90,7 @@ module Medico
       @used = aused.dup
     end
 
-    def possible_actions(doc : Doctor)
+    def self.possible_actions(doc : Doctor, &block)
       # TODO
     end
 
@@ -100,7 +105,7 @@ module Medico
     def initialize(@what)
     end
 
-    def possible_actions(doc : Doctor)
+    def self.possible_actions(doc : Doctor, &block)
       # TODO
     end
 
@@ -110,7 +115,7 @@ module Medico
   end
 
   class Bibliology < ActiveSkill
-    def possible_actions(doc : Doctor)
+    def self.possible_actions(doc : Doctor, &block)
       # TODO
     end
 
@@ -121,19 +126,38 @@ module Medico
 
   macro active_skill(atype, name, first_stat, second_stat, use_name, ap)
     class {{atype}}
-      @@name : Grammar::Noun = s({{name}})
-      @@first_stat = {{first_stat}}
-      @@second_stat = {{second_stat}}
+     @@name : Grammar::Noun = s({{name}})
+      def self.skill_name
+       @@name
+      end
+      def first_stat
+        {{first_stat}}
+      end
+      def second_stat
+        {{second_stat}}
+      end
       @@use_name : String = s({{use_name}}).get #TODO - grammar verbs
-      @@ap = {{ap}}
+      def self.use_name
+        @@use_name
+      end
+      def ap
+        {{ap}}
+      end
     end
   end
 
   macro passive_skill(atype, name, first_stat, second_stat)
     class {{atype}} < PassiveSkill
       @@name : Grammar::Noun = s({{name}})
-      @@first_stat = {{first_stat}}
-      @@second_stat = {{second_stat}}
+      def self.skill_name
+        @@name
+      end
+      def first_stat
+        {{first_stat}}
+      end
+      def second_stat
+        {{second_stat}}
+      end
     end
   end
 

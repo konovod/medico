@@ -117,9 +117,7 @@ module Medico
     def check_actions
       @actions.clear
       ALL_SKILLS.each do |sk|
-        #p sk.class
-        next unless sk.is_a? ActiveSkill.class
-        p sk
+        next unless sk.responds_to? :possible_actions
         next unless @ap >= sk.ap
         sk.possible_actions(self) do |act|
           @actions<<act
