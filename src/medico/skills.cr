@@ -42,11 +42,18 @@ module Medico
       @@ap
     end
 
-    abstract def possible_actions(doc : Doctor)
+    def self.possible_actions(doc : Doctor)
+    end
+
+    abstract def apply(doc : Doctor, random = DEF_RND)
   end
 
   class Gather < ActiveSkill
     def possible_actions(doc : Doctor)
+      yield new()
+    end
+
+    def apply(doc : Doctor, random = DEF_RND)
       # TODO
     end
   end
@@ -61,6 +68,10 @@ module Medico
     def possible_actions(doc : Doctor)
       # TODO
     end
+
+    def apply(doc : Doctor, random = DEF_RND)
+      # TODO
+    end
   end
 
   class AlchemicalTheory < ActiveSkill
@@ -71,6 +82,10 @@ module Medico
     end
 
     def possible_actions(doc : Doctor)
+      # TODO
+    end
+
+    def apply(doc : Doctor, random = DEF_RND)
       # TODO
     end
   end
@@ -84,10 +99,18 @@ module Medico
     def possible_actions(doc : Doctor)
       # TODO
     end
+
+    def apply(doc : Doctor, random = DEF_RND)
+      # TODO
+    end
   end
 
   class Bibliology < ActiveSkill
     def possible_actions(doc : Doctor)
+      # TODO
+    end
+
+    def apply(doc : Doctor, random = DEF_RND)
       # TODO
     end
   end
@@ -98,7 +121,7 @@ module Medico
       @@first_stat = {{first_stat}}
       @@second_stat = {{second_stat}}
       @@use_name : String = s({{use_name}}).get #TODO - grammar verbs
-      def ap; {{ap}}; end
+      @@ap = {{ap}}
     end
   end
 
