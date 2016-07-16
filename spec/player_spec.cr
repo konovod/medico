@@ -13,8 +13,16 @@ describe Medico do
   doc.generate($r)
 
   it "skills here" do
-    ALL_SKILLS.first.name.get.should be_truthy
+    ALL_SKILLS.first.skill_name.get.should be_truthy
     doc.skills_training[ALL_SKILLS.first].should be_truthy
+  end
+  it "skill checks" do
+    sk = ALL_SKILLS.first
+    first = doc.skill_power(sk, 1, $r, should_train: false)
+    first.should be > 0
+    1000.times {doc.skill_power(sk, 1, $r, should_train: true)}
+    second = doc.skill_power(sk, 2, $r, should_train: false)
+    second.should be > first
   end
 
   cnt = 0
@@ -45,4 +53,7 @@ describe Medico do
     doc.askers.size.should be >= 3
     doc.known_flora.size.should eq 10
   end
+
+  doc.check_actions
+  p doc.actions
 end

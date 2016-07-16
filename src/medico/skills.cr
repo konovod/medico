@@ -13,7 +13,7 @@ module Medico
       @@second_stat
     end
 
-    def self.name : Grammar::Noun
+    def self.skill_name : Grammar::Noun
       @@name
     end
 
@@ -43,18 +43,22 @@ module Medico
     end
 
     def self.possible_actions(doc : Doctor)
+      throw "ActiveSkill possible_actions is abstract"
     end
 
     abstract def apply(doc : Doctor, random = DEF_RND)
   end
 
   class Gather < ActiveSkill
-    def possible_actions(doc : Doctor)
-      yield new()
+    def self.possible_actions(doc : Doctor)
+      yield new() unless doc.known_flora.empty?
     end
 
     def apply(doc : Doctor, random = DEF_RND)
-      # TODO
+      stat_to_int(known_flora.size * self.to_power(100, doc, random)).times do
+        subs = known_flora.weighted_sample{|it| 1000 / it.level} #TODO - cache levels in array?
+        doc.bag[subs] += 1
+      end
     end
   end
 

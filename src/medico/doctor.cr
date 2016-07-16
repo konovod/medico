@@ -22,6 +22,7 @@ module Medico
     getter known_flora
     getter known_recipes
     getter bag
+    getter actions
 
     def initialize(@universe)
       @stats = Hash(Stat, Int32).new
@@ -40,6 +41,7 @@ module Medico
       @known_flora = Set(Substance).new
       @known_recipes = Set(Alchemy::Recipe).new
       @bag = Hash(Substance, Int32).new
+      @actions = Array(Skill).new
     end
 
     def generate(random = DEF_RND)
@@ -59,6 +61,7 @@ module Medico
         @known_flora << fl
         @bag[fl] = random.rand(5) + 1
       end
+      check_actions
     end
 
     def train(skill, random = DEF_RND)
@@ -108,6 +111,27 @@ module Medico
       # 4 - final
       @ap = MAX_AP
       @day += 1
+      check_actions
     end
+
+    def check_actions
+      @actions.clear
+      ALL_SKILLS.each do |sk|
+        #p sk.class
+        next unless sk.is_a? ActiveSkill.class
+        p sk
+        next unless @ap >= sk.ap
+        sk.possible_actions(self) do |act|
+          @actions<<act
+        end
+      end
+    end
+
+    def do_action(act : Skill, random = DEF_RND)
+      act.apply(self, random)
+      @ap -= act.class.ap
+      check_actions
+    end
+
   end
 end
