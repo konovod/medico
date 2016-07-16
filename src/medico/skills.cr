@@ -48,7 +48,7 @@ module Medico
     end
 
     def self.possible_actions(doc : Doctor, &block)
-      #raise "ActiveSkill is abstract"
+      # raise "ActiveSkill is abstract"
     end
 
     abstract def apply(doc : Doctor, random = DEF_RND)
@@ -61,7 +61,7 @@ module Medico
 
     def apply(doc : Doctor, random = DEF_RND)
       stat_to_int(known_flora.size * self.to_power(100, doc, random)).times do
-        subs = known_flora.weighted_sample{|it| 1000 / it.level} #TODO - cache levels in array?
+        subs = known_flora.weighted_sample { |it| 1000 / it.level } # TODO - cache levels in array?
         doc.bag[subs] += 1
       end
     end

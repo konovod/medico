@@ -20,7 +20,7 @@ describe Medico do
     sk = ALL_SKILLS.first
     first = doc.skill_power(sk, 1, $r, should_train: false)
     first.should be > 0
-    1000.times {doc.skill_power(sk, 1, $r, should_train: true)}
+    1000.times { doc.skill_power(sk, 1, $r, should_train: true) }
     second = doc.skill_power(sk, 2, $r, should_train: false)
     second.should be > first
   end

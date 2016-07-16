@@ -117,10 +117,9 @@ module Medico
     def check_actions
       @actions.clear
       ALL_SKILLS.each do |sk|
-        next unless sk.responds_to? :possible_actions
-        next unless @ap >= sk.ap
+        next unless sk.responds_to? :possible_actions && @ap >= sk.ap
         sk.possible_actions(self) do |act|
-          @actions<<act
+          @actions << act
         end
       end
     end
@@ -130,6 +129,5 @@ module Medico
       @ap -= act.class.ap
       check_actions
     end
-
   end
 end

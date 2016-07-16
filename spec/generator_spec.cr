@@ -121,7 +121,7 @@ describe Universe do
   it "test subs effects" do
     u.flora.sum { |subs| subs.effects.size }.should be_close u.flora.size*3, u.flora.size
     u.flora.sum { |subs| subs.effects.count { |eff| eff.is_a? MagicBulletEffect } }.should be > 10
-    u.flora.sum { |subs| subs.effects.count { |eff| eff.is_a? AddSympthomEffect } }.should be_close 10, 9
+    u.flora.sum { |subs| subs.effects.count { |eff| eff.is_a? AddSympthomEffect } }.should be > 1
   end
 
   it "test injecting" do
