@@ -28,8 +28,8 @@ module Medico
       random.rand*level(doc) > random.rand*difficulty
     end
 
-    def self.to_power(difficulty, doc : Doctor, random = DEF_RND)
-      {(random.rand + 0.5)*level(doc) / difficulty, 0.5}.max
+    def self.to_power(difficulty, doc : Doctor, random = DEF_RND) : FLOAT
+      {(f(random.rand) + 0.5)*level(doc) / difficulty, f(0.5)}.max
     end
   end
 
@@ -75,11 +75,18 @@ module Medico
     end
 
     def self.possible_actions(doc : Doctor, &block)
-      # TODO
+      doc.bag.each do |key, value|
+        next if value <= 0
+        doc.patients.each do |pat|
+          yield(new(pat, key))
+        end
+      end
     end
 
     def apply(doc : Doctor, random = DEF_RND)
-      # TODO
+      doc.bag[@what] -= 1
+      @what.inject(@whom, self.class.to_power(20, doc, random))
+      # TODO - log
     end
   end
 

@@ -88,6 +88,14 @@ module Medico
       end
     end
 
+    def make_patient(whom : Patient)
+      #TODO - log, CaseID
+      whom.starting_health = whom.health
+      askers.delete(whom)
+      patients << whom
+      check_actions
+    end
+
     def next_day(random = DEF_RND)
       # 1 - corpses
       @corpses.clear
@@ -127,6 +135,7 @@ module Medico
     def do_action(act : Skill, random = DEF_RND)
       act.apply(self, random)
       @ap -= act.class.ap
+      train(act.class, random)
       check_actions
     end
   end

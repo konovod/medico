@@ -55,5 +55,30 @@ describe Medico do
   end
 
   doc.check_actions
-  p doc.actions
+  it "possible actions" do
+    doc.actions.size.should be > 0
+    doc.actions.find{|act| act.is_a? Gather}.should be_truthy
+    doc.actions.find{|act| act.is_a? ApplySubs}.should be_falsey
+  end
+
+  it "make patient" do
+    n1 = doc.askers.size
+    n2 = doc.patients.size
+    target = doc.askers.first
+    doc.make_patient(target)
+    doc.askers.size.should eq n1-1
+    doc.patients.size.should eq n2+1
+    doc.actions.count{|act| act.is_a? ApplySubs}.should eq doc.bag.keys.size
+  end
+
+  it "apply substance" do
+    action = doc.actions.find{|act| act.is_a? ApplySubs}.as(ApplySubs)
+    old = doc.bag[action.what]
+    action.whom.systems.values.any?{|sys| sys.effectors[action.what]?}.should be_falsey
+    doc.do_action(action, $r)
+    doc.bag[action.what].should eq old-1
+    action.whom.systems.values.any?{|sys| sys.effectors[action.what]?}.should be_truthy
+  end
+
+
 end
