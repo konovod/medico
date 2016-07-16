@@ -39,4 +39,13 @@ describe Medico do
     end
     cnt.should be > 5
   end
+
+  it "start game" do
+    doc.start_game($r)
+    doc.askers.size.should be >= 3
+    doc.known_flora.size.should eq 10
+  end
+
+
+
 end

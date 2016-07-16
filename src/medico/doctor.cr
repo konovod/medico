@@ -19,6 +19,10 @@ module Medico
     getter askers
     getter corpses
     getter universe : Biology::Universe
+    getter known_flora
+    getter known_recipes
+    getter bag
+
 
     def initialize(@universe)
       @stats = Hash(Stat, Int32).new
@@ -31,10 +35,28 @@ module Medico
       @day = 1
       @fame = 1
       @money = 100
+      @known_flora = Set(Substance).new
+      @known_recipes = Set(Alchemy::Recipe).new
+      @bag = Hash(Substance, Int32).new
     end
 
     def generate(random = DEF_RND)
       Stat.values.each { |k| @stats[k] = randg(10, 3, random).to_i.clamp(5, 20) }
+    end
+
+    def start_game(random = DEF_RND)
+      10.times do
+        add_asker(random)
+      end
+      while @askers.size < 3
+        add_asker(random)
+      end
+      starting_flora = @universe.flora.sample(10)
+      @universe.init_substances(starting_flora, random)
+      starting_flora.each do |fl|
+        @known_flora << fl
+        @bag[fl] = random.rand(5)+1
+      end
     end
 
     def train(skill, random = DEF_RND)
