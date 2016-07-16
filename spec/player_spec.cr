@@ -57,8 +57,8 @@ describe Medico do
   doc.check_actions
   it "possible actions" do
     doc.actions.size.should be > 0
-    doc.actions.find{|act| act.is_a? Gather}.should be_truthy
-    doc.actions.find{|act| act.is_a? ApplySubs}.should be_falsey
+    doc.actions.find { |act| act.is_a? Gather }.should be_truthy
+    doc.actions.find { |act| act.is_a? ApplySubs }.should be_falsey
   end
 
   it "make patient" do
@@ -66,19 +66,24 @@ describe Medico do
     n2 = doc.patients.size
     target = doc.askers.first
     doc.make_patient(target)
-    doc.askers.size.should eq n1-1
-    doc.patients.size.should eq n2+1
-    doc.actions.count{|act| act.is_a? ApplySubs}.should eq doc.bag.keys.size
+    doc.askers.size.should eq n1 - 1
+    doc.patients.size.should eq n2 + 1
+    doc.actions.count { |act| act.is_a? ApplySubs }.should eq doc.bag.keys.size
   end
 
   it "apply substance" do
-    action = doc.actions.find{|act| act.is_a? ApplySubs}.as(ApplySubs)
+    action = doc.actions.find { |act| act.is_a? ApplySubs }.as(ApplySubs)
     old = doc.bag[action.what]
-    action.whom.systems.values.any?{|sys| sys.effectors[action.what]?}.should be_falsey
+    action.whom.systems.values.any? { |sys| sys.effectors[action.what]? }.should be_falsey
     doc.do_action(action, $r)
-    doc.bag[action.what].should eq old-1
-    action.whom.systems.values.any?{|sys| sys.effectors[action.what]?}.should be_truthy
+    doc.bag[action.what].should eq old - 1
+    action.whom.systems.values.any? { |sys| sys.effectors[action.what]? }.should be_truthy
   end
 
-
+  it "gather flora" do
+    action = doc.actions.find { |act| act.is_a? Gather }.as(Gather)
+    old = doc.bag.values.sum
+    doc.do_action(action, $r)
+    doc.bag.values.sum.should be > old
+  end
 end

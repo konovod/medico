@@ -89,7 +89,7 @@ module Medico
     end
 
     def make_patient(whom : Patient)
-      #TODO - log, CaseID
+      # TODO - log, CaseID
       whom.starting_health = whom.health
       askers.delete(whom)
       patients << whom

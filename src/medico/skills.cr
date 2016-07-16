@@ -60,8 +60,8 @@ module Medico
     end
 
     def apply(doc : Doctor, random = DEF_RND)
-      stat_to_int(known_flora.size * self.to_power(100, doc, random)).times do
-        subs = known_flora.weighted_sample { |it| 1000 / it.level } # TODO - cache levels in array?
+      stat_to_int(doc.known_flora.size * self.class.to_power(100, doc, random), random).times do
+        subs = doc.known_flora.weighted_sample(random) { |it| 1000 / it.power } # TODO - cache levels in array?
         doc.bag[subs] += 1
       end
     end
