@@ -147,7 +147,7 @@ module Medico
       def self.use_name
         @@use_name
       end
-      def ap
+      def self.ap
         {{ap}}
       end
     end

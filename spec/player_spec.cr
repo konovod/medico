@@ -86,4 +86,12 @@ describe Medico do
     doc.do_action(action, $r)
     doc.bag.values.sum.should be > old
   end
+
+  it "ap usage" do
+    doc.ap.should eq MAX_AP - ApplySubs.ap - Gather.ap
+  end
+  it "ap checking" do
+    10.times { doc.do_action(doc.actions.first, $r) unless doc.actions.empty? }
+    doc.actions.size.should eq 0
+  end
 end

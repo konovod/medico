@@ -41,7 +41,7 @@ module Medico
       @known_flora = Set(Substance).new
       @known_recipes = Set(Alchemy::Recipe).new
       @bag = Hash(Substance, Int32).new
-      @actions = Array(Skill).new
+      @actions = Array(ActiveSkill).new
     end
 
     def generate(random = DEF_RND)
@@ -132,10 +132,10 @@ module Medico
       end
     end
 
-    def do_action(act : Skill, random = DEF_RND)
+    def do_action(act : ActiveSkill, random = DEF_RND)
       act.apply(self, random)
       @ap -= act.class.ap
-      train(act.class, random)
+      train(act.as(Skill).class, random)
       check_actions
     end
   end
