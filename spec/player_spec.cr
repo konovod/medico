@@ -94,4 +94,9 @@ describe Medico do
     10.times { doc.do_action(doc.actions.first, $r) unless doc.actions.empty? }
     doc.actions.size.should eq 0
   end
+  it "ap restoring" do
+    doc.next_day($r)
+    doc.ap.should eq MAX_AP
+  end
+
 end
