@@ -113,11 +113,19 @@ module Medico
     end
 
     def self.possible_actions(doc : Doctor, &block)
-      # TODO
+      doc.known_recipes.each do |recipe|
+        next unless recipe.substances.all? {|subs, num| doc.bag[subs]? && doc.bag[subs] >= num}
+        yield new(recipe)
+      end
     end
 
     def apply(doc : Doctor, random = DEF_RND)
-      # TODO
+      @what.substances.each do |subs, num|
+        doc.bag[subs] -= num
+      end
+      v = stat_to_int(self.class.to_power(@what.product.power, doc, random))
+      doc.bag[@what.product] += v
+      # TODO - log
     end
   end
 

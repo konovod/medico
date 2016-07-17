@@ -40,7 +40,7 @@ module Medico
       @money = 100
       @known_flora = Set(Substance).new
       @known_recipes = Set(Alchemy::Recipe).new
-      @bag = Hash(Substance, Int32).new
+      @bag = Hash(Substance, Int32).new(0)
       @actions = Array(ActiveSkill).new
     end
 
