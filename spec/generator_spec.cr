@@ -1,6 +1,6 @@
 require "./spec_helper"
 require "../src/medico/biology.cr"
-require "../src/medico/generator.cr"
+require "../src/medico/universe.cr"
 
 include Biology
 

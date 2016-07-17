@@ -1,5 +1,5 @@
 require "./biology.cr"
-require "./generator.cr"
+require "./universe.cr"
 require "./substances.cr"
 require "./skills.cr"
 require "./data/*"

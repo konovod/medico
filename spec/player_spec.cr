@@ -1,6 +1,6 @@
 require "./spec_helper"
 require "../src/medico/doctor.cr"
-require "../src/medico/generator.cr"
+require "../src/medico/universe.cr"
 
 include Medico
 include Biology
@@ -98,5 +98,6 @@ describe Medico do
     doc.next_day($r)
     doc.ap.should eq MAX_AP
   end
+
 
 end
