@@ -98,7 +98,16 @@ module Medico
     end
 
     def self.possible_actions(doc : Doctor, &block)
-      # TODO
+      #has type Hash(Int32, Array(Tuple(Biology::Substance, Int32)))
+      numbered = doc.bag.group_by{|subs, count| count}
+      keys = numbered.keys.sort
+      aset = [] of Biology::Substance
+      while !keys.empty?
+        next_key = keys.pop
+        return if next_key == 0
+        aset.concat(numbered[next_key].map{|subs, count| subs})
+        yield(new(aset.dup)) if aset.size >= 2
+      end
     end
 
     def apply(doc : Doctor, random = DEF_RND)
@@ -114,7 +123,7 @@ module Medico
 
     def self.possible_actions(doc : Doctor, &block)
       doc.known_recipes.each do |recipe|
-        next unless recipe.substances.all? {|subs, num| doc.bag[subs]? && doc.bag[subs] >= num}
+        next unless recipe.substances.all? { |subs, num| doc.bag[subs]? && doc.bag[subs] >= num }
         yield new(recipe)
       end
     end
