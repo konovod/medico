@@ -1,5 +1,5 @@
 require "./spec_helper"
-require "../src/medico/grammar.cr"
+require "../src/medico/game/grammar.cr"
 
 include Grammar
 

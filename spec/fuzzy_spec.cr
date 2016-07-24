@@ -1,5 +1,5 @@
 require "./spec_helper"
-require "../src/medico/fuzzy.cr"
+require "../src/medico/game/fuzzy.cr"
 
 include Fuzzy
 

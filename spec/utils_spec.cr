@@ -1,6 +1,6 @@
 require "./spec_helper"
-require "../src/medico/globals.cr"
-require "../src/medico/namegen.cr"
+require "../src/medico/game/globals.cr"
+require "../src/medico/game/namegen.cr"
 
 it "weighted_sample" do
   {1000, 3, 4, 5, 6, 7}.weighted_sample($r) { |i| i }.should eq(1000)
