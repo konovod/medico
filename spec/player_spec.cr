@@ -115,8 +115,9 @@ describe Medico do
     doc.do_action(all_in, $r)
     doc.bag.values.sum.should eq was_in_bag - all_in.used.size
   end
+  20.times {doc.add_known_substance(univ.flora.sample($r), value: 1, is_flora: true, random: $r)}
   it "AlchemicalTheory works" do
-    100.times do
+    20.times do
       doc.next_day($r)
       gather = doc.actions.select { |x| x.is_a? Gather }.first
       doc.do_action(gather, $r)
@@ -125,6 +126,6 @@ describe Medico do
       combine = doc.actions.select { |x| x.is_a? PracticalAlchemy }
       doc.do_action(combine.sample($r), $r) unless combine.empty?
     end
-    doc.known_recipes.size.should be > 0
+    doc.known_recipes.size.should be > 1
   end
 end
