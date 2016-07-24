@@ -106,7 +106,7 @@ describe Medico do
     last = variants.last.as(AlchemicalTheory)
     first.used.size.should be < last.used.size
     last.used.should contain(first.used.first)
-    last.used.size.should eq doc.bag.count { |k, v| v >= 0 }
+    last.used.size.should eq doc.bag.count { |k, v| v > 0 }
   end
 
   it "AlchemicalTheory application" do
@@ -115,9 +115,10 @@ describe Medico do
     doc.do_action(all_in, $r)
     doc.bag.values.sum.should eq was_in_bag - all_in.used.size
   end
-  20.times { doc.add_known_substance(univ.flora.sample($r), value: 1, is_flora: true, random: $r) }
+  40.times { doc.add_known_substance(univ.flora.sample($r), value: 1, is_flora: true, random: $r) }
+  100.times { doc.train AlchemicalTheory, $r }
   it "AlchemicalTheory works" do
-    20.times do
+    40.times do
       doc.next_day($r)
       gather = doc.actions.select { |x| x.is_a? Gather }.first
       doc.do_action(gather, $r)

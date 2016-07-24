@@ -109,7 +109,7 @@ describe Universe do
   it "test disease long" do
     results = stat_patients(u, $r, 400, 200)
     # puts "stats at longtime #{results}"
-    results[0].should be < 10
+    results[0].should be < 15
   end
   it "simulation performance" do
     speed = ($performance * 1.0 / (Time.now - time).total_seconds).to_i

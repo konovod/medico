@@ -55,7 +55,7 @@ module Medico
       while @askers.size < 3
         add_asker(random)
       end
-      starting_flora = @universe.flora.sample(10)
+      starting_flora = @universe.flora.sample(10, random)
       starting_flora.each do |fl|
         add_known_substance(fl, is_flora: true, value: random.rand(5) + 1, random: random)
       end
