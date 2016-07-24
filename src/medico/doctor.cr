@@ -139,11 +139,9 @@ module Medico
 
     def add_known_substance(substance : Biology::Substance, *, is_flora = false, value = 0, random = DEF_RND)
       @universe.generate_recipes(@bag.keys, substance, random)
-      @universe.init_reactions(@bag.keys, random) #TODO - additive reactions generation
+      @universe.init_reactions(@bag.keys, random) # TODO - additive reactions generation
       @known_flora << substance if is_flora
       @bag[substance] = value
     end
-
-
   end
 end

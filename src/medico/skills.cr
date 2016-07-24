@@ -98,30 +98,30 @@ module Medico
     end
 
     def self.possible_actions(doc : Doctor, &block)
-      #has type Hash(Int32, Array(Tuple(Biology::Substance, Int32)))
-      numbered = doc.bag.group_by{|subs, count| count}
+      # has type Hash(Int32, Array(Tuple(Biology::Substance, Int32)))
+      numbered = doc.bag.group_by { |subs, count| count }
       keys = numbered.keys.sort
       aset = [] of Biology::Substance
       while !keys.empty?
         next_key = keys.pop
         return if next_key == 0
-        aset.concat(numbered[next_key].map{|subs, count| subs})
+        aset.concat(numbered[next_key].map { |subs, count| subs })
         yield(new(aset)) if aset.size >= 2
       end
     end
 
     def apply(doc : Doctor, random = DEF_RND)
-      possible = doc.universe.recipes.select{|recipe| (recipe.substances.keys - @used).empty? }
-      #spend substances
-      @used.each{|subs| doc.bag[subs] -= 1}
-      #check success
+      possible = doc.universe.recipes.select { |recipe| (recipe.substances.keys - @used).empty? }
+      # spend substances
+      @used.each { |subs| doc.bag[subs] -= 1 }
+      # check success
       # TODO - log
       return if possible.empty?
-      challenge = possible.min_of{|recipe|recipe.product.power}+5
+      challenge = possible.min_of { |recipe| recipe.product.power } + 5
       return if challenge > self.class.level(doc)
       return unless self.class.roll(challenge, doc, random)
-      #select recipe and learn
-      recipe = possible.weighted_sample(random){|r| 1000 / r.product.power}
+      # select recipe and learn
+      recipe = possible.weighted_sample(random) { |r| 1000 / r.product.power }
       doc.known_recipes << recipe
       doc.add_known_substance recipe.product, random: random
     end
