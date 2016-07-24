@@ -144,7 +144,7 @@ module Medico
       @what.substances.each do |subs, num|
         doc.bag[subs] -= num
       end
-      v = stat_to_int(self.class.to_power(@what.product.power, doc, random))
+      v = stat_to_int(self.class.to_power(@what.product.power, doc, random), random)
       doc.bag[@what.product] += v
       # TODO - log
     end

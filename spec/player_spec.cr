@@ -110,7 +110,24 @@ describe Medico do
   end
 
   it "AlchemicalTheory application" do
+    was_in_bag = doc.bag.values.sum
     all_in = doc.actions.select { |x| x.is_a? AlchemicalTheory }.last.as(AlchemicalTheory)
     doc.do_action(all_in, $r)
+    doc.bag.values.sum.should eq was_in_bag - all_in.used.size
   end
+  p doc.bag.values.sum
+  it "AlchemicalTheory works" do
+    200.times do
+      doc.next_day($r)
+      gather = doc.actions.select { |x| x.is_a? Gather }.first
+      doc.do_action(gather, $r)
+      seek = doc.actions.select { |x| x.is_a? AlchemicalTheory }
+      doc.do_action(seek.last, $r)
+      combine = doc.actions.select { |x| x.is_a? PracticalAlchemy }
+      doc.do_action(combine.sample($r), $r) unless combine.empty?
+    end
+    p doc.bag.values.sum
+    p doc.known_recipes.size
+  end
+
 end

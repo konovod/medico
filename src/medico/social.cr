@@ -22,11 +22,11 @@ module Social
   def fame_change(doc, patient, outcome, random = DEF_RND) : Int32
     if outcome
       rate = patient.status.level * (patient.maxhealth - patient.starting_health)
-      result = stat_to_int(rate * doc.skill_power(Advertising, 20, random))
+      result = stat_to_int(rate * doc.skill_power(Advertising, 20, random), random)
       result = random.rand(result) unless patient.is_good
     else
       rate = patient.status.level * patient.starting_health
-      result = -stat_to_int(rate / doc.skill_power(Advertising, 50, random))
+      result = -stat_to_int(rate / doc.skill_power(Advertising, 50, random), random)
     end
     result
   end
