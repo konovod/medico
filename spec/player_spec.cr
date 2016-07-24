@@ -100,13 +100,18 @@ describe Medico do
   end
 
   it "alchemical search possible_actions" do
-    variations = doc.actions.select{|x| x.is_a? AlchemicalTheory}
-    variations.size.should be > 1
-    first = variations.first.as(AlchemicalTheory)
-    last = variations.last.as(AlchemicalTheory)
+    variants = doc.actions.select{|x| x.is_a? AlchemicalTheory}
+    variants.size.should be > 1
+    first = variants.first.as(AlchemicalTheory)
+    last = variants.last.as(AlchemicalTheory)
     first.used.size.should be < last.used.size
     last.used.should contain(first.used.first)
     last.used.size.should eq doc.bag.count{|k, v| v >= 0 }
+  end
+
+  it "AlchemicalTheory application" do
+    all_in = doc.actions.select{|x| x.is_a? AlchemicalTheory}.last.as(AlchemicalTheory)
+    doc.do_action(all_in, $r)
   end
 
 

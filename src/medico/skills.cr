@@ -106,12 +106,24 @@ module Medico
         next_key = keys.pop
         return if next_key == 0
         aset.concat(numbered[next_key].map{|subs, count| subs})
-        yield(new(aset.dup)) if aset.size >= 2
+        yield(new(aset)) if aset.size >= 2
       end
     end
 
     def apply(doc : Doctor, random = DEF_RND)
-      # TODO
+      possible = doc.universe.recipes.select{|recipe| (recipe.substances.keys - @used).empty? }
+      #spend substances
+      @used.each{|subs| doc.bag[subs] -= 1}
+      #check success
+      # TODO - log
+      return if possible.empty?
+      challenge = possible.min_of{|recipe|recipe.product.power}+5
+      return if challenge > self.class.level(doc)
+      return unless self.class.roll(challenge, doc, random)
+      #select recipe and learn
+      recipe = possible.weighted_sample(random){|r| 1000 / r.product.power}
+      doc.known_recipes << recipe
+      doc.add_known_substance recipe.product, random: random
     end
   end
 
