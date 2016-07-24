@@ -1,5 +1,9 @@
-require "./medico/*"
+require "./medico/game/*"
+require "./medico/ui/*"
 
 module Medico
-  # TODO Put your code here
+  Terminal.open
+  Terminal.refresh
+  p Terminal.read
+  Terminal.close
 end

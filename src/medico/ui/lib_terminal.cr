@@ -1,5 +1,3 @@
-require "./bearlib/*"
-
 @[Link("BearLibTerminal")]
 lib Terminal
   enum TK
