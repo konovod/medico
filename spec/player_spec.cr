@@ -115,7 +115,7 @@ describe Medico do
     doc.do_action(all_in, $r)
     doc.bag.values.sum.should eq was_in_bag - all_in.used.size
   end
-  20.times {doc.add_known_substance(univ.flora.sample($r), value: 1, is_flora: true, random: $r)}
+  20.times { doc.add_known_substance(univ.flora.sample($r), value: 1, is_flora: true, random: $r) }
   it "AlchemicalTheory works" do
     20.times do
       doc.next_day($r)
