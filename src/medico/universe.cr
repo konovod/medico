@@ -146,7 +146,7 @@ module Biology
       @param_rules.reject! { |rule| rule.effects.empty? }
     end
 
-    def make_recipe_tuple(arr) : TRecipeTuple
+    private def make_recipe_tuple(arr) : TRecipeTuple
       case arr.size
       when 2
         return {arr[0], arr[1]}

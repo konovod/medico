@@ -109,6 +109,6 @@ describe Medico do
     last.used.size.should eq doc.bag.count{|k, v| v >= 0 }
   end
 
-  
+
 
 end

@@ -56,10 +56,8 @@ module Medico
         add_asker(random)
       end
       starting_flora = @universe.flora.sample(10)
-      @universe.init_substances(starting_flora, random)
       starting_flora.each do |fl|
-        @known_flora << fl
-        @bag[fl] = random.rand(5) + 1
+        add_known_substance(fl, is_flora: true, value: random.rand(5) + 1, random: random)
       end
       check_actions
     end
@@ -138,5 +136,14 @@ module Medico
       train(act.as(Skill).class, random)
       check_actions
     end
+
+    def add_known_substance(substance : Biology::Substance, *, is_flora = false, value = 0, random = DEF_RND)
+      @universe.generate_recipes(@bag.keys, substance, random)
+      @universe.init_reactions(@bag.keys, random) #TODO - additive reactions generation
+      @known_flora << substance if is_flora
+      @bag[substance] = value
+    end
+
+
   end
 end

@@ -123,7 +123,7 @@ module Medico
 
     def self.possible_actions(doc : Doctor, &block)
       doc.known_recipes.each do |recipe|
-        next unless recipe.substances.all? { |subs, num| doc.bag[subs]? && doc.bag[subs] >= num }
+        next unless recipe.substances.all? { |subs, num| doc.bag[subs] >= num }
         yield new(recipe)
       end
     end
