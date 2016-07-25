@@ -1,9 +1,9 @@
 @[Link("BearLibTerminal")]
 lib Terminal
   alias Color = UInt32
-  alias Int = LibC::Int
+  alias CInt = LibC::Int
 
-  enum TK : Int
+  enum TK : CInt
     # If key was released instead of pressed, it's code will be OR'ed with VK_KEY_RELEASED.
     KEY_RELEASED = 0x100
     A            =  0x04
@@ -124,7 +124,7 @@ lib Terminal
 
   # Virtual key-codes for internal terminal states/variables.
   # These can be accessed via state = terminal_state function.
-  enum State : Int
+  enum State : CInt
     WIDTH       = 0xC0 # Terminal width in cells
     HEIGHT      = 0xC1 # Terminal height in cells
     CELL_WIDTH  = 0xC2 # Cell width in pixels
@@ -149,43 +149,43 @@ lib Terminal
   INPUT_CANCELLED = -1
 
   # control functions
-  fun open = terminal_open : Int
+  fun open = terminal_open : CInt
   fun close = terminal_close
-  fun set = terminal_set8(value : UInt8*) : Int
+  fun set = terminal_set8(value : UInt8*) : CInt
   fun get = terminal_get8(key : UInt8*, default_ : UInt8*) : UInt8*
   fun refresh = terminal_refresh
   # output
   fun clear = terminal_clear
-  fun clear_area = terminal_clear_area(x : Int, y : Int, w : Int, h : Int)
-  fun crop = terminal_crop(x : Int, y : Int, w : Int, h : Int)
-  fun layer = terminal_layer(index : Int)
+  fun clear_area = terminal_clear_area(x : CInt, y : CInt, w : CInt, h : CInt)
+  fun crop = terminal_crop(x : CInt, y : CInt, w : CInt, h : CInt)
+  fun layer = terminal_layer(index : CInt)
   fun color = terminal_color(color : Color)
   fun bkcolor = terminal_bkcolor(color : Color)
   fun composition = terminal_composition(mode : Composition)
-  fun put = terminal_put(x : Int, y : Int, code : Int)
-  fun put_ext = terminal_put_ext(x : Int, y : Int, dx : Int, dy : Int, code : Int, corners : Color*)
-  fun pick = terminal_pick(x : Int, y : Int, index : Int) : Int
-  fun pick_color = terminal_pick_color(x : Int, y : Int, index : Int) : Color
-  fun pick_bkcolor = terminal_pick_bkcolor(x : Int, y : Int) : Color
-  fun print = terminal_print8(x : Int, y : Int, s : UInt8*) : Int
+  fun put = terminal_put(x : CInt, y : CInt, code : CInt)
+  fun put_ext = terminal_put_ext(x : CInt, y : CInt, dx : CInt, dy : CInt, code : CInt, corners : Color*)
+  fun pick = terminal_pick(x : CInt, y : CInt, index : CInt) : CInt
+  fun pick_color = terminal_pick_color(x : CInt, y : CInt, index : CInt) : Color
+  fun pick_bkcolor = terminal_pick_bkcolor(x : CInt, y : CInt) : Color
+  fun print = terminal_print8(x : CInt, y : CInt, s : UInt8*) : CInt
   # input
-  fun read_str = terminal_read_str8(x : Int, y : Int, buffer : UInt8*, max : Int) : Int
+  fun read_str = terminal_read_str8(x : CInt, y : CInt, buffer : UInt8*, max : CInt) : CInt
   fun has_input = terminal_has_input : Bool
   # input (with enums)
-  fun state = terminal_state(code : State) : Int
-  fun input_state = terminal_state(code : TK) : Int
-  fun check = terminal_check(code : State) : Bool
-  fun input_check = terminal_check(code : TK) : Bool
+  fun state = terminal_state(code : State) : CInt
+  fun input_state = terminal_state(code : TK) : CInt
+  fun check = terminal_state(code : State) : Bool
+  fun input_check = terminal_state(code : TK) : Bool
   fun peek = terminal_peek : TK
   fun read = terminal_read : TK
   # and without them (just in case)
-  fun raw_state = terminal_state(code : Int) : Int
-  fun raw_check = terminal_check(code : Int) : Bool
-  fun raw_peek = terminal_peek : Int
-  fun raw_read = terminal_read : Int
+  fun raw_state = terminal_state(code : CInt) : CInt
+  fun raw_check = terminal_state(code : CInt) : Bool
+  fun raw_peek = terminal_peek : CInt
+  fun raw_read = terminal_read : CInt
 
   # utility
-  fun measure = terminal_measure8(s : UInt8*) : Int
-  fun delay = terminal_delay(period : Int)
+  fun measure = terminal_measure8(s : UInt8*) : CInt
+  fun delay = terminal_delay(period : CInt)
   fun color_from_name = color_from_name8(name : UInt8*) : Color
 end

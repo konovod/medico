@@ -42,7 +42,11 @@ class Frontend
   def update
     Terminal.clear
     # Draw ui
-
+    Terminal.print 1,1,"Hello!"
+    #Terminal.print 1,2,"Left mouse pressed!"
+    p "!!!" if Terminal.input_check(Terminal::TK::MOUSE_LEFT)
+    p Terminal.input_state(Terminal::TK::MOUSE_RIGHT) != 0
+    #p "!!!" if 0.as(LibC::Int) != 0
     Terminal.refresh
     Terminal.delay 1
   end
