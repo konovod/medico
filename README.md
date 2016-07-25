@@ -1,5 +1,5 @@
 # medico
-[![Build Status](https://travis-ci.org/konovod/test-crystal.svg?branch=master)](https://travis-ci.org/konovod/test-crystal)
+[![Build Status](https://travis-ci.org/konovod/medico.svg?branch=master)](https://travis-ci.org/konovod/medico)
 
 
 This is a remake of my discontinued project http://sf.net/p/medico in a Crystal language.
