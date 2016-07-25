@@ -2,8 +2,10 @@ require "./medico/game/*"
 require "./medico/ui/*"
 
 module Medico
-  Terminal.open
-  Terminal.refresh
-  p Terminal.read
-  Terminal.close
+  game = Frontend.new
+  loop do
+    game.update
+    break if game.process_inputs
+  end
+  game.close
 end
