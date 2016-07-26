@@ -176,11 +176,6 @@ lib Terminal
   fun input_state = terminal_state(code : TK) : CInt
   fun peek = terminal_peek : TK
   fun read = terminal_read : TK
-  # and without them (just in case)
-  fun raw_state = terminal_state(code : CInt) : CInt
-  fun raw_check = terminal_state(code : CInt) : Bool
-  fun raw_peek = terminal_peek : CInt
-  fun raw_read = terminal_read : CInt
 
   # utility
   fun measure = terminal_measure8(s : UInt8*) : CInt
