@@ -2,10 +2,12 @@ require "./medico/game/*"
 require "./medico/ui/*"
 
 module Medico
-  game = Frontend.new
+  $frontend : AbstractFrontend
+
+  $frontend = BearLibFrontend.new
   loop do
-    game.update
-    break if game.process_inputs
+    $frontend.update
+    break if $frontend.process_inputs == QuittingState::Quit
   end
-  game.close
+  $frontend.close
 end

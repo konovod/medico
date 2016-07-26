@@ -1,3 +1,5 @@
+require "./lib_terminal"
+
 SCREEN_WIDTH  = 120
 SCREEN_HEIGHT =  36
 FONT_NAME     = "default"
@@ -23,7 +25,22 @@ enum Colors : UInt32
   SKY        = 0xFF0040FF,
 end
 
-class Frontend
+enum QuittingState
+  Quit
+  Stay
+end
+
+
+abstract class AbstractFrontend
+  abstract def update
+  abstract def close
+  abstract def process_inputs : QuittingState
+end
+
+
+class BearLibFrontend < AbstractFrontend
+  include TerminalHelper
+
   def initialize
     Terminal.open
     Terminal.set "window: title=#{CAPTION}, size=#{SCREEN_WIDTH}x#{SCREEN_HEIGHT}"
@@ -39,23 +56,6 @@ class Frontend
     Terminal.close
   end
 
-  #this should be moved to terminal wrapper
-  private def is_release(code : Terminal::TK)
-    code > Terminal::TK::KEY_RELEASED
-  end
-  private def is_mouse(code : Terminal::TK)
-    code -= Terminal::TK::KEY_RELEASED.to_i if is_release(code)
-    code >= Terminal::TK::MOUSE_LEFT && code <= Terminal::TK::MOUSE_CLICKS
-  end
-  private def is_keyboard(code : Terminal::TK)
-    code -= Terminal::TK::KEY_RELEASED.to_i if is_release(code)
-    code >= Terminal::TK::A && code < Terminal::TK::MOUSE_LEFT
-  end
-
-  private def check(code)
-    Terminal.state(code) != 0
-  end
-
   def update
     Terminal.clear
     # Draw ui
@@ -66,13 +66,13 @@ class Frontend
     Terminal.delay 1
   end
 
-  def process_inputs : Bool
+  def process_inputs : QuittingState
     while Terminal.has_input
       key = Terminal.read
-      return true if key == Terminal::TK::CLOSE
-      return true if key == Terminal::TK::ESCAPE
+      return QuittingState::Quit if key == Terminal::TK::CLOSE
+      #return QuittingState::Quit if key == Terminal::TK::ESCAPE
       p key if is_keyboard(key)
     end
-    return false
+    return QuittingState::Stay
   end
 end
