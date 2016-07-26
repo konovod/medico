@@ -39,6 +39,7 @@ class Frontend
     Terminal.close
   end
 
+  #this should be moved to terminal wrapper
   private def is_release(code : Terminal::TK)
     code > Terminal::TK::KEY_RELEASED
   end
@@ -50,19 +51,17 @@ class Frontend
     code -= Terminal::TK::KEY_RELEASED.to_i if is_release(code)
     code >= Terminal::TK::A && code < Terminal::TK::MOUSE_LEFT
   end
-  private def check(code : Terminal::State)
+
+  private def check(code)
     Terminal.state(code) != 0
-  end
-  private def input_check(code : Terminal::TK)
-    Terminal.input_state(code) != 0
   end
 
   def update
     Terminal.clear
     # Draw ui
     Terminal.print 1,1,"Hello!"
-    Terminal.print 1,2,"Left mouse pressed!" if input_check(Terminal::TK::MOUSE_LEFT)
-    Terminal.print 1,3,"Right mouse pressed!" if input_check(Terminal::TK::MOUSE_RIGHT)
+    Terminal.print 1,2,"Left mouse pressed!" if check(Terminal::TK::MOUSE_LEFT)
+    Terminal.print 1,3,"Right mouse pressed!" if check(Terminal::TK::MOUSE_RIGHT)
     Terminal.refresh
     Terminal.delay 1
   end

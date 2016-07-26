@@ -171,9 +171,7 @@ lib Terminal
   # input
   fun read_str = terminal_read_str8(x : CInt, y : CInt, buffer : UInt8*, max : CInt) : CInt
   fun has_input = terminal_has_input : Bool
-  # input (with enums)
-  fun state = terminal_state(code : State) : CInt
-  fun input_state = terminal_state(code : TK) : CInt
+  fun state = terminal_state(code : CInt) : CInt
   fun peek = terminal_peek : TK
   fun read = terminal_read : TK
 
