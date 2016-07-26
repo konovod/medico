@@ -174,8 +174,6 @@ lib Terminal
   # input (with enums)
   fun state = terminal_state(code : State) : CInt
   fun input_state = terminal_state(code : TK) : CInt
-  fun check = terminal_state(code : State) : Bool
-  fun input_check = terminal_state(code : TK) : Bool
   fun peek = terminal_peek : TK
   fun read = terminal_read : TK
   # and without them (just in case)
