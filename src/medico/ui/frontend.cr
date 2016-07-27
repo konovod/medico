@@ -23,6 +23,20 @@ enum Color : UInt32
   GREY       = 0xFF808080,
   DARK_GREY  = 0xFF404040,
   SKY        = 0xFF0040FF,
+
+  def self.rgba(r,g,b,a = 255) : Color
+    aa = a.clamp(0,255)
+    rr = r.clamp(0,255)
+    gg = g.clamp(0,255)
+    bb = b.clamp(0,255)
+    Color.new(0_u32+(aa << 24) + (rr << 16) + (gg << 8) + bb)
+  end
+end
+
+class String
+  def to_color : Color
+    Color.new(Terminal.color_from_name(self.downcase.tr("_", " ")))
+  end
 end
 
 enum QuittingState
@@ -67,7 +81,7 @@ class BearLibFrontend < AbstractFrontend
     frame 5,5,10,10
     setcolor Color::GREY,Color::DARK_GREY
     write_centered 5,5,10,10, "Hello!"
-    setcolor Color::BLACK,Color::WHITE
+    setcolor Color.rgba(200,0,0),"Cyan".to_color
     write 1,2,"Left mouse pressed!" if check(Terminal::TK::MOUSE_LEFT)
     setcolor Color::WHITE,Color::BLACK
     write 1,3,"Right mouse pressed!" if check(Terminal::TK::MOUSE_RIGHT)
@@ -80,7 +94,7 @@ class BearLibFrontend < AbstractFrontend
       key = Terminal.read
       return QuittingState::Quit if key == Terminal::TK::CLOSE
       #return QuittingState::Quit if key == Terminal::TK::ESCAPE
-      p key if is_keyboard(key)
+      #p key if is_keyboard(key)
     end
     return QuittingState::Stay
   end
@@ -113,7 +127,6 @@ class BearLibFrontend < AbstractFrontend
   end
 
   CORNERS = {topleft: "\u250C", topright: "\u2510", bottomleft: "\u2514", bottomright: "\u2518"}
-  BEAUTYCORNERS = {topleft: "\u2597", topright: "\u2596", bottomleft: "\u259D", bottomright: "\u2598"}
   SIDES = {horiz: "\u2500", vert: "\u2502"}
 
   def frame(x1, y1, width, height, fill : Bool = false)
