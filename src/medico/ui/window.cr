@@ -2,8 +2,8 @@ require "./frontend"
 
 
 alias OnKey = Proc(Key, Bool)
-alias OnClick = Proc(Bool)
-alias OnMouseMove = Proc(Int32, Int32, Bool)
+alias OnClick = Proc(Void)
+alias OnMouseMove = Proc(MouseEvent, Int32, Int32, Void)
 
 abstract class Control
   getter owner : Window?
@@ -26,6 +26,10 @@ abstract class Control
   end
   abstract def process_key(key : TK)
   abstract def process_mouse(event : MouseEvent, x : Int32, y : Int32)
+
+  def includes?(x, y)
+    (x >= @x)&&(x <= @x+width)&&(y >= @y)&&(y <= @y+height)
+  end
 
   def initialize(@owner, @name, @x, @y, @width, @height)
     @visible = true
@@ -56,10 +60,13 @@ class Window < Control
   end
 
   def process_key(key : TK)
-
+    return ProcessingResult::Break if on_key && on_key(key)
+    focused_child ? focused_child.process_key(key) : ProcessingResult::Continue
   end
 
   def process_mouse(event : MouseEvent, x : Int32, y : Int32)
+    item = @controls.first?{|item| item.visible && item.includes?(x,y)}
+    item.process_mouse(event,x,y) if item
   end
 
 end

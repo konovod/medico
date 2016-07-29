@@ -39,9 +39,9 @@ class String
   end
 end
 
-enum QuittingState
-  Quit
-  Stay
+enum ProcessingResult
+  Break
+  Continue
 end
 
 enum MouseEvent
@@ -55,7 +55,7 @@ alias Key = Terminal::TK
 abstract class AbstractFrontend
   abstract def update
   abstract def close
-  abstract def process_inputs : QuittingState
+  abstract def process_inputs : ProcessingResult
   abstract def setcolor(color, bgcolor)
   abstract def setchar(x, y, char, color, bgcolor)
   abstract def write(x, y, string)
@@ -96,15 +96,15 @@ class BearLibFrontend < AbstractFrontend
     Terminal.delay 1
   end
 
-  def process_inputs : QuittingState
+  def process_inputs : ProcessingResult
     while Terminal.has_input
       key = Terminal.read
-      return QuittingState::Quit if key == Terminal::TK::CLOSE
-      #return QuittingState::Quit if key == Terminal::TK::ESCAPE
+      return ProcessingResult::Break if key == Terminal::TK::CLOSE
+      #return ProcessingResult::Break if key == Terminal::TK::ESCAPE
       #p key if is_keyboard(key)
     end
-    return QuittingState::Stay
-  end
+    return ProcessingResult::Continue
+  end 
 
   def setcolor(color : Color, bgcolor : Color)
     if color
