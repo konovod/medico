@@ -44,6 +44,13 @@ enum QuittingState
   Stay
 end
 
+enum MouseEvent
+  LeftClick
+  Move
+  #TODO - others?
+end
+
+alias Key = Terminal::TK
 
 abstract class AbstractFrontend
   abstract def update
