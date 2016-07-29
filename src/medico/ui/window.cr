@@ -17,12 +17,8 @@ abstract class Control
   property have_focus : Bool
   property focused_child : Control?
 
-  def frontend
-    owner.frontend
-  end
-
   def draw
-    frontend.frame(@x,@y,@width,@height) if need_frame
+    $frontend.frame(@x,@y,@width,@height) if need_frame
   end
   abstract def process_key(key : TK)
   abstract def process_mouse(event : MouseEvent, x : Int32, y : Int32)
@@ -42,21 +38,12 @@ end
 
 class Window < Control
   getter controls
-  @frontend : AbstractFrontend?
   getter on_key : OnKey?
-
-  def frontend
-    case @owner
-    when nil
-      @frontend.as(AbstractFrontend)
-    else
-      super
-    end
-  end
 
   def initialize(@owner, @name, @x, @y, @width, @height)
     super
     @controls = Array(Control).new
+    @need_frame = true
   end
 
   def process_key(key : TK)

@@ -1,4 +1,5 @@
 require "./lib_terminal"
+require "./window"
 
 SCREEN_WIDTH  = 120
 SCREEN_HEIGHT =  36
@@ -53,6 +54,7 @@ end
 alias Key = Terminal::TK
 
 abstract class AbstractFrontend
+  property main_window : Window
   abstract def update
   abstract def close
   abstract def process_inputs : ProcessingResult
@@ -61,6 +63,10 @@ abstract class AbstractFrontend
   abstract def write(x, y, string)
   abstract def write_centered(x, y, w, h, string)
   abstract def frame(x1, y1, width, height, fill)
+
+  def initialize
+    @main_window = Window.new(nil, "", 0,0,1,1)
+  end
 end
 
 
@@ -68,6 +74,7 @@ class BearLibFrontend < AbstractFrontend
   include TerminalHelper
 
   def initialize
+    super
     Terminal.open
     Terminal.set "window: title=#{CAPTION}, size=#{SCREEN_WIDTH}x#{SCREEN_HEIGHT}"
     Terminal.set "font: #{FONT_NAME}, size=#{FONT_SIZE}"
@@ -85,13 +92,7 @@ class BearLibFrontend < AbstractFrontend
   def update
     Terminal.clear
     # Draw ui
-    frame 5,5,10,10
-    setcolor Color::GREY,Color::DARK_GREY
-    write_centered 5,5,10,10, "Hello!"
-    setcolor Color.rgba(200,0,0),"Cyan".to_color
-    write 1,2,"Left mouse pressed!" if check(Terminal::TK::MOUSE_LEFT)
-    setcolor Color::WHITE,Color::BLACK
-    write 1,3,"Right mouse pressed!" if check(Terminal::TK::MOUSE_RIGHT)
+    @main_window.draw unless @main_window.nil?
     Terminal.refresh
     Terminal.delay 1
   end
@@ -104,7 +105,7 @@ class BearLibFrontend < AbstractFrontend
       #p key if is_keyboard(key)
     end
     return ProcessingResult::Continue
-  end 
+  end
 
   def setcolor(color : Color, bgcolor : Color)
     if color
