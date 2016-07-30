@@ -181,15 +181,16 @@ lib Terminal
   fun color_from_name = color_from_name8(name : UInt8*) : Color
 end
 
-
 module TerminalHelper
   def is_release(code : Terminal::TK)
     code > Terminal::TK::KEY_RELEASED
   end
+
   def is_mouse(code : Terminal::TK)
     code -= Terminal::TK::KEY_RELEASED.to_i if is_release(code)
     code >= Terminal::TK::MOUSE_LEFT && code <= Terminal::TK::MOUSE_CLICKS
   end
+
   def is_keyboard(code : Terminal::TK)
     code -= Terminal::TK::KEY_RELEASED.to_i if is_release(code)
     code >= Terminal::TK::A && code < Terminal::TK::MOUSE_LEFT
@@ -198,5 +199,4 @@ module TerminalHelper
   def check(code)
     Terminal.state(code) != 0
   end
-
 end

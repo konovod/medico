@@ -1,6 +1,5 @@
 require "./frontend"
 
-
 alias OnKey = Proc(Key, Bool)
 alias OnClick = Proc(Nil)
 alias OnMouseMove = Proc(MouseEvent, Int32, Int32, Void)
@@ -18,7 +17,7 @@ abstract class Control
   property focused_child : Control?
 
   def draw
-    $frontend.frame(@x-1,@y-1,@width+2,@height+2) if need_frame
+    $frontend.frame(@x - 1, @y - 1, @width + 2, @height + 2) if need_frame
   end
 
   def process_key(key : Key) : ProcessingResult
@@ -29,7 +28,7 @@ abstract class Control
   end
 
   def includes?(x, y)
-    (x >= @x)&&(x <= @x+width)&&(y >= @y)&&(y <= @y+height)
+    (x >= @x) && (x <= @x + width) && (y >= @y) && (y <= @y + height)
   end
 
   def initialize(@owner, @name, @x, @y, @width, @height)
@@ -37,9 +36,7 @@ abstract class Control
     @need_frame = false
     @have_focus = false
   end
-
 end
-
 
 class Window < Control
   getter controls
@@ -49,6 +46,10 @@ class Window < Control
     super
     @controls = Array(Control).new
     @need_frame = true
+    init_controls
+  end
+
+  def init_controls
   end
 
   def process_key(key : TK)
@@ -57,8 +58,8 @@ class Window < Control
   end
 
   def process_mouse(event : MouseEvent, x : Int32, y : Int32)
-    item = @controls.find{|item| item.visible && item.includes?(x,y)}
-    item.process_mouse(event,x,y) if item
+    item = @controls.find { |item| item.visible && item.includes?(x, y) }
+    item.process_mouse(event, x, y) if item
   end
 
   def draw
@@ -66,14 +67,13 @@ class Window < Control
     @controls.each do |item|
       item.draw if item.visible
     end
-
   end
 end
-
 
 class Button < Control
   property text : String
   property on_click : OnClick
+
   def initialize(@owner, @name, @x, @y, @width, @height, @text, *, @on_click)
     super(@owner, @name, @x, @y, @width, @height)
     @need_frame = true
@@ -87,10 +87,8 @@ class Button < Control
   def process_mouse(event : MouseEvent, x : Int32, y : Int32)
     case event
     when MouseEvent::LeftClick
-      @on_click.call()
+      @on_click.call
     else
     end
   end
-
-
 end

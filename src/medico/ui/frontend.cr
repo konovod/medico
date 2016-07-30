@@ -25,12 +25,12 @@ enum Color : UInt32
   DARK_GREY  = 0xFF404040,
   SKY        = 0xFF0040FF,
 
-  def self.rgba(r,g,b,a = 255) : Color
-    aa = a.clamp(0,255)
-    rr = r.clamp(0,255)
-    gg = g.clamp(0,255)
-    bb = b.clamp(0,255)
-    Color.new(0_u32+(aa << 24) + (rr << 16) + (gg << 8) + bb)
+  def self.rgba(r, g, b, a = 255) : Color
+    aa = a.clamp(0, 255)
+    rr = r.clamp(0, 255)
+    gg = g.clamp(0, 255)
+    bb = b.clamp(0, 255)
+    Color.new(0_u32 + (aa << 24) + (rr << 16) + (gg << 8) + bb)
   end
 end
 
@@ -48,13 +48,14 @@ end
 enum MouseEvent
   LeftClick
   Move
-  #TODO - others?
+  # TODO - others?
 end
 
 alias Key = Terminal::TK
 
 abstract class AbstractFrontend
   property main_window : Window
+
   abstract def update
   abstract def close
   abstract def process_inputs : ProcessingResult
@@ -65,10 +66,9 @@ abstract class AbstractFrontend
   abstract def frame(x1, y1, width, height, fill)
 
   def initialize
-    @main_window = Window.new(nil, "", 0,0,1,1)
+    @main_window = Window.new(nil, "", 0, 0, 1, 1)
   end
 end
-
 
 class BearLibFrontend < AbstractFrontend
   include TerminalHelper
@@ -80,7 +80,7 @@ class BearLibFrontend < AbstractFrontend
     Terminal.set "font: #{FONT_NAME}, size=#{FONT_SIZE}"
     @savedcolor = Color::WHITE
     @savedbgcolor = Color::BLACK
-    @main_window = Window.new(nil, :main, 0,0,SCREEN_WIDTH-1,SCREEN_HEIGHT-1)
+    @main_window = Window.new(nil, :main, 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1)
     @main_window.need_frame = false
 
     # @savedmouse = {cx: 0, cy: 0}
@@ -101,14 +101,13 @@ class BearLibFrontend < AbstractFrontend
   end
 
   private def handle_input(input : Terminal::TK)
-
     case input
-      when Terminal::TK::CLOSE
-        return ProcessingResult::Break
-      when Terminal::TK::MOUSE_LEFT+Terminal::TK::KEY_RELEASED.to_i
-        @main_window.process_mouse(MouseEvent::LeftClick,
-            Terminal.state(Terminal::TK::MOUSE_X), 
-            Terminal.state(Terminal::TK::MOUSE_Y))
+    when Terminal::TK::CLOSE
+      return ProcessingResult::Break
+    when Terminal::TK::MOUSE_LEFT + Terminal::TK::KEY_RELEASED.to_i
+      @main_window.process_mouse(MouseEvent::LeftClick,
+        Terminal.state(Terminal::TK::MOUSE_X),
+        Terminal.state(Terminal::TK::MOUSE_Y))
     end
     ProcessingResult::Continue
   end
@@ -118,12 +117,12 @@ class BearLibFrontend < AbstractFrontend
       while Terminal.has_input
         key = Terminal.read
         return handle_input(key)
-        #return ProcessingResult::Break if key == Terminal::TK::ESCAPE
-        #p key if is_keyboard(key)
+        # return ProcessingResult::Break if key == Terminal::TK::ESCAPE
+        # p key if is_keyboard(key)
       end
       return ProcessingResult::Continue
     else
-      return handle_input(Terminal.read) #TODO - flag if refresh is required
+      return handle_input(Terminal.read) # TODO - flag if refresh is required
     end
   end
 
@@ -151,27 +150,26 @@ class BearLibFrontend < AbstractFrontend
   end
 
   def write_centered(x, y, w, h, string : String)
-    Terminal.print x+(w-string.size)/2, y+h/2, string
+    Terminal.print x + (w - string.size)/2, y + h/2, string
   end
 
   CORNERS = {topleft: "\u250C", topright: "\u2510", bottomleft: "\u2514", bottomright: "\u2518"}
-  SIDES = {horiz: "\u2500", vert: "\u2502"}
+  SIDES   = {horiz: "\u2500", vert: "\u2502"}
 
   def frame(x1, y1, width, height, fill : Bool = false)
-    x1=x1.to_i
-    y1=y1.to_i
-    width=width.to_i
-    height=height.to_i
-    Terminal.print x1, y1, CORNERS[:topleft]+SIDES[:horiz]*(width-1) +CORNERS[:topright]
-    Terminal.print x1, y1+height, CORNERS[:bottomleft]+SIDES[:horiz]*(width-1) +CORNERS[:bottomright]
-    (y1+1..y1+height-1).each do |y|
+    x1 = x1.to_i
+    y1 = y1.to_i
+    width = width.to_i
+    height = height.to_i
+    Terminal.print x1, y1, CORNERS[:topleft] + SIDES[:horiz]*(width - 1) + CORNERS[:topright]
+    Terminal.print x1, y1 + height, CORNERS[:bottomleft] + SIDES[:horiz]*(width - 1) + CORNERS[:bottomright]
+    (y1 + 1..y1 + height - 1).each do |y|
       if fill
-        Terminal.print x1, y, SIDES[:vert]+" "*(width-1)+SIDES[:vert]
+        Terminal.print x1, y, SIDES[:vert] + " "*(width - 1) + SIDES[:vert]
       else
         Terminal.print x1, y, SIDES[:vert]
-        Terminal.print x1+width, y, SIDES[:vert]
+        Terminal.print x1 + width, y, SIDES[:vert]
       end
     end
   end
-
 end

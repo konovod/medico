@@ -133,14 +133,14 @@ module Biology
       # add effects
       CONFIG[:NRules].times do
         rule = @param_rules.weighted_sample(random) { |p| p.param.damage(p.checker.average) }
-        rule.effects.concat random_effects(f(0.1), count: 1, random: random) { |eff|
+        rule.effects.concat(random_effects(f(0.1), count: 1, random: random) do |eff|
           case eff
           when ChangeParam
             eff.param != rule.param && !(eff.param.is_a? LiquidParam) && (rule.param.is_a? LiquidParam)
           else
             true
           end
-        }
+        end)
       end
       # remove empty rules
       @param_rules.reject! { |rule| rule.effects.empty? }

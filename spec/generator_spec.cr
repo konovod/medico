@@ -53,11 +53,11 @@ describe Universe do
     bads.any? { |e| e.is_a?(AddSympthomEffect) }.should be_truthy
     bads.any? { |e| e.is_a?(ChangeParam) }.should be_truthy
 
-    heads = u.random_effects_sys(f(0.5), random: $r, count: 20, sys: Set{System::Brains})
-    heads.any? { |e| e.is_a?(AddSympthomEffect) && e.sympthom.system == System::Brains }.should be_truthy
-    heads.any? { |e| e.is_a?(RemoveSympthomEffect) && e.sympthom.system == System::Brains }.should be_truthy
-    heads.any? { |e| e.is_a?(AddSympthomEffect) && e.sympthom.system != System::Brains }.should be_falsey
-    heads.any? { |e| e.is_a?(RemoveSympthomEffect) && e.sympthom.system != System::Brains }.should be_falsey
+    heads = u.random_effects_sys(f(0.5), random: $r, count: 20, sys: Set{Biology::System::Brains})
+    heads.any? { |e| e.is_a?(AddSympthomEffect) && e.sympthom.system == Biology::System::Brains }.should be_truthy
+    heads.any? { |e| e.is_a?(RemoveSympthomEffect) && e.sympthom.system == Biology::System::Brains }.should be_truthy
+    heads.any? { |e| e.is_a?(AddSympthomEffect) && e.sympthom.system != Biology::System::Brains }.should be_falsey
+    heads.any? { |e| e.is_a?(RemoveSympthomEffect) && e.sympthom.system != Biology::System::Brains }.should be_falsey
     heads.any? { |e| e.is_a?(ChangeParam) }.should be_truthy
   end
 
