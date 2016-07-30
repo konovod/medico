@@ -74,12 +74,14 @@ class BearLibFrontend < AbstractFrontend
   include TerminalHelper
 
   def initialize
-    super
     Terminal.open
     Terminal.set "window: title=#{CAPTION}, size=#{SCREEN_WIDTH}x#{SCREEN_HEIGHT}"
     Terminal.set "font: #{FONT_NAME}, size=#{FONT_SIZE}"
     @savedcolor = Color::WHITE
     @savedbgcolor = Color::BLACK
+    @main_window = Window.new(nil, CAPTION, 0,0,SCREEN_WIDTH-1,SCREEN_HEIGHT-1)
+    @main_window.need_frame = false
+
     # @savedmouse = {cx: 0, cy: 0}
     # @mousemoved = false
     # @cached = false

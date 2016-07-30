@@ -18,7 +18,7 @@ abstract class Control
   property focused_child : Control?
 
   def draw
-    $frontend.frame(@x,@y,@width,@height) if need_frame
+    $frontend.frame(@x-1,@y-1,@width+2,@height+2) if need_frame
   end
   abstract def process_key(key : TK)
   abstract def process_mouse(event : MouseEvent, x : Int32, y : Int32)
