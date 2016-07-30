@@ -57,7 +57,7 @@ class Window < Control
   end
 
   def process_mouse(event : MouseEvent, x : Int32, y : Int32)
-    item = @controls.first?{|item| item.visible && item.includes?(x,y)}
+    item = @controls.find{|item| item.visible && item.includes?(x,y)}
     item.process_mouse(event,x,y) if item
   end
 
@@ -86,7 +86,7 @@ class Button < Control
 
   def process_mouse(event : MouseEvent, x : Int32, y : Int32)
     case event
-    when LeftClick
+    when MouseEvent::LeftClick
       @on_click.call()
     else
     end

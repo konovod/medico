@@ -101,8 +101,15 @@ class BearLibFrontend < AbstractFrontend
   end
 
   private def handle_input(input : Terminal::TK)
-    return ProcessingResult::Break if input == Terminal::TK::CLOSE
 
+    case input
+      when Terminal::TK::CLOSE
+        return ProcessingResult::Break
+      when Terminal::TK::MOUSE_LEFT+Terminal::TK::KEY_RELEASED.to_i
+        @main_window.process_mouse(MouseEvent::LeftClick,
+            Terminal.state(Terminal::TK::MOUSE_X), 
+            Terminal.state(Terminal::TK::MOUSE_Y))
+    end
     ProcessingResult::Continue
   end
 
