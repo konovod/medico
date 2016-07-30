@@ -2,12 +2,12 @@ require "./frontend"
 
 
 alias OnKey = Proc(Key, Bool)
-alias OnClick = Proc(Void)
+alias OnClick = Proc(Nil)
 alias OnMouseMove = Proc(MouseEvent, Int32, Int32, Void)
 
 abstract class Control
   getter owner : Window?
-  getter name : String
+  getter name : Symbol
   property x : Int32
   property y : Int32
   property width : Int32
@@ -61,12 +61,15 @@ end
 
 class Button < Control
   property text : String
+  property on_click : OnClick
   def initialize(@owner, @name, @x, @y, @width, @height, @text, *, @on_click)
-    super
+    super(@owner, @name, @x, @y, @width, @height)
+    need_frame = true
   end
 
   def draw
-
+    super
+    $frontend.write_centered @x, @y, @width, @height, @text
   end
   def process_mouse(event : TK)
     #@owner.

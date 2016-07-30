@@ -79,7 +79,7 @@ class BearLibFrontend < AbstractFrontend
     Terminal.set "font: #{FONT_NAME}, size=#{FONT_SIZE}"
     @savedcolor = Color::WHITE
     @savedbgcolor = Color::BLACK
-    @main_window = Window.new(nil, CAPTION, 0,0,SCREEN_WIDTH-1,SCREEN_HEIGHT-1)
+    @main_window = Window.new(nil, :main, 0,0,SCREEN_WIDTH-1,SCREEN_HEIGHT-1)
     @main_window.need_frame = false
 
     # @savedmouse = {cx: 0, cy: 0}
