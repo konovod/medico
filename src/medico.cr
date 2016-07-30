@@ -18,8 +18,8 @@ end
 
 module Medico
   $frontend : AbstractFrontend
-
-  $frontend = BearLibFrontend.new
+ 
+  $frontend = BearLibFrontend.new(false)
   form = MainForm.new(nil, :main, 0,0,SCREEN_WIDTH,SCREEN_HEIGHT)
   $frontend.main_window = form
   loop do

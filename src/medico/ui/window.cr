@@ -20,8 +20,13 @@ abstract class Control
   def draw
     $frontend.frame(@x-1,@y-1,@width+2,@height+2) if need_frame
   end
-  abstract def process_key(key : TK)
-  abstract def process_mouse(event : MouseEvent, x : Int32, y : Int32)
+
+  def process_key(key : Key) : ProcessingResult
+    ProcessingResult::Continue
+  end
+
+  def process_mouse(event : MouseEvent, x : Int32, y : Int32)
+  end
 
   def includes?(x, y)
     (x >= @x)&&(x <= @x+width)&&(y >= @y)&&(y <= @y+height)
@@ -78,12 +83,7 @@ class Button < Control
     super
     $frontend.write_centered @x, @y, @width, @height, @text
   end
-  def process_mouse(event : TK)
-    #@owner.
-  end
-  def process_key(key : TK)
-    false
-  end
+
   def process_mouse(event : MouseEvent, x : Int32, y : Int32)
     case event
     when LeftClick

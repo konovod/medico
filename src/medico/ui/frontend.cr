@@ -72,8 +72,9 @@ end
 
 class BearLibFrontend < AbstractFrontend
   include TerminalHelper
+  getter realtime : Bool
 
-  def initialize
+  def initialize(@realtime)
     Terminal.open
     Terminal.set "window: title=#{CAPTION}, size=#{SCREEN_WIDTH}x#{SCREEN_HEIGHT}"
     Terminal.set "font: #{FONT_NAME}, size=#{FONT_SIZE}"
@@ -99,14 +100,24 @@ class BearLibFrontend < AbstractFrontend
     Terminal.delay 1
   end
 
+  private def handle_input(input : Terminal::TK)
+    return ProcessingResult::Break if input == Terminal::TK::CLOSE
+
+    ProcessingResult::Continue
+  end
+
   def process_inputs : ProcessingResult
-    while Terminal.has_input
-      key = Terminal.read
-      return ProcessingResult::Break if key == Terminal::TK::CLOSE
-      #return ProcessingResult::Break if key == Terminal::TK::ESCAPE
-      #p key if is_keyboard(key)
+    if @realtime
+      while Terminal.has_input
+        key = Terminal.read
+        return handle_input(key)
+        #return ProcessingResult::Break if key == Terminal::TK::ESCAPE
+        #p key if is_keyboard(key)
+      end
+      return ProcessingResult::Continue
+    else
+      return handle_input(Terminal.read) #TODO - flag if refresh is required
     end
-    return ProcessingResult::Continue
   end
 
   def setcolor(color : Color, bgcolor : Color)
