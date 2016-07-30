@@ -56,6 +56,13 @@ class Window < Control
     item.process_mouse(event,x,y) if item
   end
 
+  def draw
+    super
+    @controls.each do |item|
+      item.draw if item.visible
+    end
+
+  end
 end
 
 
@@ -64,7 +71,7 @@ class Button < Control
   property on_click : OnClick
   def initialize(@owner, @name, @x, @y, @width, @height, @text, *, @on_click)
     super(@owner, @name, @x, @y, @width, @height)
-    need_frame = true
+    @need_frame = true
   end
 
   def draw

@@ -16,9 +16,6 @@ class MainForm < Window
 
 end
 
-
-
-
 module Medico
   $frontend : AbstractFrontend
 
