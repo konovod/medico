@@ -14,14 +14,9 @@ abstract class Control
   property visible : Bool
   property need_frame : Bool
   property have_focus : Bool
-  property focused_child : Control?
 
   def draw
     $frontend.frame(@x - 1, @y - 1, @width + 2, @height + 2) if need_frame
-  end
-
-  def process_key(key : Key) : ProcessingResult
-    ProcessingResult::Continue
   end
 
   def process_mouse(event : MouseEvent, x : Int32, y : Int32)
@@ -38,9 +33,21 @@ abstract class Control
   end
 end
 
-class Window < Control
-  getter controls
+class FocusableControl < Control
   getter on_key : OnKey?
+
+  def process_key(key : Key) : ProcessingResult
+    if on_key && on_key.not_nil!.call(key)
+      ProcessingResult::Break
+    else
+      ProcessingResult::Continue
+    end
+  end
+end
+
+class Window < FocusableControl
+  getter controls
+  property focused_child : FocusableControl?
 
   def initialize(@owner, @name, @x, @y, @width, @height)
     super
@@ -53,7 +60,7 @@ class Window < Control
   end
 
   def process_key(key : Key)
-    return ProcessingResult::Break if on_key && on_key.not_nil!.call(key)
+    return ProcessingResult::Break if super == ProcessingResult::Break
     focused_child ? focused_child.not_nil!.process_key(key) : ProcessingResult::Continue
   end
 

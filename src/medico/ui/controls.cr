@@ -39,25 +39,26 @@ end
 class ListBox < Control
   getter items
   property position
-#  property scroll
+
+  #  property scroll
 
   def initialize(*args)
     super
     @items = [] of String
     @position = 0
-
   end
 
   def draw
     super
     @height.times do |i|
       s = i < items.size ? items[i] : ""
-      $frontend.write @x, @y+i, s
+      $frontend.write @x, @y + i, s
     end
   end
 
   def process_mouse(event : MouseEvent, x : Int32, y : Int32)
   end
 
-
+  def process_key(key : Key)
+  end
 end
