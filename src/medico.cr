@@ -2,17 +2,25 @@ require "./medico/game/*"
 require "./medico/ui/*"
 
 class MainForm < Window
+
   def initialize(*args)
     super
     @need_frame = false
   end
 
+  getter! button1
+  getter! label1
+
   def init_controls
-    @controls << Button.new(self, :button1, 10, 10, 10, 10, "Click me", on_click: ->button1_click)
+    @button1 = Button.new(self, :button1, 10, 10, 10, 5, "Click me", on_click: ->button1_click)
+    @label1 = Label.new(self, :button1, 10, 20, 10, 10, "Label1")
+    @controls << button1
+    @controls << label1
+
   end
 
-  def button1_click
-    puts "Hello!"
+  def button1_click() : Void
+    @label1.not_nil!.text +="A"
   end
 end
 

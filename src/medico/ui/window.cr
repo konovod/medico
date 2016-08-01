@@ -92,3 +92,17 @@ class Button < Control
     end
   end
 end
+
+class Label < Control
+  property text : String
+
+  def initialize(@owner, @name, @x, @y, @width, @height, @text)
+    super(@owner, @name, @x, @y, @width, @height)
+  end
+
+  def draw
+    super
+    $frontend.write_centered @x, @y, @width, @height, @text
+  end
+
+end
