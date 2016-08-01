@@ -36,12 +36,10 @@ end
 class FocusableControl < Control
   getter on_key : OnKey?
 
-  def process_key(key : Key) : ProcessingResult
-    if on_key && on_key.not_nil!.call(key)
-      ProcessingResult::Break
-    else
-      ProcessingResult::Continue
-    end
+  def process_key(key : Key) : Bool
+    #TODO - there was idiomatic code for it?
+    akey = on_key
+    akey ? akey.call(key) : false
   end
 end
 
@@ -59,9 +57,10 @@ class Window < FocusableControl
   def init_controls
   end
 
-  def process_key(key : Key)
-    return ProcessingResult::Break if super == ProcessingResult::Break
-    focused_child ? focused_child.not_nil!.process_key(key) : ProcessingResult::Continue
+  def process_key(key : Key) : Bool
+    return true if super
+    focused = @focused_child
+    focused ? focused.process_key(key) : false
   end
 
   def process_mouse(event : MouseEvent, x : Int32, y : Int32)
