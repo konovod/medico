@@ -37,7 +37,7 @@ class FocusableControl < Control
   getter on_key : OnKey?
 
   def process_key(key : Key) : Bool
-    #TODO - there was idiomatic code for it?
+    # TODO - there was idiomatic code for it?
     akey = on_key
     akey ? akey.call(key) : false
   end

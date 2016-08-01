@@ -43,7 +43,6 @@ end
 
 module Medico
   $frontend : AbstractFrontend
- 
   $frontend = BearLibFrontend.new(false)
   $quitting = false
   form = MainForm.new(nil, :main, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
