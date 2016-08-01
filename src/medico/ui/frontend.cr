@@ -108,6 +108,8 @@ class BearLibFrontend < AbstractFrontend
       @main_window.process_mouse(MouseEvent::LeftClick,
         Terminal.state(Terminal::TK::MOUSE_X),
         Terminal.state(Terminal::TK::MOUSE_Y))
+    when is_keyboard(input)
+      @main_window.process_key(input)
     end
     ProcessingResult::Continue
   end

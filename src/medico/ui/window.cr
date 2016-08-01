@@ -52,9 +52,9 @@ class Window < Control
   def init_controls
   end
 
-  def process_key(key : TK)
-    return ProcessingResult::Break if on_key && on_key(key)
-    focused_child ? focused_child.process_key(key) : ProcessingResult::Continue
+  def process_key(key : Key)
+    return ProcessingResult::Break if on_key && on_key.not_nil!.call(key)
+    focused_child ? focused_child.not_nil!.process_key(key) : ProcessingResult::Continue
   end
 
   def process_mouse(event : MouseEvent, x : Int32, y : Int32)
