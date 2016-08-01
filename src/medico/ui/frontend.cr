@@ -108,7 +108,7 @@ class BearLibFrontend < AbstractFrontend
       @main_window.process_mouse(MouseEvent::LeftClick,
         Terminal.state(Terminal::TK::MOUSE_X),
         Terminal.state(Terminal::TK::MOUSE_Y))
-    #TODO - check case syntax
+      # TODO - check case syntax
     else
       @main_window.process_key(input) if is_keyboard(input)
     end
