@@ -1,7 +1,7 @@
 require "./frontend"
 
 alias OnKey = Proc(Key, Bool)
-alias OnClick = Proc(Nil)
+alias OnClick = Proc(Void)
 alias OnMouseMove = Proc(MouseEvent, Int32, Int32, Void)
 
 abstract class Control
