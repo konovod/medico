@@ -1,6 +1,10 @@
 require "./medico/game/*"
 require "./medico/ui/*"
 
+SEL_COLOR = ColorPair.new(Color::BLACK, Color::GREEN)
+
+
+
 class MainForm < Window
   def initialize(*args)
     super
@@ -16,6 +20,7 @@ class MainForm < Window
     @on_key = ->(key : Key) { form_key(key) }
 
     @button1 = Button.new(self, :button1, 10, 10, 10, 5, "Click me", on_click: ->button1_click)
+    button1.color = SEL_COLOR
     @controls << button1
     @label1 = Label.new(self, :label1, 10, 20, 10, 10, "Label1")
     @controls << label1

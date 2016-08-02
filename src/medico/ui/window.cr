@@ -14,8 +14,10 @@ abstract class Control
   property visible : Bool
   property need_frame : Bool
   property have_focus : Bool
+  property color : ColorPair
 
   def draw
+    $frontend.setcolor color
     $frontend.frame(@x - 1, @y - 1, @width + 2, @height + 2) if need_frame
   end
 
@@ -27,6 +29,8 @@ abstract class Control
   end
 
   def initialize(@owner, @name, @x, @y, @width, @height)
+    aowner = @owner
+    @color = aowner ? aowner.color : DEF_COLOR
     @visible = true
     @need_frame = false
     @have_focus = false

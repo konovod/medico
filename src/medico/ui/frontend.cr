@@ -6,6 +6,7 @@ SCREEN_HEIGHT =  36
 FONT_NAME     = "default"
 FONT_SIZE     = 12
 CAPTION       = "Medico"
+DEF_COLOR = ColorPair.new(Color::WHITE, Color::BLACK)
 
 enum Color : UInt32
   WHITE       = 0xFFFFFFFF,
@@ -33,6 +34,24 @@ enum Color : UInt32
     Color.new(0_u32 + (aa << 24) + (rr << 16) + (gg << 8) + bb)
   end
 end
+
+struct ColorPair
+  property fg : Color
+  property bg : Color
+  def initialize(@fg,@bg)
+  end
+
+  def invert!
+    @bg, @fg = @fg, @bg
+    self
+  end
+
+  def invert
+    return clone.invert!
+  end
+end
+
+
 
 class String
   def to_color : Color
@@ -127,6 +146,10 @@ class BearLibFrontend < AbstractFrontend
     else
       return handle_input(Terminal.read) # TODO - flag if refresh is required
     end
+  end
+
+  def setcolor(pair : ColorPair)
+    setcolor(pair.fg, pair.bg)
   end
 
   def setcolor(color : Color, bgcolor : Color)
