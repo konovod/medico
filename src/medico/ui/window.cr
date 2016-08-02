@@ -18,7 +18,11 @@ abstract class Control
 
   def draw
     $frontend.setcolor color
-    $frontend.frame(@x - 1, @y - 1, @width + 2, @height + 2, true) if need_frame
+    if need_frame
+      $frontend.frame(@x - 1, @y - 1, @width + 2, @height + 2, true)
+    else
+      $frontend.fill(@x, @y, @width, @height)
+    end
   end
 
   def process_mouse(event : MouseEvent, x : Int32, y : Int32)

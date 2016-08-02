@@ -182,6 +182,12 @@ class BearLibFrontend < AbstractFrontend
   CORNERS = {topleft: "\u250C", topright: "\u2510", bottomleft: "\u2514", bottomright: "\u2518"}
   SIDES   = {horiz: "\u2500", vert: "\u2502"}
 
+  def fill(x1, y1, width, height)
+    (y1..y1 + height).each do |y|
+        Terminal.print x1, y, " "*width
+    end
+  end
+
   def frame(x1, y1, width, height, fill : Bool = false)
     x1 = x1.to_i
     y1 = y1.to_i
