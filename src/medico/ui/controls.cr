@@ -36,7 +36,7 @@ class Label < Control
   end
 end
 
-class ListBox < Control
+class ListBox < FocusableControl
   getter items
   property position
   property sel_color : ColorPair
@@ -64,5 +64,16 @@ class ListBox < Control
   end
 
   def process_key(key : Key)
+    case key
+    when Terminal::TK::UP
+      @position -= 1 if @position > 0
+    when Terminal::TK::DOWN
+      @position += 1 if @position < @items.size-1
+
+
+    else
+      return false
+    end
+    return true
   end
 end

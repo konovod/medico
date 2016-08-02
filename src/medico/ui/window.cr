@@ -60,6 +60,8 @@ class Window < FocusableControl
     @controls = Array(Control).new
     @need_frame = true
     init_controls
+    f = @controls.find{|x| x.is_a? FocusableControl}
+    @focused_child = f.as(FocusableControl) if f
   end
 
   def init_controls
