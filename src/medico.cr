@@ -4,7 +4,6 @@ require "./medico/ui/*"
 SEL_COLOR = ColorPair.new(Color::BLACK, Color::GREEN)
 
 
-
 class MainForm < Window
   def initialize(*args)
     super
@@ -25,14 +24,21 @@ class MainForm < Window
     @label1 = Label.new(self, :label1, 10, 20, 10, 10, "Label1")
     @controls << label1
     @listbox1 = ListBox.new(self, :listbox1, 40, 20, 10, 10, true)
+    listbox1.on_select = ->(index : Int32) { listbox1_select(index) }
     @controls << listbox1
   end
 
   # end of macro-generated
 
-  def button1_click : Void
-    label1.text += "A"
-    listbox1.items << label1.text
+  @aitem = 1
+
+  def button1_click : Nil
+    @aitem += 1
+    listbox1.items << "Item #{@aitem}"
+  end
+
+  def listbox1_select(index : Int32) : Nil
+    label1.text = listbox1.items[index]
   end
 
   def form_key(key : Key) : Bool

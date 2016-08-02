@@ -1,8 +1,8 @@
 require "./frontend"
 
 alias OnKey = Proc(Key, Bool)
-alias OnClick = Proc(Void)
-alias OnMouseMove = Proc(MouseEvent, Int32, Int32, Void)
+alias OnClick = Proc(Nil)
+alias OnMouseMove = Proc(MouseEvent, Int32, Int32, Nil)
 
 abstract class Control
   getter owner : Window?
@@ -48,6 +48,11 @@ class FocusableControl < Control
     # TODO - there was idiomatic code for it?
     akey = on_key
     akey ? akey.call(key) : false
+  end
+
+  def need_frame
+    ow = @owner
+    ow.nil? || self == ow.focused_child
   end
 end
 

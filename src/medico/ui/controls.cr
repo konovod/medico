@@ -36,12 +36,12 @@ class Label < Control
   end
 end
 
-alias OnSelectItem = Proc(Int32, Void)
-alias OnClickItem = Proc(Int32, Void)
+alias OnSelectItem = Proc(Int32, Nil)
+alias OnClickItem = Proc(Int32, Nil)
 
 class ListBox < FocusableControl
   getter items
-  property position
+  getter position
   property sel_color : ColorPair
   property scrollable : Bool
   property scrollpos
@@ -59,13 +59,43 @@ class ListBox < FocusableControl
     @sel_color = @color.invert
   end
 
+  def scroll_shift
+    scrollable ? 1 : 0
+  end
+
+  def position= (value)
+     if value < 0
+       @position = 0
+     elsif value < items.size
+       @position = value
+     elsif items.size==0
+       @position = 0
+     else
+       @position = items.size-1
+     end
+     if scrollable
+       if position < scrollpos
+         @scrollpos = position
+       elsif position >= scrollpos+height-1-scroll_shift
+         @scrollpos = position - height+1+scroll_shift
+       end
+     end
+     event = on_select
+     event.call(position) if event && !items.empty?
+   end
+
   def draw
     super
-    @height.times do |i|
-      s = i < items.size ? items[i] : ""
-      $frontend.setcolor sel_color if i == @position
+    (0..height-scroll_shift*2).each do |i|
+      index = scrollpos+i
+      s = index < items.size ? items[index] : ""
+      $frontend.setcolor sel_color if index == @position
       $frontend.write @x, @y + i, s
-      $frontend.setcolor color if i == @position
+      $frontend.setcolor color if index == @position
+    end
+    if scrollable
+      $frontend.write(x, y, "\u{24}" * width ) if scrollpos > 0
+      $frontend.write(x, y+height-1, "\u{25}" * width ) if scrollpos <= items.size - height
     end
   end
 
@@ -75,13 +105,13 @@ class ListBox < FocusableControl
   def process_key(key : Key)
     case key
     when Terminal::TK::UP
-      @position -= 1 if @position > 0
+      self.position = @position - 1 if position > 0
     when Terminal::TK::DOWN
-      @position += 1 if @position < @items.size-1
+      self.position = @position + 1 if position < @items.size-1
     when Terminal::TK::HOME
-      @position = 0
+      self.position = 0
     when Terminal::TK::K_END
-      @position = @items.size-1
+      self.position = @items.size-1
     else
       return false
     end
