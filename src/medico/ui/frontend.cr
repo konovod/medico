@@ -47,7 +47,7 @@ struct ColorPair
   end
 
   def invert
-    return clone.invert!
+    return ColorPair.new(@bg, @fg)
   end
 end
 

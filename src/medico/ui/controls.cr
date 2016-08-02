@@ -39,6 +39,7 @@ end
 class ListBox < Control
   getter items
   property position
+  property sel_color : ColorPair
 
   #  property scroll
 
@@ -46,13 +47,16 @@ class ListBox < Control
     super
     @items = [] of String
     @position = 0
+    @sel_color = @color.invert
   end
 
   def draw
     super
     @height.times do |i|
       s = i < items.size ? items[i] : ""
+      $frontend.setcolor sel_color if i == @position
       $frontend.write @x, @y + i, s
+      $frontend.setcolor color if i == @position
     end
   end
 
