@@ -24,7 +24,7 @@ class MainForm < Window
     @controls << button1
     @label1 = Label.new(self, :label1, 10, 20, 10, 10, "Label1")
     @controls << label1
-    @listbox1 = ListBox.new(self, :listbox1, 40, 20, 10, 10)
+    @listbox1 = ListBox.new(self, :listbox1, 40, 20, 10, 10, true)
     @controls << listbox1
   end
 

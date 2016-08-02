@@ -36,17 +36,26 @@ class Label < Control
   end
 end
 
+alias OnSelectItem = Proc(Int32, Void)
+alias OnClickItem = Proc(Int32, Void)
+
 class ListBox < FocusableControl
   getter items
   property position
   property sel_color : ColorPair
+  property scrollable : Bool
+  property scrollpos
+
+  property on_select : OnSelectItem?
+  property on_click : OnClickItem?
 
   #  property scroll
 
-  def initialize(*args)
-    super
+  def initialize(@owner, @name, @x, @y, @width, @height, @scrollable)
+    super(@owner, @name, @x, @y, @width, @height)
     @items = [] of String
     @position = 0
+    @scrollpos = 0
     @sel_color = @color.invert
   end
 
@@ -69,8 +78,10 @@ class ListBox < FocusableControl
       @position -= 1 if @position > 0
     when Terminal::TK::DOWN
       @position += 1 if @position < @items.size-1
-
-
+    when Terminal::TK::HOME
+      @position = 0
+    when Terminal::TK::K_END
+      @position = @items.size-1
     else
       return false
     end
