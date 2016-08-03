@@ -87,6 +87,7 @@ describe Universe do
     15.times { john.process_tick($r) }
     john.health.should be < john.maxhealth
   end
+
   it "test reset" do
     john.reset
     john.health.should eq(john.maxhealth)

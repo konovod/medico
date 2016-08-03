@@ -31,9 +31,9 @@ module Fuzzy
       # actual checks
       return oldstate if oldstate == (rate2 > rate1)
       if rate2 > rate1
-        return rand < (rate2 - rate1) / (1 - rate1)
+        return random.rand < (rate2 - rate1) / (1 - rate1)
       else
-        return rand < rate2 / rate1
+        return random.rand < rate2 / rate1
       end
     end
   end
