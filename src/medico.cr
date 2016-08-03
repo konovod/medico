@@ -3,7 +3,6 @@ require "./medico/ui/*"
 
 SEL_COLOR = ColorPair.new(Color::BLACK, Color::GREEN)
 
-
 class MainForm < Window
   def initialize(*args)
     super
@@ -39,7 +38,7 @@ class MainForm < Window
 
   def button1_click : Nil
     @aitem += 1
-    listbox1.items << "Item #{@aitem}"+"."*@aitem
+    listbox1.items << "Item #{@aitem}" + "."*@aitem
   end
 
   def listbox1_select(index : Int32) : Nil
@@ -47,7 +46,7 @@ class MainForm < Window
   end
 
   def listbox1_click(index : Int32) : Nil
-    listbox1.items[index] = "!"+listbox1.items[index]
+    listbox1.items[index] = "!" + listbox1.items[index]
   end
 
   def form_key(key : Key) : Bool

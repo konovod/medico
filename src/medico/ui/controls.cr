@@ -63,32 +63,35 @@ class ListBox < FocusableControl
     scrollable ? 1 : 0
   end
 
-  def position= (value)
-     if value < 0
-       @position = 0
-     elsif value < items.size
-       @position = value
-     elsif items.size==0
-       @position = 0
-     else
-       @position = items.size-1
-     end
-     if scrollable
-       if position < scrollpos
-         @scrollpos = position
-       elsif position >= scrollpos+height-1-scroll_shift
-         @scrollpos = position - height+1+scroll_shift
-         @scrollpos -= 1 if position == items.size-1
-       end
-     end
-     event = on_select
-     event.call(position) if event && !items.empty?
-   end
+  def position=(value)
+    if items.empty?
+      @scrollpos = 0
+      @position = 0
+      return
+    end
+    if value < 0
+      value = 0
+    elsif value >= items.size
+      value = items.size - 1
+    end
+    return if value == @position
+    @position = value
+    if scrollable
+      if position < scrollpos
+        @scrollpos = position
+      elsif position >= scrollpos + height - 1 - scroll_shift
+        @scrollpos = position - height + 1 + scroll_shift
+        @scrollpos -= 1 if position == items.size - 1
+      end
+    end
+    event = on_select
+    event.call(position) if event
+  end
 
   def draw
     super
-    (0..height-1).each do |i|
-      index = scrollpos+i
+    (0..height - 1).each do |i|
+      index = scrollpos + i
       s = index < items.size ? items[index] : ""
       if index == @position
         $frontend.setcolor sel_color
@@ -98,8 +101,8 @@ class ListBox < FocusableControl
       $frontend.setcolor color if index == @position
     end
     if scrollable && need_frame
-      $frontend.write(x, y-1, "\u{24}" * width ) if scrollpos > 0
-      $frontend.write(x, y+height, "\u{25}" * width ) if scrollpos < items.size - height
+      $frontend.write(x, y - 1, "\u{24}" * width) if scrollpos > 0
+      $frontend.write(x, y + height, "\u{25}" * width) if scrollpos < items.size - height
     end
   end
 
@@ -114,13 +117,17 @@ class ListBox < FocusableControl
   def process_key(key : Key)
     case key
     when Terminal::TK::UP
-      self.position = @position - 1 if position > 0
+      self.position = @position - 1
     when Terminal::TK::DOWN
-      self.position = @position + 1 if position < @items.size-1
+      self.position = @position + 1
     when Terminal::TK::HOME
       self.position = 0
     when Terminal::TK::K_END
-      self.position = @items.size-1
+      self.position = @items.size - 1
+    when Terminal::TK::PAGEUP
+      self.position -= height
+    when Terminal::TK::PAGEDOWN
+      self.position += height
     when Terminal::TK::ENTER, Terminal::TK::SPACE
       clicked
     else

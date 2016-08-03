@@ -29,16 +29,16 @@ abstract class Control
   end
 
   def x2
-    x+width-1
+    x + width - 1
   end
 
   def y2
-    y+height-1
+    y + height - 1
   end
 
   def includes?(x, y)
     if need_frame
-      (x >= @x-1) && (x <= x2+1) && (y >= @y-1) && (y <= y2+1)
+      (x >= @x - 1) && (x <= x2 + 1) && (y >= @y - 1) && (y <= y2 + 1)
     else
       (x >= @x) && (x <= x2) && (y >= @y) && (y <= y2)
     end
@@ -77,7 +77,7 @@ class Window < FocusableControl
     @controls = Array(Control).new
     @need_frame = true
     init_controls
-    f = @controls.find{|x| x.is_a? FocusableControl}
+    f = @controls.find { |x| x.is_a? FocusableControl }
     @focused_child = f.as(FocusableControl) if f
   end
 

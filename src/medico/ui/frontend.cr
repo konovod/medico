@@ -6,7 +6,7 @@ SCREEN_HEIGHT =  36
 FONT_NAME     = "default"
 FONT_SIZE     = 12
 CAPTION       = "Medico"
-DEF_COLOR = ColorPair.new(Color::WHITE, Color::BLACK)
+DEF_COLOR     = ColorPair.new(Color::WHITE, Color::BLACK)
 
 enum Color : UInt32
   WHITE       = 0xFFFFFFFF,
@@ -38,7 +38,8 @@ end
 struct ColorPair
   property fg : Color
   property bg : Color
-  def initialize(@fg,@bg)
+
+  def initialize(@fg, @bg)
   end
 
   def invert!
@@ -50,8 +51,6 @@ struct ColorPair
     return ColorPair.new(@bg, @fg)
   end
 end
-
-
 
 class String
   def to_color : Color
@@ -130,6 +129,10 @@ class BearLibFrontend < AbstractFrontend
         Terminal.state(Terminal::TK::MOUSE_X),
         Terminal.state(Terminal::TK::MOUSE_Y))
       # TODO - check case syntax
+    when Terminal::TK::MOUSE_MOVE
+      @main_window.process_mouse(MouseEvent::Move,
+        Terminal.state(Terminal::TK::MOUSE_X),
+        Terminal.state(Terminal::TK::MOUSE_Y))
     else
       @main_window.process_key(input) if is_keyboard(input)
     end
@@ -186,20 +189,20 @@ class BearLibFrontend < AbstractFrontend
   SIDES   = {horiz: "\u2500", vert: "\u2502"}
 
   def fill(x1, y1, width, height)
-    (y1..y1 + height-1).each do |y|
-        Terminal.print x1, y, " "*width
+    (y1..y1 + height - 1).each do |y|
+      Terminal.print x1, y, " "*width
     end
   end
 
   def frame(x1, y1, width, height, fill : Bool = false)
     Terminal.print x1, y1, CORNERS[:topleft] + SIDES[:horiz]*(width - 2) + CORNERS[:topright]
-    Terminal.print x1, y1 + height-1, CORNERS[:bottomleft] + SIDES[:horiz]*(width - 2) + CORNERS[:bottomright]
+    Terminal.print x1, y1 + height - 1, CORNERS[:bottomleft] + SIDES[:horiz]*(width - 2) + CORNERS[:bottomright]
     (y1 + 1..y1 + height - 2).each do |y|
       if fill
         Terminal.print x1, y, SIDES[:vert] + " "*(width - 2) + SIDES[:vert]
       else
         Terminal.print x1, y, SIDES[:vert]
-        Terminal.print x1 + width-1, y, SIDES[:vert]
+        Terminal.print x1 + width - 1, y, SIDES[:vert]
       end
     end
   end
