@@ -72,7 +72,7 @@ end
 alias Key = Terminal::TK
 
 abstract class AbstractFrontend
-  property main_window : Window
+  property! main_window : Window?
   property quitting : Bool
 
   abstract def update
@@ -85,23 +85,25 @@ abstract class AbstractFrontend
   abstract def frame(x1, y1, width, height, fill)
 
   def initialize
-    @main_window = Window.new(nil, "", 0, 0, 1, 1)
     @quitting = false
+    $frontend = self
   end
 end
+
+$frontend : AbstractFrontend?
 
 class BearLibFrontend < AbstractFrontend
   include TerminalHelper
   getter realtime : Bool
 
-  def initialize(@realtime)
+  def initialize(@realtime, mainformclass)
+    super()
     Terminal.open
     Terminal.set "window: title=#{CAPTION}, size=#{SCREEN_WIDTH}x#{SCREEN_HEIGHT}"
     Terminal.set "font: #{FONT_NAME}, size=#{FONT_SIZE}"
     @savedcolor = Color::WHITE
     @savedbgcolor = Color::BLACK
-    @main_window = Window.new(nil, :main, 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1)
-    @main_window.need_frame = false
+    @main_window = mainformclass.new(nil, :main, 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1)
 
     # @savedmouse = {cx: 0, cy: 0}
     # @mousemoved = false
@@ -115,7 +117,7 @@ class BearLibFrontend < AbstractFrontend
   def update
     Terminal.clear
     # Draw ui
-    @main_window.draw unless @main_window.nil?
+    main_window.draw unless @main_window.nil?
     Terminal.refresh
     Terminal.delay 1
   end
@@ -125,16 +127,16 @@ class BearLibFrontend < AbstractFrontend
     when Terminal::TK::CLOSE
       return ProcessingResult::Break
     when Terminal::TK::MOUSE_LEFT + Terminal::TK::KEY_RELEASED.to_i
-      @main_window.process_mouse(MouseEvent::LeftClick,
+      main_window.process_mouse(MouseEvent::LeftClick,
         Terminal.state(Terminal::TK::MOUSE_X),
         Terminal.state(Terminal::TK::MOUSE_Y))
       # TODO - check case syntax
     when Terminal::TK::MOUSE_MOVE
-      @main_window.process_mouse(MouseEvent::Move,
+      main_window.process_mouse(MouseEvent::Move,
         Terminal.state(Terminal::TK::MOUSE_X),
         Terminal.state(Terminal::TK::MOUSE_Y))
     else
-      @main_window.process_key(input) if is_keyboard(input)
+      main_window.process_key(input) if is_keyboard(input)
     end
     ProcessingResult::Continue
   end

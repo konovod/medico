@@ -17,7 +17,6 @@ class MainForm < Window
 
   def init_controls
     @on_key = ->(key : Key) { form_key(key) }
-
     @button1 = Button.new(self, :button1, 10, 10, 10, 5, "Click me", on_click: ->button1_click)
     button1.color = SEL_COLOR
     @controls << button1
@@ -52,7 +51,7 @@ class MainForm < Window
   def form_key(key : Key) : Bool
     if key == Terminal::TK::ESCAPE
       label1.text = "Quitting!"
-      $frontend.quitting = true
+      frontend.quitting = true
       true
     else
       false
@@ -61,14 +60,12 @@ class MainForm < Window
 end
 
 module Medico
-  $frontend : AbstractFrontend
-  $frontend = BearLibFrontend.new(false)
-  form = MainForm.new(nil, :main, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
-  $frontend.main_window = form
+  frontend = BearLibFrontend.new(false, MainForm)
+  form = frontend.main_window.as(MainForm)
   loop do
     form.label2.text = "#{Terminal.state(Terminal::TK::MOUSE_X)}, #{Terminal.state(Terminal::TK::MOUSE_Y)}"
-    $frontend.update
-    break if $frontend.process_inputs == ProcessingResult::Break
+    frontend.update
+    break if frontend.process_inputs == ProcessingResult::Break
   end
-  $frontend.close
+  frontend.close
 end

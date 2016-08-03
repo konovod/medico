@@ -16,12 +16,16 @@ abstract class Control
   property have_focus : Bool
   property color : ColorPair
 
+  def frontend
+    $frontend.not_nil!
+  end
+
   def draw
-    $frontend.setcolor color
+    frontend.setcolor color
     if need_frame
-      $frontend.frame(@x - 1, @y - 1, @width + 2, @height + 2, true)
+      frontend.frame(@x - 1, @y - 1, @width + 2, @height + 2, true)
     else
-      $frontend.fill(@x, @y, @width, @height)
+      frontend.fill(@x, @y, @width, @height)
     end
   end
 

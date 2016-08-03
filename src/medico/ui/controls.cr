@@ -11,7 +11,7 @@ class Button < Control
 
   def draw
     super
-    $frontend.write_centered @x, @y, @width, @height, @text
+    frontend.write_centered @x, @y, @width, @height, @text
   end
 
   def process_mouse(event : MouseEvent, x : Int32, y : Int32)
@@ -32,7 +32,7 @@ class Label < Control
 
   def draw
     super
-    $frontend.write_centered @x, @y, @width, @height, @text[0...width]
+    frontend.write_centered @x, @y, @width, @height, @text[0...width]
   end
 end
 
@@ -94,15 +94,15 @@ class ListBox < FocusableControl
       index = scrollpos + i
       s = index < items.size ? items[index] : ""
       if index == @position
-        $frontend.setcolor sel_color
-        $frontend.write @x, @y + i, " "*width
+        frontend.setcolor sel_color
+        frontend.write @x, @y + i, " "*width
       end
-      $frontend.write @x, @y + i, s[0...width]
-      $frontend.setcolor color if index == @position
+      frontend.write @x, @y + i, s[0...width]
+      frontend.setcolor color if index == @position
     end
     if scrollable && need_frame
-      $frontend.write(x, y - 1, "\u{24}" * width) if scrollpos > 0
-      $frontend.write(x, y + height, "\u{25}" * width) if scrollpos < items.size - height
+      frontend.write(x, y - 1, "\u{24}" * width) if scrollpos > 0
+      frontend.write(x, y + height, "\u{25}" * width) if scrollpos < items.size - height
     end
   end
 
