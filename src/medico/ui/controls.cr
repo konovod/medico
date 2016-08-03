@@ -109,8 +109,8 @@ class ListBox < FocusableControl
   def process_mouse(event : MouseEvent, x : Int32, y : Int32)
     cursor = y - @y + @scrollpos
     self.position = cursor
-    return if scrollable && y == @y-1
-    return if scrollable && y == @y+height
+    return if scrollable && y == @y - 1
+    return if scrollable && y == @y + height
     clicked if event == MouseEvent::LeftClick # && position == cursor
   end
 
