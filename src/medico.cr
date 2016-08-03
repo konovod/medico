@@ -9,7 +9,7 @@ class MainForm < Window
     @need_frame = false
   end
 
-  # code  be macro-generated
+  # code will be macro-generated
   getter! button1
   getter! label1
   getter! label2
