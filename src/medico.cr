@@ -29,6 +29,7 @@ class MainForm < Window
     @listbox1 = ListBox.new(self, :listbox1, 40, 20, 10, 10, true)
     listbox1.sel_color = SEL_COLOR
     listbox1.on_select = ->(index : Int32) { listbox1_select(index) }
+    listbox1.on_click = ->(index : Int32) { listbox1_click(index) }
     @controls << listbox1
   end
 
@@ -43,6 +44,10 @@ class MainForm < Window
 
   def listbox1_select(index : Int32) : Nil
     label1.text = listbox1.items[index]
+  end
+
+  def listbox1_click(index : Int32) : Nil
+    listbox1.items[index] = "!"+listbox1.items[index]
   end
 
   def form_key(key : Key) : Bool

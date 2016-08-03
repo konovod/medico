@@ -106,6 +106,11 @@ class ListBox < FocusableControl
   def process_mouse(event : MouseEvent, x : Int32, y : Int32)
   end
 
+  def clicked
+    event = on_click
+    event.call(position) if event && !items.empty?
+  end
+
   def process_key(key : Key)
     case key
     when Terminal::TK::UP
@@ -116,6 +121,8 @@ class ListBox < FocusableControl
       self.position = 0
     when Terminal::TK::K_END
       self.position = @items.size-1
+    when Terminal::TK::ENTER, Terminal::TK::SPACE
+      clicked
     else
       return false
     end
