@@ -150,3 +150,5 @@ describe Universe do
     state.effectors[first]?.should be_falsey
   end
 end
+
+p "generator_spec #{$r.rand}" if TEST_RANDOM

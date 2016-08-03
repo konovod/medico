@@ -61,3 +61,5 @@ describe Universe do
     # puts "max recipe level #{u.chemicals.map(&.complexity).max}"
   end
 end
+
+p "subs_gen_spec #{$r.rand}" if TEST_RANDOM

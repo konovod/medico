@@ -60,3 +60,5 @@ describe Biology do
     CON_RATER.estimate_f(f(10)).should eq :ConLevel3
   end
 end
+
+p "biology_spec #{$r.rand}" if TEST_RANDOM

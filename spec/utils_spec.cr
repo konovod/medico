@@ -68,3 +68,5 @@ it "stat_to_int" do
   1000.times { n += stat_to_int(5.1, $r) }
   (n/1000.0).should be_close 5.1, 0.05
 end
+
+p "utils_spec #{$r.rand}" if TEST_RANDOM

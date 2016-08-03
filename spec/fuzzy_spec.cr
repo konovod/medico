@@ -176,3 +176,5 @@ describe Fuzzy do
     Trapezoid.new(f(0), f(10), f(10), f(30)).average.should be_close(13.333, 0.01)
   end
 end
+
+p "fuzzy_spec #{$r.rand}" if TEST_RANDOM

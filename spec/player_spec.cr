@@ -130,3 +130,4 @@ describe Medico do
     doc.known_recipes.size.should be > 1
   end
 end
+p "player_spec #{$r.rand}" if TEST_RANDOM

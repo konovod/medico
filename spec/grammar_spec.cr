@@ -30,3 +30,5 @@ describe Grammar do
     n.get(Case::Locative, Grammar::Number::Plural).should eq "test~ or not testx~"
   end
 end
+
+p "grammar_spec #{$r.rand}" if TEST_RANDOM
