@@ -53,7 +53,7 @@ class MainForm < Window
   def form_key(key : Key) : Bool
     if key == Terminal::TK::ESCAPE
       label1.text = "Quitting!"
-      $quitting = true
+      $frontend.quitting = true
       true
     else
       false
@@ -64,14 +64,12 @@ end
 module Medico
   $frontend : AbstractFrontend
   $frontend = BearLibFrontend.new(false)
-  $quitting = false
   form = MainForm.new(nil, :main, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
   $frontend.main_window = form
   loop do
     form.label2.text = "#{Terminal.state(Terminal::TK::MOUSE_X)}, #{Terminal.state(Terminal::TK::MOUSE_Y)}"
     $frontend.update
     break if $frontend.process_inputs == ProcessingResult::Break
-    break if $quitting
   end
   $frontend.close
 end

@@ -74,6 +74,7 @@ alias Key = Terminal::TK
 
 abstract class AbstractFrontend
   property main_window : Window
+  property quitting : Bool
 
   abstract def update
   abstract def close
@@ -86,6 +87,7 @@ abstract class AbstractFrontend
 
   def initialize
     @main_window = Window.new(nil, "", 0, 0, 1, 1)
+    @quitting = false
   end
 end
 
@@ -135,6 +137,7 @@ class BearLibFrontend < AbstractFrontend
   end
 
   def process_inputs : ProcessingResult
+    return ProcessingResult::Break if @quitting
     if @realtime
       while Terminal.has_input
         key = Terminal.read
