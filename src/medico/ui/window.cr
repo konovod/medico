@@ -28,8 +28,20 @@ abstract class Control
   def process_mouse(event : MouseEvent, x : Int32, y : Int32)
   end
 
+  def x2
+    x+width-1
+  end
+
+  def y2
+    y+height-1
+  end
+
   def includes?(x, y)
-    (x >= @x) && (x <= @x + width) && (y >= @y) && (y <= @y + height)
+    if need_frame
+      (x >= @x-1) && (x <= x2+1) && (y >= @y-1) && (y <= y2+1)
+    else
+      (x >= @x) && (x <= x2) && (y >= @y) && (y <= y2)
+    end
   end
 
   def initialize(@owner, @name, @x, @y, @width, @height)

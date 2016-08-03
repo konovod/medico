@@ -32,7 +32,7 @@ class Label < Control
 
   def draw
     super
-    $frontend.write_centered @x, @y, @width, @height, @text
+    $frontend.write_centered @x, @y, @width, @height, @text[0...width]
   end
 end
 
@@ -78,6 +78,7 @@ class ListBox < FocusableControl
          @scrollpos = position
        elsif position >= scrollpos+height-1-scroll_shift
          @scrollpos = position - height+1+scroll_shift
+         @scrollpos -= 1 if position == items.size-1
        end
      end
      event = on_select
@@ -86,16 +87,19 @@ class ListBox < FocusableControl
 
   def draw
     super
-    (0..height-scroll_shift*2).each do |i|
+    (0..height-1).each do |i|
       index = scrollpos+i
       s = index < items.size ? items[index] : ""
-      $frontend.setcolor sel_color if index == @position
-      $frontend.write @x, @y + i, s
+      if index == @position
+        $frontend.setcolor sel_color
+        $frontend.write @x, @y + i, " "*width
+      end
+      $frontend.write @x, @y + i, s[0...width]
       $frontend.setcolor color if index == @position
     end
-    if scrollable
-      $frontend.write(x, y, "\u{24}" * width ) if scrollpos > 0
-      $frontend.write(x, y+height-1, "\u{25}" * width ) if scrollpos <= items.size - height
+    if scrollable && need_frame
+      $frontend.write(x, y-1, "\u{24}" * width ) if scrollpos > 0
+      $frontend.write(x, y+height, "\u{25}" * width ) if scrollpos < items.size - height
     end
   end
 

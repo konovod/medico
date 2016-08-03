@@ -183,24 +183,20 @@ class BearLibFrontend < AbstractFrontend
   SIDES   = {horiz: "\u2500", vert: "\u2502"}
 
   def fill(x1, y1, width, height)
-    (y1..y1 + height).each do |y|
+    (y1..y1 + height-1).each do |y|
         Terminal.print x1, y, " "*width
     end
   end
 
   def frame(x1, y1, width, height, fill : Bool = false)
-    x1 = x1.to_i
-    y1 = y1.to_i
-    width = width.to_i
-    height = height.to_i
-    Terminal.print x1, y1, CORNERS[:topleft] + SIDES[:horiz]*(width - 1) + CORNERS[:topright]
-    Terminal.print x1, y1 + height, CORNERS[:bottomleft] + SIDES[:horiz]*(width - 1) + CORNERS[:bottomright]
-    (y1 + 1..y1 + height - 1).each do |y|
+    Terminal.print x1, y1, CORNERS[:topleft] + SIDES[:horiz]*(width - 2) + CORNERS[:topright]
+    Terminal.print x1, y1 + height-1, CORNERS[:bottomleft] + SIDES[:horiz]*(width - 2) + CORNERS[:bottomright]
+    (y1 + 1..y1 + height - 2).each do |y|
       if fill
-        Terminal.print x1, y, SIDES[:vert] + " "*(width - 1) + SIDES[:vert]
+        Terminal.print x1, y, SIDES[:vert] + " "*(width - 2) + SIDES[:vert]
       else
         Terminal.print x1, y, SIDES[:vert]
-        Terminal.print x1 + width, y, SIDES[:vert]
+        Terminal.print x1 + width-1, y, SIDES[:vert]
       end
     end
   end
