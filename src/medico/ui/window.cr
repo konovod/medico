@@ -104,4 +104,42 @@ class Window < FocusableControl
       item.draw if item.visible
     end
   end
+
+  macro controls(**args)
+    {% for name, data in args%}
+      {% if name.id != "self".id%}
+        getter! {{name}} : {{data[0]}}
+      {% end %}
+    {% end %}
+
+    def init_controls
+      super
+      {% for name, data in args%}
+        {% if name.id == "self".id%}
+          {% for key, value in data %}
+            {% if key.starts_with? "on_" %}
+              @{{key}} = ->{{value.id}}
+            {% else %}
+              @{{key}} = {{value}}
+            {% end %}
+          {% end %}
+        {% else %}
+          {% cls = data[0] %}
+          {% args = data[1] %}
+          @{{name}} = {{cls}}.new(self, :{{name}}, {{*args}})
+          {% if data.size > 2 %}
+            {% for key, value in data[2]%}
+              {% if key.starts_with? "on_" %}
+                {{name}}.{{key}} = ->{{value.id}}
+              {% else %}
+                {{name}}.{{key}} = {{value}}
+              {% end %}
+            {% end %}
+          {% end %}
+          @controls << {{name}}
+        {% end %}
+      {% end %}
+    end
+  end
+  
 end
