@@ -152,11 +152,11 @@ module Medico
 
   class Bibliology < ActiveSkill
     def self.possible_actions(doc : Doctor, &block)
-      # TODO
+      # TODO Bibliology
     end
 
     def apply(doc : Doctor, random = DEF_RND)
-      # TODO
+      # TODO Bibliology
     end
   end
 

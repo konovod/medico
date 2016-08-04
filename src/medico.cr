@@ -10,25 +10,36 @@ class MainForm < Window
   end
 
   # code will be macro-generated
-  getter! button1
-  getter! label1
-  getter! label2
-  getter! listbox1
+
+  getter! button1 : Button?
+  getter! label1 : Label?
+  getter! label2 : Label?
+  getter! listbox1 : ListBox?
+
+  macro testtest(**args)
+    {% for name, data in args%}
+      {% cls = data[0] %}
+      {% args = data[1]}
+      @{{name}} = {{cls}}.new(self, :{{name}}, {{*args}})
+      {% if data.size > 2 %}
+        {% for key, value in data[2]%}
+          {{name}}.{{key}} = {{value}}
+        {% end %}
+      {% end %}
+      @controls << {{name}}
+    {% end %}
+  end
 
   def init_controls
     @on_key = ->(key : Key) { form_key(key) }
-    @button1 = Button.new(self, :button1, 10, 10, 10, 5, "Click me", on_click: ->button1_click)
-    button1.color = SEL_COLOR
-    @controls << button1
-    @label1 = Label.new(self, :label1, 10, 20, 10, 10, "1234567890x")
-    @controls << label1
-    @label2 = Label.new(self, :label2, 40, 5, 10, 10, "1234567890x")
-    @controls << label2
-    @listbox1 = ListBox.new(self, :listbox1, 40, 20, 10, 10, true)
-    listbox1.sel_color = SEL_COLOR
-    listbox1.on_select = ->(index : Int32) { listbox1_select(index) }
-    listbox1.on_click = ->(index : Int32) { listbox1_click(index) }
-    @controls << listbox1
+    testtest(
+      button1: { Button, {10, 10, 10, 5, "Click me"}, {on_click: ->button1_click, color: SEL_COLOR} },
+      label1: {Label, {10, 20, 10, 10, "1234567890x"} },
+      label2: {Label, {40, 5, 10, 10, "1234567890x"} },
+      listbox1: { ListBox, {40, 20, 10, 10}, {sel_color: SEL_COLOR,
+            on_select: ->(index : Int32){ listbox1_select(index) },
+            on_click: ->(index : Int32){ listbox1_click(index) } } }
+    )
   end
 
   # end of macro-generated

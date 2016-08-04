@@ -2,9 +2,9 @@ require "./window"
 
 class Button < Control
   property text : String
-  property on_click : OnClick
+  property on_click : OnClick?
 
-  def initialize(@owner, @name, @x, @y, @width, @height, @text, *, @on_click)
+  def initialize(@owner, @name, @x, @y, @width, @height, @text)
     super(@owner, @name, @x, @y, @width, @height)
     @need_frame = true
   end
@@ -17,7 +17,7 @@ class Button < Control
   def process_mouse(event : MouseEvent, x : Int32, y : Int32)
     case event
     when MouseEvent::LeftClick
-      @on_click.call
+      @on_click.try &.call
     else
     end
   end
@@ -49,13 +49,12 @@ class ListBox < FocusableControl
   property on_select : OnSelectItem?
   property on_click : OnClickItem?
 
-  #  property scroll
-
-  def initialize(@owner, @name, @x, @y, @width, @height, @scrollable)
+  def initialize(@owner, @name, @x, @y, @width, @height)
     super(@owner, @name, @x, @y, @width, @height)
     @items = [] of String
     @position = 0
     @scrollpos = 0
+    @scrollable = true
     @sel_color = @color.invert
   end
 

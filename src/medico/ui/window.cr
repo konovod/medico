@@ -62,8 +62,7 @@ class FocusableControl < Control
 
   def process_key(key : Key) : Bool
     # TODO - there was idiomatic code for it?
-    akey = on_key
-    akey ? akey.call(key) : false
+    on_key.try(&.call(key)) || false
   end
 
   def need_frame
