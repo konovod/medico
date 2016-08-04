@@ -39,6 +39,6 @@ module Social
         (1000.0 / {st.level, 1}.max + doc.fame * CONFIG[:FameKoeff] + CONFIG[:FameDelta]).round(0)
       end
     end
-    status.nil? ? nil : Biology::Patient.new($r, status: status)
+    status.nil? ? nil : Biology::Patient.new(random, status: status)
   end
 end

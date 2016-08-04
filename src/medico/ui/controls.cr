@@ -101,8 +101,8 @@ class ListBox < FocusableControl
       frontend.setcolor color if index == @position
     end
     if scrollable && need_frame
-      frontend.write(x, y - 1, "\u{24}" * width) if scrollpos > 0
-      frontend.write(x, y + height, "\u{25}" * width) if scrollpos < items.size - height
+      frontend.write(x, y - 1, "\u{2191}" * width) if scrollpos > 0
+      frontend.write(x, y + height, "\u{2193}" * width) if scrollpos < items.size - height
     end
   end
 
