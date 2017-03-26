@@ -40,6 +40,3 @@ class NameGen
     end
   end
 end
-
-$disease_names = NameGen.new(DIS_NAMES1, DIS_NAMES2)
-$chemical_names = NameGen.new(CHEM_NAMES1, CHEM_NAMES2)

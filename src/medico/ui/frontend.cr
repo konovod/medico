@@ -1,6 +1,10 @@
 require "./lib_terminal"
 require "./window"
 
+class Frontend
+  class_property! instance : AbstractFrontend
+end
+
 SCREEN_WIDTH  = 120
 SCREEN_HEIGHT =  36
 FONT_NAME     = "default"
@@ -86,11 +90,9 @@ abstract class AbstractFrontend
 
   def initialize
     @quitting = false
-    $frontend = self
+    Frontend.instance = self
   end
 end
-
-$frontend : AbstractFrontend?
 
 class BearLibFrontend < AbstractFrontend
   include TerminalHelper

@@ -1,5 +1,6 @@
-require "./data/i18n/ru.cr"
+require "logger"
 require "math"
+require "./data/i18n/ru.cr"
 require "./grammar"
 
 alias FLOAT = Float32
@@ -15,8 +16,9 @@ end
 class TEST_RND
   include Random
 
-  def next_u32
+  def next_u
     raise "RANDOM NOT PASSED"
+    return 0
   end
 
   def initialize
@@ -88,7 +90,7 @@ end
 
 # TODO - replace with universal function? how to yield in recursive implementation?
 # TODO - repeatable, sorted combinations, use std product?
-def each_combination(n : Int32, aset : Enumerable(T))
+def each_combination(n : Int32, aset : Enumerable)
   case n
   when 1
     aset.each do |e1|
@@ -129,10 +131,16 @@ def each_combination(n : Int32, aset : Enumerable(T))
 end
 
 # TODO: replace to std logger
-$verbose = false
+class Log
+  @@logger = Logger.new(STDOUT)
 
-def logs(s)
-  puts s if $verbose
+  def self.s(string)
+    @@logger.debug(string)
+  end
+
+  def self.level=(value)
+    @@logger.level = value
+  end
 end
 
 # TODO: def fill_hash

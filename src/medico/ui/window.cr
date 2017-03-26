@@ -17,7 +17,7 @@ abstract class Control
   property color : ColorPair
 
   def frontend
-    $frontend.not_nil!
+    Frontend.instance
   end
 
   def draw
@@ -106,16 +106,16 @@ class Window < FocusableControl
   end
 
   macro controls(**args)
-    {% for name, data in args%}
-      {% if name.id != "self".id%}
+    {% for name, data in args %}
+      {% if name.id != "self".id %}
         getter! {{name}} : {{data[0]}}
       {% end %}
     {% end %}
 
     def init_controls
       super
-      {% for name, data in args%}
-        {% if name.id == "self".id%}
+      {% for name, data in args %}
+        {% if name.id == "self".id %}
           {% for key, value in data %}
             {% if key.starts_with? "on_" %}
               @{{key}} = ->{{value.id}}
@@ -128,7 +128,7 @@ class Window < FocusableControl
           {% args = data[1] %}
           @{{name}} = {{cls}}.new(self, :{{name}}, {{*args}})
           {% if data.size > 2 %}
-            {% for key, value in data[2]%}
+            {% for key, value in data[2] %}
               {% if key.starts_with? "on_" %}
                 {{name}}.{{key}} = ->{{value.id}}
               {% else %}
@@ -141,5 +141,4 @@ class Window < FocusableControl
       {% end %}
     end
   end
-  
 end

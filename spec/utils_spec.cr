@@ -3,12 +3,12 @@ require "../src/medico/game/globals.cr"
 require "../src/medico/game/namegen.cr"
 
 it "weighted_sample" do
-  {1000, 3, 4, 5, 6, 7}.weighted_sample($r) { |i| i }.should eq(1000)
-  [-1, -100, -3, 4, 5, 6, 7, -10000].weighted_sample($r, &.abs).should eq(-10000)
-  ["low", "high", "low2"].weighted_sample([1, 1000, 3], $r).should eq("high")
-  ["low", "high", "low2"].weighted_sample({1, 1000, 3}, $r).should eq("high")
-  {"low", "high", "low2"}.weighted_sample([1, 1000, 3], $r).should eq("high")
-  {"low", "high", "low2"}.weighted_sample({1, 1000, 3}, $r).should eq("high")
+  {1000, 3, 4, 5, 6, 7}.weighted_sample(SPEC_R) { |i| i }.should eq(1000)
+  [-1, -100, -3, 4, 5, 6, 7, -10000].weighted_sample(SPEC_R, &.abs).should eq(-10000)
+  ["low", "high", "low2"].weighted_sample([1, 1000, 3], SPEC_R).should eq("high")
+  ["low", "high", "low2"].weighted_sample({1, 1000, 3}, SPEC_R).should eq("high")
+  {"low", "high", "low2"}.weighted_sample([1, 1000, 3], SPEC_R).should eq("high")
+  {"low", "high", "low2"}.weighted_sample({1, 1000, 3}, SPEC_R).should eq("high")
 end
 
 def check_namegen(gen, n, str1, str2, maxval, minval)
@@ -16,7 +16,7 @@ def check_namegen(gen, n, str1, str2, maxval, minval)
   amin, amax = maxval, minval
   fl1, fl2 = false, false
   n.times do
-    item, val = gen.next(true, $r)
+    item, val = gen.next(true, SPEC_R)
     fl1 = true if item.get.index(str1)
     fl2 = true if item.get.index(str2)
     amin = val if amin > val
@@ -30,11 +30,14 @@ def check_namegen(gen, n, str1, str2, maxval, minval)
   gen.history.clear
 end
 
+disease_names = NameGen.new(DIS_NAMES1, DIS_NAMES2)
+chemical_names = NameGen.new(CHEM_NAMES1, CHEM_NAMES2)
+
 it "names gen" do
-  check_namegen($disease_names, 60,
+  check_namegen(disease_names, 60,
     s(DIS_NAMES1.first[:name], Grammar::Adjective).get(Grammar::Gender::She),
     s(DIS_NAMES2.last[:name]).get, 7, 20)
-  check_namegen($chemical_names, 100,
+  check_namegen(chemical_names, 100,
     s(CHEM_NAMES1.first[:name], Grammar::Adjective).get(Grammar::Gender::She),
     s(CHEM_NAMES2.last[:name]).get, 7, 20)
 end
@@ -65,8 +68,8 @@ end
 
 it "stat_to_int" do
   n = 0
-  1000.times { n += stat_to_int(5.1, $r) }
+  1000.times { n += stat_to_int(5.1, SPEC_R) }
   (n/1000.0).should be_close 5.1, 0.05
 end
 
-p "utils_spec #{$r.rand}" if TEST_RANDOM
+p "utils_spec #{SPEC_R.rand}" if TEST_RANDOM

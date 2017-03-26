@@ -1,5 +1,5 @@
 require "spec"
 
-$r = Random.new(1)
+SPEC_R = Random.new(1)
 
 TEST_RANDOM = false

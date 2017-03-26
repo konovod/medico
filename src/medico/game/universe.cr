@@ -26,9 +26,14 @@ module Biology
     getter reactions_generated
     getter substance_combinations
     getter recipes_limit
+    getter disease_names
+    getter chemical_names
     alias TRecipeTuple = Union(Tuple(Substance, Substance), Tuple(Substance, Substance, Substance), Tuple(Substance, Substance, Substance, Substance))
 
     def initialize
+      @disease_names = NameGen.new(DIS_NAMES1, DIS_NAMES2)
+      @chemical_names = NameGen.new(CHEM_NAMES1, CHEM_NAMES2)
+
       @effects_pool = Array(Effect).new
       @diseases_pool = Array(Disease).new(CONFIG[:NDiseases])
       CONFIG[:NDiseases].times do |i|
@@ -49,13 +54,13 @@ module Biology
     end
 
     def generate(random = DEF_RND)
-      logs("initializing effects")
+      Log.s("initializing effects")
       init_effects
-      logs("initializing param rules")
+      Log.s("initializing param rules")
       init_param_rules(random)
-      logs("initializing diseases")
+      Log.s("initializing diseases")
       init_diseases(random)
-      logs("initializing flora")
+      Log.s("initializing flora")
       generate_flora(random)
     end
 
@@ -70,8 +75,8 @@ module Biology
 
     def init_effects
       @types = [Kind::Sympthom]*CONFIG[:SympthomEff] +
-        [Kind::Param]*CONFIG[:ParamEff] +
-        [Kind::Bullet]*CONFIG[:BulletEff]
+               [Kind::Param]*CONFIG[:ParamEff] +
+               [Kind::Bullet]*CONFIG[:BulletEff]
       @effects_pool.clear
       @effects_pool.concat ALL_SYMPTHOMS.map { |symp| AddSympthomEffect.new(symp) }
       @effects_pool.concat ALL_SYMPTHOMS.map { |symp| RemoveSympthomEffect.new(symp) }
@@ -169,10 +174,10 @@ module Biology
       return if random.rand > CONFIG[:RecipeChance] / counter_chance / counter_chance
       combination.each { |subs| @recipes_limit[subs] += 1 }
       complexity = 1 + combination.map(&.complexity).max
-      name, power = $chemical_names.next(false, random)
+      name, power = @chemical_names.next(false, random)
       power += complexity
       subs = (@chemicals.find { |it| it.name == name }) ||
-        Substance.new(@substances.size - 1, complexity, name, power).generate(self, random)
+             Substance.new(@substances.size - 1, complexity, name, power).generate(self, random)
       recipe = Alchemy::Recipe.new(subs.as(Substance))
       combination.each do |ingridient|
         recipe.substances[ingridient] = random.rand(5) + 1

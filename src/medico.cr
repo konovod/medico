@@ -10,16 +10,17 @@ class MainForm < Window
   end
 
   controls(
-    self: {on_key: "(key : Key) { form_key(key) }" },
-    button1: { Button, {10, 10, 10, 5, "Click me"}, {on_click: :button1_click, color: SEL_COLOR} },
-    label1: {Label, {10, 20, 10, 10, "1234567890x"} },
-    label2: {Label, {40, 5, 10, 10, "1234567890x"} },
-    listbox1: { ListBox, {40, 20, 10, 10} , {sel_color: SEL_COLOR,
-           on_select: "(index : Int32){ listbox1_select(index) }" ,
-           on_click: "(index : Int32){ listbox1_click(index) }" } }
+    self: {on_key: "(key : Key) { form_key(key) }"},
+    button1: {Button, {10, 10, 10, 5, "Click me"}, {on_click: :button1_click, color: SEL_COLOR}},
+    label1: {Label, {10, 20, 10, 10, "1234567890x"}},
+    label2: {Label, {40, 5, 10, 10, "1234567890x"}},
+    listbox1: {ListBox, {40, 20, 10, 10}, {sel_color: SEL_COLOR,
+                                           on_select: "(index : Int32){ listbox1_select(index) }",
+                                           on_click:  "(index : Int32){ listbox1_click(index) }"}}
   )
 
   @aitem = 0
+
   def button1_click : Nil
     @aitem += 1
     listbox1.items << "Item #{@aitem}" + "."*@aitem

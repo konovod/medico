@@ -31,4 +31,4 @@ describe Grammar do
   end
 end
 
-p "grammar_spec #{$r.rand}" if TEST_RANDOM
+p "grammar_spec #{SPEC_R.rand}" if TEST_RANDOM

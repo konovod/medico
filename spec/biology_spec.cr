@@ -6,19 +6,19 @@ include Biology
 
 describe Biology do
   it "Creating patient" do
-    john = Patient.new($r)
+    john = Patient.new(SPEC_R)
     john.systems.keys.first.name.should be_truthy
     john.systems.values.first.sympthoms.keys.first.name.get.should be_truthy
     john.systems.values.first.params.get.keys.first.name.get.should be_truthy
     john.systems.values.first.params.get.values.first.real.should be_truthy
   end
-  john = Patient.new($r)
+  john = Patient.new(SPEC_R)
   asys = Biology::System.values.first
   aparam = ALL_PARAMS.first
   asym = ALL_SYMPTHOMS.select { |sym| sym.system == asys }.first
 
   it "empty tick" do
-    10.times { john.process_tick($r) }
+    10.times { john.process_tick(SPEC_R) }
     john.systems[asys].params.get[aparam].real.should be_close(0.25, 0.01)
   end
 
@@ -28,9 +28,9 @@ describe Biology do
     testdis.effects << testeff
 
     john.systems[asys].effectors[testdis] = 10
-    5.times { john.process_tick($r) }
+    5.times { john.process_tick(SPEC_R) }
     john.systems[asys].params.get[aparam].real.should be_close(0.15, 0.01)
-    10.times { john.process_tick($r) }
+    10.times { john.process_tick(SPEC_R) }
     john.systems[asys].params.get[aparam].real.should be_close(0.25, 0.01)
   end
   john.reset
@@ -45,13 +45,13 @@ describe Biology do
 
     john.systems[asys].effectors[testdis] = 10
     john.systems[asys].effectors[testdis2] = 0
-    1.times { john.process_tick($r) }
+    1.times { john.process_tick(SPEC_R) }
     john.systems[asys].sympthoms[asym].should eq(0)
-    5.times { john.process_tick($r) }
+    5.times { john.process_tick(SPEC_R) }
     john.systems[asys].sympthoms[asym].should eq(1)
     # p john.systems[asys].damage
     # p john.systems[asys].danger
-    10.times { john.process_tick($r) }
+    10.times { john.process_tick(SPEC_R) }
     john.systems[asys].sympthoms[asym].should eq(0)
   end
 
@@ -61,4 +61,4 @@ describe Biology do
   end
 end
 
-p "biology_spec #{$r.rand}" if TEST_RANDOM
+p "biology_spec #{SPEC_R.rand}" if TEST_RANDOM
