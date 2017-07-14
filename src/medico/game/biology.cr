@@ -275,7 +275,7 @@ module Biology
   abstract class Effector
     getter effects
 
-    alias Context = NamedTuple(state: SystemState, data: TEffectorData, random: Random::MT19937)
+    alias Context = NamedTuple(state: SystemState, data: TEffectorData, random: Random)
 
     abstract def process(**context) : TEffectorData
 
