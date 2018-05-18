@@ -103,6 +103,7 @@ class BearLibFrontend < AbstractFrontend
     Terminal.open
     Terminal.set "window: title=#{CAPTION}, size=#{SCREEN_WIDTH}x#{SCREEN_HEIGHT}"
     Terminal.set "font: #{FONT_NAME}, size=#{FONT_SIZE}"
+    Terminal.set "input.filter={keyboard, mouse+}"
     @savedcolor = Color::WHITE
     @savedbgcolor = Color::BLACK
     @main_window = mainformclass.new(nil, :main, 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1)
@@ -182,11 +183,11 @@ class BearLibFrontend < AbstractFrontend
   end
 
   def write(x, y, string : String)
-    Terminal.print x, y, string
+    TerminalHelper.print x, y, string
   end
 
   def write_centered(x, y, w, h, string : String)
-    Terminal.print x + (w - string.size)/2, y + h/2, string
+    TerminalHelper.print x + (w - string.size)/2, y + h/2, string
   end
 
   CORNERS = {topleft: "\u250C", topright: "\u2510", bottomleft: "\u2514", bottomright: "\u2518"}
@@ -194,19 +195,19 @@ class BearLibFrontend < AbstractFrontend
 
   def fill(x1, y1, width, height)
     (y1..y1 + height - 1).each do |y|
-      Terminal.print x1, y, " "*width
+      TerminalHelper.print x1, y, " "*width
     end
   end
 
   def frame(x1, y1, width, height, fill : Bool = false)
-    Terminal.print x1, y1, CORNERS[:topleft] + SIDES[:horiz]*(width - 2) + CORNERS[:topright]
-    Terminal.print x1, y1 + height - 1, CORNERS[:bottomleft] + SIDES[:horiz]*(width - 2) + CORNERS[:bottomright]
+    TerminalHelper.print x1, y1, CORNERS[:topleft] + SIDES[:horiz]*(width - 2) + CORNERS[:topright]
+    TerminalHelper.print x1, y1 + height - 1, CORNERS[:bottomleft] + SIDES[:horiz]*(width - 2) + CORNERS[:bottomright]
     (y1 + 1..y1 + height - 2).each do |y|
       if fill
-        Terminal.print x1, y, SIDES[:vert] + " "*(width - 2) + SIDES[:vert]
+        TerminalHelper.print x1, y, SIDES[:vert] + " "*(width - 2) + SIDES[:vert]
       else
-        Terminal.print x1, y, SIDES[:vert]
-        Terminal.print x1 + width - 1, y, SIDES[:vert]
+        TerminalHelper.print x1, y, SIDES[:vert]
+        TerminalHelper.print x1 + width - 1, y, SIDES[:vert]
       end
     end
   end

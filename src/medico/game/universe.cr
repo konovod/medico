@@ -65,6 +65,7 @@ module Biology
     end
 
     MAX_DELTA = 0.6
+
     private def gen_adders(p : BioParam)
       delta = {(p.min - p.average)*MAX_DELTA / PARAM_DELTA_STAGES, (p.max - p.average)*MAX_DELTA / PARAM_DELTA_STAGES}
       result = [] of Fuzzy::FuzzySet
