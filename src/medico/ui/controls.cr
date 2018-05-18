@@ -140,3 +140,28 @@ class ListBox < FocusableControl
     return true
   end
 end
+
+class TabControl < FocusableControl
+  getter pages = [] of Window
+  property selected = 0
+
+  def initialize(@owner, @name, @x, @y, @width, @height, classes)
+    super(@owner, @name, @x, @y, @width, @height)
+    @pages = classes.map_with_index { |cls, i| cls.new(self, "Item#{i}", @x, @y, @width, @height) }
+  end
+
+  def cur_page
+    @pages[@selected]
+  end
+
+  def select(page)
+    @selected = page.to_i
+  end
+
+  delegate :draw, :process_mouse, :process_key, to: cur_page
+end
+
+class ListView < FocusableControl
+  getter item_class
+  getter items
+end

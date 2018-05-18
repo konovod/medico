@@ -148,6 +148,21 @@ lib Terminal
   INPUT_NONE      =  0
   INPUT_CANCELLED = -1
 
+  enum Align
+    DEFAULT =  0
+    LEFT    =  1
+    RIGHT   =  2
+    CENTER  =  3
+    TOP     =  4
+    BOTTOM  =  8
+    MIDDLE  = 12
+  end
+
+  struct Dimensions
+    width : CInt
+    height : CInt
+  end
+
   # control functions
   fun open = terminal_open : CInt
   fun close = terminal_close
@@ -167,7 +182,7 @@ lib Terminal
   fun pick = terminal_pick(x : CInt, y : CInt, index : CInt) : CInt
   fun pick_color = terminal_pick_color(x : CInt, y : CInt, index : CInt) : Color
   fun pick_bkcolor = terminal_pick_bkcolor(x : CInt, y : CInt) : Color
-  fun print = terminal_print8(x : CInt, y : CInt, s : UInt8*) : CInt
+  fun print_ext = terminal_print_ext8(x : CInt, y : CInt, w : CInt, h : CInt, align : Align, s : UInt8*, outw : CInt*, outh : CInt*)
   # input
   fun read_str = terminal_read_str8(x : CInt, y : CInt, buffer : UInt8*, max : CInt) : CInt
   fun has_input = terminal_has_input : Bool
@@ -182,6 +197,8 @@ lib Terminal
 end
 
 module TerminalHelper
+  extend self
+
   def is_release(code : Terminal::TK)
     code > Terminal::TK::KEY_RELEASED
   end
@@ -198,5 +215,9 @@ module TerminalHelper
 
   def check(code)
     Terminal.state(code) != 0
+  end
+
+  def print(x, y, string)
+    Terminal.print_ext x, y, 0, 0, Terminal::Align::DEFAULT, string, out outw, out outh
   end
 end
