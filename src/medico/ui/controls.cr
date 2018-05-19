@@ -147,7 +147,7 @@ class TabControl < FocusableControl
 
   def initialize(@owner, @name, @x, @y, @width, @height, classes)
     super(@owner, @name, @x, @y, @width, @height)
-    @pages = classes.map_with_index { |cls, i| cls.new(self, "Item#{i}", @x, @y, @width, @height) }
+    classes.each_with_index { |cls, i| @pages << cls.new(@owner, :item, @x, @y, @width, @height) }
   end
 
   def cur_page

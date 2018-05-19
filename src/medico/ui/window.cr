@@ -6,7 +6,7 @@ alias OnMouseMove = Proc(MouseEvent, Int32, Int32, Nil)
 
 abstract class Control
   getter owner : Window?
-  getter name : Symbol
+  getter name : String | Symbol
   property x : Int32
   property y : Int32
   property width : Int32

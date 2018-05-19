@@ -3,7 +3,7 @@ require "../ui/*"
 
 SEL_COLOR = ColorPair.new(Color::BLACK, Color::GREEN)
 
-class MainForm < Window
+class TestForm < Window
   def initialize(*args)
     super
     @need_frame = false
@@ -43,4 +43,10 @@ class MainForm < Window
       false
     end
   end
+end
+
+class MainForm < Window
+  controls(
+    scenes: {TabControl, {0, 0, 40, 25, [TestForm]}}
+  )
 end

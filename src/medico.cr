@@ -4,7 +4,7 @@ require "./medico/gameui/*"
 
 module Medico
   frontend = BearLibFrontend.new(false, MainForm)
-  form = frontend.main_window.as(MainForm)
+  form = frontend.main_window.as(MainForm).scenes.pages[0].as(TestForm)
   loop do
     form.label2.text = "#{Terminal.state(Terminal::TK::MOUSE_X)}, #{Terminal.state(Terminal::TK::MOUSE_Y)}"
     frontend.update
