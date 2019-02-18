@@ -168,16 +168,13 @@ module Fuzzy
   end
 
   class RateSet
-    getter items
-    getter names
+    getter items = [] of FuzzySet
+    getter names = [] of Symbol
 
     def initialize
-      @items = Array(FuzzySet).new
-      @names = Array(Symbol).new
     end
 
     def initialize(param : Param, additional = 0)
-      initialize()
       generate_for(param, additional)
     end
 

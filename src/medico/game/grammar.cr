@@ -45,15 +45,10 @@ module Grammar
   end
 
   class Noun
-    getter gender : Gender
+    getter gender = Gender::It
     getter case_data : Tuple(Array(String), Array(String))
 
-    def initialize(@gender, str)
-      @case_data = {Array(String).new(N_CASES, str), Array(String).new(N_CASES, str)}
-    end
-
     def initialize(*, parse : String)
-      initialize(Gender::It, "")
       regex = /([MWUN])(.*)/
       match = regex.match(parse)
       if match.nil?
@@ -64,6 +59,10 @@ module Grammar
       end
       parts = Grammar.split_string(base, 2*N_CASES)
       @case_data = {parts[0...N_CASES], parts[N_CASES...2*N_CASES]}
+    end
+
+    def initialize(@gender, str)
+      @case_data = {Array(String).new(N_CASES, str), Array(String).new(N_CASES, str)}
     end
 
     def get(acase = Case::Nominative, number = Number::Single)
@@ -87,7 +86,6 @@ module Grammar
     end
 
     def initialize(*, parse : String)
-      initialize("")
       parts = Grammar.split_string parse, N_GENDERS*N_CASES
       @case_data = parts.in_groups_of(N_CASES, "")
     end

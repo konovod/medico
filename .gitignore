@@ -1,4 +1,5 @@
 /doc/
 /lib/
 /.crystal/
+/.vscode/
 /.shards/
