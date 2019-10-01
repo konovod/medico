@@ -25,8 +25,8 @@ describe Medico do
     second.should be > first
   end
 
-  cnt = 0
   it "initial askers" do
+    cnt = 0
     50.times do
       doc.askers.clear
       10.times do
@@ -54,8 +54,8 @@ describe Medico do
     doc.known_flora.size.should eq 10
   end
 
-  doc.check_actions
   it "possible actions" do
+    doc.check_actions
     doc.actions.size.should be > 0
     doc.actions.find { |act| act.is_a? Gather }.should be_truthy
     doc.actions.find { |act| act.is_a? ApplySubs }.should be_falsey
@@ -115,9 +115,9 @@ describe Medico do
     doc.do_action(all_in, SPEC_R)
     doc.bag.values.sum.should eq was_in_bag - all_in.used.size
   end
-  40.times { doc.add_known_substance(univ.flora.sample(SPEC_R), value: 1, is_flora: true, random: SPEC_R) }
-  100.times { doc.train AlchemicalTheory, SPEC_R }
   it "AlchemicalTheory works" do
+    40.times { doc.add_known_substance(univ.flora.sample(SPEC_R), value: 1, is_flora: true, random: SPEC_R) }
+    100.times { doc.train AlchemicalTheory, SPEC_R }
     40.times do
       doc.next_day(SPEC_R)
       gather = doc.actions.select { |x| x.is_a? Gather }.first

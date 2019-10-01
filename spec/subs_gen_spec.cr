@@ -47,11 +47,11 @@ describe Universe do
   it "substances gen" do
     t = Time.utc
     #    possible_substances(u, u.flora.to_set).size.should eq u.flora.size+u.chemicals.
-    p recipe_stats(u, 6, 3)
-    p recipe_stats(u, 6, 100)
-    p recipe_stats(u, 10, 5)
-    p recipe_stats(u, 20, 5)
-    p recipe_stats(u, 40, 1)
+    # p recipe_stats(u, 6, 3)
+    # p recipe_stats(u, 6, 100)
+    # p recipe_stats(u, 10, 5)
+    # p recipe_stats(u, 20, 5)
+    # p recipe_stats(u, 40, 1)
     # p recipe_stats(u, u.flora.size, 1)
     recipe_stats(u, 6, 3).first.should be > 0
     recipe_stats(u, 6, 100).first.should be > 1
