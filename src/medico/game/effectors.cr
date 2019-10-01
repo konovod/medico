@@ -12,7 +12,7 @@ module Biology
       sys.sympthoms[@sympthom] += power if sys.sympthoms.has_key? @sympthom
     end
 
-    def sign
+    def sign : Biology::Sign
       Sign::Negative
     end
   end
@@ -21,7 +21,7 @@ module Biology
     def apply(sys : SystemState, power : FLOAT)
     end
 
-    def sign
+    def sign : Biology::Sign
       Sign::Neutral
     end
   end
@@ -38,7 +38,7 @@ module Biology
       sys.sympthoms[@sympthom] -= power if sys.sympthoms.has_key? @sympthom
     end
 
-    def sign
+    def sign : Biology::Sign
       Sign::Positive
     end
   end
@@ -57,7 +57,7 @@ module Biology
       sys.effectors[state.stage] = v - (power*50).to_i
     end
 
-    def sign
+    def sign : Biology::Sign
       Sign::Positive
     end
   end
@@ -84,7 +84,7 @@ module Biology
       end if @param.class == LiquidParam
     end
 
-    def sign
+    def sign : Biology::Sign
       Sign::Neutral
     end
   end

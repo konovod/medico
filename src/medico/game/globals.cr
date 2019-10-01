@@ -44,18 +44,6 @@ module Enumerable(T)
     weighted_sample(weights, random)
   end
 
-  private def zip(other)
-    each_with_index do |elem, i|
-      yield elem, other[i]
-    end
-  end
-
-  private def zip(other : Array(U))
-    pairs = Array({T, U}).new(size)
-    zip(other) { |x, y| pairs << {x, y} }
-    pairs
-  end
-
   # TODO - iterator support?
   def weighted_sample(weights : (Array | Tuple), random = DEF_RND) : T
     total = weights.sum

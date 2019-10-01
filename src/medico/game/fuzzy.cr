@@ -52,7 +52,7 @@ module Fuzzy
       return 0 # TODO: think about it
     end
 
-    def average
+    def average : FLOAT
       return @value
     end
 
@@ -86,7 +86,7 @@ module Fuzzy
       @max = @topmax + delta
     end
 
-    def average
+    def average : FLOAT
       # return @topmin
       # simple algorithm
       if @topmin - @min == @max - @topmax

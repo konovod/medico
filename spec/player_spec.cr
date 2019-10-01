@@ -35,8 +35,8 @@ describe Medico do
       cnt += doc.askers.size
       # doc.askers.size.should be > 1
     end
+    cnt.should be_close 3*50, 50
   end
-  cnt.should be_close 3*50, 50
 
   it "lazy doctor askers" do
     cnt = 0

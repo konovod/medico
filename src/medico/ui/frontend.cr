@@ -13,22 +13,22 @@ CAPTION       = "Medico"
 DEF_COLOR     = ColorPair.new(Color::WHITE, Color::BLACK)
 
 enum Color : UInt32
-  WHITE       = 0xFFFFFFFF,
-  BLACK       = 0xFF000000,
-  RED         = 0xFFFF0000,
-  ORANGE      = 0xFFFF8000,
-  YELLOW      = 0xFFFFFF00,
-  GREEN       = 0xFF00FF00,
-  CYAN        = 0xFF00FFFF,
-  BLUE        = 0xFF0000FF,
-  VIOLET      = 0xFFFF00FF,
-  TRANSPARENT =          0,
+  WHITE       = 0xFFFFFFFF
+  BLACK       = 0xFF000000
+  RED         = 0xFFFF0000
+  ORANGE      = 0xFFFF8000
+  YELLOW      = 0xFFFFFF00
+  GREEN       = 0xFF00FF00
+  CYAN        = 0xFF00FFFF
+  BLUE        = 0xFF0000FF
+  VIOLET      = 0xFFFF00FF
+  TRANSPARENT =          0
 
-  DARK_BLUE  = 0xFF000080,
-  DARK_GREEN = 0xFF008000,
-  GREY       = 0xFF808080,
-  DARK_GREY  = 0xFF404040,
-  SKY        = 0xFF0040FF,
+  DARK_BLUE  = 0xFF000080
+  DARK_GREEN = 0xFF008000
+  GREY       = 0xFF808080
+  DARK_GREY  = 0xFF404040
+  SKY        = 0xFF0040FF
 
   def self.rgba(r, g, b, a = 255) : Color
     aa = a.clamp(0, 255)

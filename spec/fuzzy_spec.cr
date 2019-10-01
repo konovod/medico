@@ -55,14 +55,14 @@ def rate_value(trapezoid, start, finish, n, steps)
     v = f(start)
     inside = trapezoid.check(v, SPEC_R)
     steps.times do
-      vnew = v + f(finish - start) / steps
+      vnew = v + (finish - start) / steps
       inside = trapezoid.incremental(v, vnew, inside, SPEC_R)
       v = vnew
     end
     rate += 1 if inside
     rate -= 1 if trapezoid.check(finish, SPEC_R)
   end
-  1.0*rate / n
+  rate / n
 end
 
 describe Fuzzy do
@@ -116,11 +116,11 @@ describe Fuzzy do
     medium = Trapezoid.new(f(0), f(50), f(50), f(100))
     high = Trapezoid.new(f(50), f(90), f(100), f(100))
     rates.items.concat [low, medium, high]
-    value.real = f(10)
+    value.real = 10
     rates.estimate(value).should eq(0)
-    value.real = f(40)
+    value.real = 40
     rates.estimate(value).should eq(1)
-    value.real = f(75)
+    value.real = 75
     rates.estimate(value).should eq(2)
   end
 
@@ -131,17 +131,17 @@ describe Fuzzy do
     rates.generate_for(param, 1)
     rates.items.size.should eq(5)
 
-    value.real = f(1)
+    value.real = 1
     rates.estimate(value).should eq(0)
-    value.real = f(6)
+    value.real = 6
     rates.estimate(value).should eq(1)
-    value.real = f(9)
+    value.real = 9
     rates.estimate(value).should eq(2)
-    value.real = f(16)
+    value.real = 16
     value.estimate(rates).should eq(2)
-    value.real = f(70)
+    value.real = 70
     rates.estimate(value).should eq(3)
-    value.real = f(90)
+    value.real = 90
     rates.estimate(value).should eq(4)
   end
 
@@ -150,22 +150,22 @@ describe Fuzzy do
     value = ParamValue.new(param)
     rates = RateSet.new(param, 1)
 
-    value.real = f(0)
+    value.real = 0
     rates.estimate(value).should eq(2)
-    value.real = f(5)
+    value.real = 5
     rates.estimate(value).should eq(3)
-    value.real = f(9)
+    value.real = 9
     rates.estimate(value).should eq(4)
 
     param = Param.new(f(0), f(10), f(10))
     value = ParamValue.new(param)
     rates = RateSet.new(param, 1)
 
-    value.real = f(0)
+    value.real = 0
     rates.estimate(value).should eq(0)
-    value.real = f(5)
+    value.real = 5
     rates.estimate(value).should eq(1)
-    value.real = f(10)
+    value.real = 10
     rates.estimate(value).should eq(2)
   end
 

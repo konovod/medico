@@ -29,7 +29,7 @@ def stat_patients(univ, random, time, trials)
     result = simulate_patient(john, univ, random, time)
     counts[result] += 1
   end
-  counts.keys.each { |k| counts[k] = (1.0*counts[k]) / trials * 100 }
+  counts.keys.each { |k| counts[k] = counts[k] / trials * 100 }
   counts
 end
 
@@ -101,7 +101,7 @@ describe Universe do
   end
 
   Performance.value = 0
-  time = Time.now
+  time = Time.utc
 
   it "test diseases short" do
     results = stat_patients(u, SPEC_R, 20, 200)
@@ -115,13 +115,13 @@ describe Universe do
     results[0].should be < 15
   end
   it "simulation performance" do
-    speed = (Performance.value * 1.0 / (Time.now - time).total_seconds).to_i
+    speed = (Performance.value / (Time.utc - time).total_seconds).to_i
     puts "ticks simulated #{Performance.value}, #{speed} ticks/s"
     speed.should be > 10000
   end
 
-  u.generate_flora(SPEC_R)
   it "test subs effects" do
+  u.generate_flora(SPEC_R)
     u.flora.sum { |subs| subs.effects.size }.should be_close u.flora.size*3, u.flora.size
     u.flora.sum { |subs| subs.effects.count { |eff| eff.is_a? MagicBulletEffect } }.should be > 10
     u.flora.sum { |subs| subs.effects.count { |eff| eff.is_a? AddSympthomEffect } }.should be > 1
