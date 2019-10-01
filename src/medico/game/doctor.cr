@@ -38,9 +38,9 @@ module Medico
       @day = 1
       @fame = 1
       @money = 100
-      @known_flora = Set(Substance).new
+      @known_flora = Set(Biology::Substance).new
       @known_recipes = Set(Alchemy::Recipe).new
-      @bag = Hash(Substance, Int32).new(0)
+      @bag = Hash(Biology::Substance, Int32).new(0)
       @actions = Array(ActiveSkill).new
     end
 

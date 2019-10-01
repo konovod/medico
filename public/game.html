@@ -1,0 +1,112 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=500, initial-scale=1">
+  <title>Medico</title>
+</head>
+
+<body>
+
+  <link rel="stylesheet" href="spectre.min.css">
+  <link rel="stylesheet" href="spectre-icons.min.css">
+
+  <style>
+    .card {
+      box-shadow: inset 0 .25rem 2rem rgba(48, 55, 66, .15);
+    }
+
+    ul li {
+      line-height: 1.0;
+    }
+
+    .chip:hover {
+      color: darkgreen;
+    }
+  </style>
+
+  <div id="app">
+
+    <div class="columns">
+      <div class="column col-1"></div>
+      <div class="column col-5">
+        <div class="panel">
+          <div class="panel-header text-center">
+            <button v-on:click="reset" class="btn btn-error float-right">Restart</button>
+            <!-- <figure class="avatar avatar-lg"></figure> -->
+            <div class="panel-title h5 mt-10">Медико</div>
+            <div class="panel-subtitle">День {{ day }}</div>
+          </div>
+          <nav class="panel-nav">
+            <ul class="tab tab-block">
+              <li class="tab-item c-hand" v-bind:class="{ active: page == 'visitors' }">
+                <a v-on:click="page = 'visitors'">Посетители</a></li>
+              <li class="tab-item c-hand" v-bind:class="{ active: page == 'patients' }">
+                <a v-on:click="page = 'patients'">Пациенты</a></li>
+              <li class="tab-item c-hand" v-bind:class="{ active: page == 'alchemy' }">
+                <a v-on:click="page = 'alchemy'">Алхимия</a></li>
+              <li class="tab-item c-hand" v-bind:class="{ active: page == 'gather' }">
+                <a v-on:click="page = 'gather'">Сбор трав</a></li>
+            </ul>
+          </nav>
+          <div class="panel-body">
+
+            <!-- ------------------------------------- -->
+
+            <div class="visitors" v-show="page == 'visitors'">
+            </div>
+
+            <!-- ------------------------------------- -->
+
+            <div class="patients" v-show="page == 'patients'">
+            </div>
+
+            <!-- ------------------------------------- -->
+
+            <div class="alchemy" v-show="page == 'alchemy'">
+            </div>
+
+
+            <!-- ------------------------------------- -->
+
+            <div class="gather" v-show="page == 'gather'">
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <div class="column col-6 col-xs-12">
+        <div class="panel">
+          <div class="panel-header">
+            <button v-on:click="next_day" class="btn btn-primary input-group-btn"
+              v-bind:class="{loading: waiting}">Следующий день</button>
+            <div class="panel-title h3">События, день {{ day }}:</div>
+          </div>
+          <div class="panel-body">
+            <!-- <div class="tile" v-for="event in news">
+              <div class="tile-icon">
+                <figure class="avatar"><i class="icon icon-2x icon-location" v-bind:class="'bg-'+event.color"></i>
+                </figure>
+              </div>
+              <div class="tile-content">
+                <p class="tile-title text-bold">{{event.origin}}:</p>
+                <p class="tile-subtitle">{{event.text}}</p>
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="vue.min.js"></script>
+  <script src="app.js"></script>
+
+
+</body>
+
+</html>

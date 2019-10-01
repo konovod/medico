@@ -5,3 +5,8 @@ authors:
   -  <me>
 
 license: GPL3
+
+dependencies:
+  kemal:
+    github: kemalcr/kemal
+    branch: master 

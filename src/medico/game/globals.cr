@@ -25,9 +25,9 @@ class TEST_RND
   end
 end
 
-DEF_RND = TEST_RND.new
+# DEF_RND = TEST_RND.new
 
-# DEF_RND = Random::DEFAULT
+DEF_RND = Random::DEFAULT
 
 def randg(norm, sigma, random = DEF_RND)
   u = random.rand
