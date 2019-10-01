@@ -1,4 +1,4 @@
-require "./medico/game/*"
+require "../game/*"
 require "json"
 
 class Game

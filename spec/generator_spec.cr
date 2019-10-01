@@ -1,6 +1,6 @@
 require "./spec_helper"
-require "../src/medico/game/biology.cr"
-require "../src/medico/game/universe.cr"
+require "../src/game/biology.cr"
+require "../src/game/universe.cr"
 
 include Biology
 
