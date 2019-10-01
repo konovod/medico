@@ -26,7 +26,7 @@ module Biology
 
   class LiquidParam < BioParam
     def initialize(name)
-      super(name, f(0), f(1) / N_LIQUIDS, f(1))
+      super(name, 0, 1 / N_LIQUIDS, 1)
     end
   end
 
@@ -99,12 +99,12 @@ module Biology
       @sympthoms = Hash(Sympthom, FLOAT).new
       @params = ParamsBuffer.new
       @effectors = Hash(Effector, TEffectorData).new
-      ALL_SYMPTHOMS.select { |sy| sy.system == @sys }.each { |sy| @sympthoms[sy] = f(0) }
+      ALL_SYMPTHOMS.select { |sy| sy.system == @sys }.each { |sy| @sympthoms[sy] = 0 }
     end
 
     def reset
       @params.reset_all
-      @sympthoms.keys.each { |x| @sympthoms[x] = f(0) }
+      @sympthoms.keys.each { |x| @sympthoms[x] = 0 }
       @effectors.select! { |k, v| k.is_a? ParamRule }
       @effectors.each_key { |k| @effectors[k] = 0 }
     end
@@ -115,7 +115,7 @@ module Biology
 
     def process_tick(random = DEF_RND)
       @params.scroll
-      @sympthoms.keys.each { |x| @sympthoms[x] = f(0) }
+      @sympthoms.keys.each { |x| @sympthoms[x] = 0 }
       # apply effectors
       @effectors.each do |eff, data|
         @effectors[eff] = eff.process(state: self, data: data, random: random)
@@ -151,7 +151,7 @@ module Biology
     property maxhealth : FLOAT
     property starting_health : FLOAT
     property health : FLOAT
-    getter immunity : FLOAT = f(1)
+    getter immunity : FLOAT = 1
     getter diseases
 
     def to_s(io)

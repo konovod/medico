@@ -3,7 +3,7 @@ require "math"
 require "./data/i18n/ru.cr"
 require "./grammar"
 
-alias FLOAT = Float32
+alias FLOAT = Float64
 
 def f(value) : FLOAT
   return FLOAT.new(value)

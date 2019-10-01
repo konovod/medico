@@ -43,19 +43,19 @@ describe Universe do
   end
 
   it "random effects" do
-    goods = u.random_effects_any(f(1), random: SPEC_R, count: 40)
+    goods = u.random_effects_any(1, random: SPEC_R, count: 40)
     goods.any? { |e| e.is_a?(MagicBulletEffect) }.should be_truthy
     goods.any? { |e| e.is_a?(RemoveSympthomEffect) }.should be_truthy
     goods.any? { |e| e.is_a?(AddSympthomEffect) }.should be_falsey
     goods.any? { |e| e.is_a?(ChangeParam) }.should be_truthy
 
-    bads = u.random_effects_any(f(0), random: SPEC_R, count: 20)
+    bads = u.random_effects_any(0, random: SPEC_R, count: 20)
     bads.any? { |e| e.is_a?(MagicBulletEffect) }.should be_falsey
     bads.any? { |e| e.is_a?(RemoveSympthomEffect) }.should be_falsey
     bads.any? { |e| e.is_a?(AddSympthomEffect) }.should be_truthy
     bads.any? { |e| e.is_a?(ChangeParam) }.should be_truthy
 
-    heads = u.random_effects_sys(f(0.5), random: SPEC_R, count: 20, sys: Set{Biology::System::Brains})
+    heads = u.random_effects_sys(0.5, random: SPEC_R, count: 20, sys: Set{Biology::System::Brains})
     heads.any? { |e| e.is_a?(AddSympthomEffect) && e.sympthom.system == Biology::System::Brains }.should be_truthy
     heads.any? { |e| e.is_a?(RemoveSympthomEffect) && e.sympthom.system == Biology::System::Brains }.should be_truthy
     heads.any? { |e| e.is_a?(AddSympthomEffect) && e.sympthom.system != Biology::System::Brains }.should be_falsey
@@ -121,7 +121,7 @@ describe Universe do
   end
 
   it "test subs effects" do
-  u.generate_flora(SPEC_R)
+    u.generate_flora(SPEC_R)
     u.flora.sum { |subs| subs.effects.size }.should be_close u.flora.size*3, u.flora.size
     u.flora.sum { |subs| subs.effects.count { |eff| eff.is_a? MagicBulletEffect } }.should be > 10
     u.flora.sum { |subs| subs.effects.count { |eff| eff.is_a? AddSympthomEffect } }.should be > 1
@@ -130,7 +130,7 @@ describe Universe do
   it "test injecting" do
     john.reset
     drug = u.flora.sample(SPEC_R)
-    drug.inject(john, f(0.5))
+    drug.inject(john, 0.5)
     sys = drug.systems.to_a.sample(SPEC_R)
     john.systems[sys].effectors[drug].should be_close drug.kinetics/2, 1
   end
@@ -141,7 +141,7 @@ describe Universe do
     u.init_reactions(u.flora, SPEC_R)
     drug1 = (u.flora.select { |subs| subs.reactions.size > 1 }).sample(SPEC_R)
     first, second = drug1.reactions[0], drug1.reactions[1]
-    first.substances.each &.inject(john, f(1.0))
+    first.substances.each &.inject(john, 1.0)
     sys = (first.substances[0].systems & first.substances[1].systems).to_a.sample(SPEC_R)
     state = john.systems[sys]
     state.effectors[first]?.should eq 1

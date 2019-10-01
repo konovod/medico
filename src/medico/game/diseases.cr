@@ -41,7 +41,7 @@ module Biology
           astage.effects.concat(curstage.as(DiseaseStage).effects)
         end
         curstage = astage
-        curstage.effects.concat(univ.random_effects_sys(f(0), sys: @systems, random: random, count: 2*CONFIG[:DisRules] / 5))
+        curstage.effects.concat(univ.random_effects_sys(0, sys: @systems, random: random, count: 2*CONFIG[:DisRules] // 5))
         curstage.effects.uniq! # if i > 0
         # curstage
 
@@ -61,7 +61,7 @@ module Biology
     property stage : DiseaseStage
 
     def initialize(dis : Disease)
-      @antigene = f(0.05)
+      @antigene = 0.05
       @stage = dis.first
     end
   end

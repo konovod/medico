@@ -139,7 +139,7 @@ module Biology
       # add effects
       CONFIG[:NRules].times do
         rule = @param_rules.weighted_sample(random) { |p| p.param.damage(p.checker.average) }
-        rule.effects.concat(random_effects(f(0.1), count: 1, random: random) do |eff|
+        rule.effects.concat(random_effects(0.1, count: 1, random: random) do |eff|
           case eff
           when ChangeParam
             eff.param != rule.param && !(eff.param.is_a? LiquidParam) && (rule.param.is_a? LiquidParam)
@@ -235,7 +235,7 @@ module Biology
           next unless random.rand < CONFIG[:ReactionChance]
           react = ReactionRule.new
           react.substances.concat list
-          react.effects.concat random_effects_sys(f(0.5), s1.systems & s2.systems, count: 1, random: random)
+          react.effects.concat random_effects_sys(0.5, s1.systems & s2.systems, count: 1, random: random)
           list.each { |subs| subs.reactions << react }
         end
       end

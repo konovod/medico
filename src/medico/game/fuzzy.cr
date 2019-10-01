@@ -126,8 +126,8 @@ module Fuzzy
       return 1 if value >= @topmin && value <= @topmax
       return 0 if value <= @min
       return 0 if value >= @max
-      return f(value - @min) / (@topmin - @min) if value < @topmin
-      return f(@max - value) / (@max - @topmax)
+      return (value - @min) / (@topmin - @min) if value < @topmin
+      return (@max - value) / (@max - @topmax)
     end
   end
 

@@ -29,7 +29,7 @@ module Biology
       @power.times { arr << System.values.sample(random) }
       @systems = arr.to_set
       @kinetics = 5 + @power + random.rand(2*@power)
-      @effects.concat univ.random_effects_sys(f(0.9), @systems,
+      @effects.concat univ.random_effects_sys(0.9, @systems,
         count: @power//2 + 1 + random.rand(@power//2 + 1),
         random: random)
       self
