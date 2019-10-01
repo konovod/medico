@@ -6,11 +6,11 @@ require "kemal"
 
 error 404 do
   text = "Страница не найдена"
-  render "src/views/error.ecr", "src/views/layout.ecr"
+  render "src/web/views/error.ecr", "src/web/views/layout.ecr"
 end
 error 403 do
   text = "Доступ запрещен"
-  render "src/views/error.ecr", "src/views/layout.ecr"
+  render "src/web/views/error.ecr", "src/web/views/layout.ecr"
 end
 get "/" do |env|
   env.response.status_code = 403

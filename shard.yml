@@ -6,6 +6,9 @@ authors:
 
 license: GPL3
 
+targets:
+  medico:
+    main: src/web/server.cr 
 dependencies:
   kemal:
     github: kemalcr/kemal

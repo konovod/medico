@@ -36,7 +36,7 @@
             <button v-on:click="reset" class="btn btn-error float-right">Restart</button>
             <!-- <figure class="avatar avatar-lg"></figure> -->
             <div class="panel-title h5 mt-10">Медико</div>
-            <div class="panel-subtitle">День {{ day }}</div>
+            <div class="panel-subtitle">День {{ doctor.day }}</div>
           </div>
           <nav class="panel-nav">
             <ul class="tab tab-block">
@@ -83,7 +83,7 @@
           <div class="panel-header">
             <button v-on:click="next_day" class="btn btn-primary input-group-btn"
               v-bind:class="{loading: waiting}">Следующий день</button>
-            <div class="panel-title h3">События, день {{ day }}:</div>
+            <div class="panel-title h3">События, день {{ doctor.day }}:</div>
           </div>
           <div class="panel-body">
             <!-- <div class="tile" v-for="event in news">
