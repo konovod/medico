@@ -25,7 +25,7 @@ describe Medico do
     second.should be > first
   end
   it "skill use different stats" do
-    ALL_SKILLS[0].level(doc).should_not eq ALL_SKILLS[1].level(doc)
+    ALL_SKILLS[0].first_stat.should_not eq ALL_SKILLS[1].first_stat
   end
 
   it "initial askers" do
