@@ -126,9 +126,13 @@ module Biology
       end
     end
 
+    def active_sympthoms
+      @sympthoms.select { |sym, val| val > 0 }.keys
+    end
+
     def damage
       part1 = (@params.get.sum { |param, value| param.damage(value.real) }) / N_PARAMS
-      part2 = @sympthoms.select { |sym, val| val > 0 }.sum { |sym, val| sym.damage }
+      part2 = active_sympthoms.sum(&.damage)
       part1 + part2
     end
 

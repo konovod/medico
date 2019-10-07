@@ -30,7 +30,9 @@ class Game
   end
 
   def for_json
-    {doctor: @doctor.for_json,
+    {doctor:   @doctor.for_json,
+     patients: @doctor.patients.map(&.for_json),
+     askers:   @doctor.askers.map(&.for_json),
     }.to_json
   end
 end
