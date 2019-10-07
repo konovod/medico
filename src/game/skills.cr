@@ -166,10 +166,10 @@ module Medico
       def self.skill_name
        @@name
       end
-      def first_stat
+      def self.first_stat
         {{first_stat}}
       end
-      def second_stat
+      def self.second_stat
         {{second_stat}}
       end
       @@use_name : String = s({{use_name}}).get #TODO - grammar verbs
@@ -188,10 +188,10 @@ module Medico
       def self.skill_name
         @@name
       end
-      def first_stat
+      def self.first_stat
         {{first_stat}}
       end
-      def second_stat
+      def self.second_stat
         {{second_stat}}
       end
     end

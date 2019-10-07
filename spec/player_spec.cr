@@ -24,6 +24,9 @@ describe Medico do
     second = doc.skill_power(sk, 2, SPEC_R, should_train: false)
     second.should be > first
   end
+  it "skill use different stats" do
+    ALL_SKILLS[0].level(doc).should_not eq ALL_SKILLS[1].level(doc)
+  end
 
   it "initial askers" do
     cnt = 0
