@@ -22,6 +22,8 @@ def cmd_react(game, cmd)
     game.next_day
   when "r"
     game.reset
+  when /m (.*)/
+    game.make_patient $1.to_i
   end
 
   game.for_json

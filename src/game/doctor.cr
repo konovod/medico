@@ -86,7 +86,7 @@ module Medico
       end
     end
 
-    def make_patient(whom : Patient)
+    def make_patient(whom : Biology::Patient)
       # TODO - log, CaseID
       whom.starting_health = whom.health
       askers.delete(whom)

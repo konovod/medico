@@ -94,9 +94,7 @@ describe Universe do
     john.reset
     john.health.should eq(john.maxhealth)
     1.times { john.process_tick(SPEC_R) }
-    Log.level = Logger::DEBUG
     15.times { john.process_tick(SPEC_R) }
-    Log.level = Logger::INFO
     john.health.should eq(john.maxhealth)
   end
 
@@ -105,13 +103,13 @@ describe Universe do
 
   it "test diseases short" do
     results = stat_patients(u, SPEC_R, 20, 200)
-    # puts "stats at initial #{results}"
+    puts "stats at initial #{results}"
     results[0].should be_close(100, 15)
   end
 
   it "test disease long" do
     results = stat_patients(u, SPEC_R, 400, 200)
-    # puts "stats at longtime #{results}"
+    puts "stats at longtime #{results}"
     results[0].should be < 15
   end
   it "simulation performance" do

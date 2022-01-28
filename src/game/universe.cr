@@ -54,13 +54,13 @@ module Biology
     end
 
     def generate(random = DEF_RND)
-      Log.s("initializing effects")
+      Log.info { "initializing effects" }
       init_effects
-      Log.s("initializing param rules")
+      Log.info { "initializing param rules" }
       init_param_rules(random)
-      Log.s("initializing diseases")
+      Log.info { "initializing diseases" }
       init_diseases(random)
-      Log.s("initializing flora")
+      Log.info { "initializing flora" }
       generate_flora(random)
     end
 

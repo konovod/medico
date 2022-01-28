@@ -29,6 +29,11 @@ class Game
     @doctor.next_day
   end
 
+  def make_patient(i : Int32)
+    return if i >= @doctor.askers.size || i < 0
+    doctor.make_patient(@doctor.askers[i])
+  end
+
   def for_json
     {doctor:   @doctor.for_json,
      patients: @doctor.patients.map(&.for_json),

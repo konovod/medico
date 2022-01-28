@@ -41,13 +41,17 @@
           <nav class="panel-nav">
             <ul class="tab tab-block">
               <li class="tab-item c-hand" v-bind:class="{ active: page == 'visitors' }">
-                <a v-on:click="page = 'visitors'">Посетители</a></li>
+                <a v-on:click="page = 'visitors'">Посетители</a>
+              </li>
               <li class="tab-item c-hand" v-bind:class="{ active: page == 'patients' }">
-                <a v-on:click="page = 'patients'">Пациенты</a></li>
+                <a v-on:click="page = 'patients'">Пациенты</a>
+              </li>
               <li class="tab-item c-hand" v-bind:class="{ active: page == 'alchemy' }">
-                <a v-on:click="page = 'alchemy'">Алхимия</a></li>
+                <a v-on:click="page = 'alchemy'">Алхимия</a>
+              </li>
               <li class="tab-item c-hand" v-bind:class="{ active: page == 'gather' }">
-                <a v-on:click="page = 'gather'">Сбор трав</a></li>
+                <a v-on:click="page = 'gather'">Сбор трав</a>
+              </li>
             </ul>
           </nav>
           <div class="panel-body">
@@ -55,11 +59,49 @@
             <!-- ------------------------------------- -->
 
             <div class="visitors" v-show="page == 'visitors'">
+
+              <div class="card" v-for="asker, i in askers">
+                <div class="card-header">
+                  <div class="card-title h5"> {{asker.name}} </div>
+                </div>
+                <div class="card-body ">
+                  <span class="chip">
+                    {{ asker.health }} </span>
+                  <div class="columns col-gapless">
+                    <div class="column ">
+                      <span class="chip" v-for="sympthom in asker.sympthoms">
+                        {{sympthom}}
+                      </span>
+                    </div>
+                  </div>
+                  <button class="btn btn-primary" v-on:click="make_patient(i)">Сделать пациентом</button>
+                </div>
+              </div>
+
             </div>
 
             <!-- ------------------------------------- -->
 
             <div class="patients" v-show="page == 'patients'">
+
+              <div class="card" v-for="patient, i in patients">
+                <div class="card-header">
+                  <div class="card-title h5"> {{patient.name}} </div>
+                </div>
+                <div class="card-body ">
+                  <span class="chip">
+                    {{ patient.health }} </span>
+                  <div class="columns col-gapless">
+                    <div class="column ">
+                      <span class="chip" v-for="sympthom in patient.sympthoms">
+                        {{sympthom}}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
             </div>
 
             <!-- ------------------------------------- -->

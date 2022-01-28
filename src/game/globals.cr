@@ -1,4 +1,4 @@
-require "logger"
+require "log"
 require "math"
 require "./data/i18n/ru.cr"
 require "./grammar"
@@ -115,19 +115,6 @@ def each_combination(n : Int32, aset : Enumerable)
     end
   else
     raise "each_combination not implemented for #{n}"
-  end
-end
-
-# TODO: replace to std logger
-class Log
-  @@logger = Logger.new(STDOUT)
-
-  def self.s(string)
-    @@logger.debug(string)
-  end
-
-  def self.level=(value)
-    @@logger.level = value
   end
 end
 
